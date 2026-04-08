@@ -1,0 +1,13 @@
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[[tool.uv.index]]
+name = "jax-releases"
+url = "https://storage.googleapis.com/jax-releases/jax_cuda_releases.html"
+explicit = true
+
+[tool.uv]
+constraint-dependencies = [
+    "pygments>=2.20.0",   # CVE-2026-4539
+    "requests>=2.33.0",   # CVE-2026-25645
+]
