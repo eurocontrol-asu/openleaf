@@ -29,7 +29,8 @@ select = ["E", "F", "I", "N", "UP", "B", "C4", "S", "T20", "RUF"]
 per-file-ignores = { "tests/**" = ["S101"] }
 
 [tool.pytest.ini_options]
-testpaths = ["packages",
+testpaths = [
+    "packages/openleaf-core/tests",
     "packages/openleaf-performance/tests",
 ]
 addopts = "-q --import-mode=importlib"
