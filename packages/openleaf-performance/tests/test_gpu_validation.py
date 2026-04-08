@@ -35,9 +35,7 @@ def _to_gpu(arr: np.ndarray) -> torch.Tensor:
     return torch.tensor(arr, dtype=torch.float64, device="cuda")
 
 
-def _assert_close(
-    gpu_result: torch.Tensor, expected: np.ndarray, rtol: float = 1e-10
-) -> None:
+def _assert_close(gpu_result: torch.Tensor, expected: np.ndarray, rtol: float = 1e-10) -> None:
     """Assert GPU result matches expected values."""
     actual = gpu_result.detach().cpu().numpy()
     np.testing.assert_allclose(actual, expected, rtol=rtol)
@@ -175,9 +173,7 @@ class TestGradientFlowOnGPU:
     """Verify that autograd gradients flow through AetherX on GPU."""
 
     def test_isa_gradient_on_gpu(self):
-        h = torch.tensor(
-            [10000.0], dtype=torch.float64, device="cuda", requires_grad=True
-        )
+        h = torch.tensor([10000.0], dtype=torch.float64, device="cuda", requires_grad=True)
         T = isa.air_temperature(h)
         T.backward()
         assert h.grad is not None
@@ -185,9 +181,7 @@ class TestGradientFlowOnGPU:
         assert torch.isfinite(h.grad).all()
 
     def test_multi_variable_gradient_on_gpu(self):
-        h = torch.tensor(
-            [10668.0], dtype=torch.float64, device="cuda", requires_grad=True
-        )
+        h = torch.tensor([10668.0], dtype=torch.float64, device="cuda", requires_grad=True)
         m = torch.tensor([0.78], dtype=torch.float64, device="cuda", requires_grad=True)
         T = isa.air_temperature(h)
         p = isa.air_pressure(h)

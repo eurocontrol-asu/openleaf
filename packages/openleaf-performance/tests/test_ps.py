@@ -119,13 +119,10 @@ class TestPSEngine:
 
         assert np.all(np.diff(thrusts) < 0)
 
-    def test_fuel_flow_increases_with_thrust(
-        self, ps_model: PSModel, cruise_state: dict
-    ):
+    def test_fuel_flow_increases_with_thrust(self, ps_model: PSModel, cruise_state: dict):
         """Test fuel flow monotonicity."""
         fuel_flows = [
-            ps_model.engine.fuel_flow({**cruise_state, "thrust": t})
-            for t in [15000, 25000, 35000]
+            ps_model.engine.fuel_flow({**cruise_state, "thrust": t}) for t in [15000, 25000, 35000]
         ]
         assert np.all(np.diff(fuel_flows) > 0)
 
@@ -334,8 +331,7 @@ class TestPSModelValidation:
         )
 
         assert c_drag_ae == pytest.approx(c_drag_pc, rel=PS_CD_TOLERANCE), (
-            f"FL{altitude_ft} M{mach} {mass}kg: CD {c_drag_ae:.6f} != "
-            f"pycontrails {c_drag_pc:.6f}"
+            f"FL{altitude_ft} M{mach} {mass}kg: CD {c_drag_ae:.6f} != pycontrails {c_drag_pc:.6f}"
         )
 
     @pytest.mark.parametrize(
@@ -409,14 +405,10 @@ class TestPSModelValidation:
         )
 
         # Thrust coefficient using pycontrails
-        c_t_pc = pc_ps.engine_thrust_coefficient(
-            thrust_pc, mach, p, params.wing_surface_area
-        )
+        c_t_pc = pc_ps.engine_thrust_coefficient(thrust_pc, mach, p, params.wing_surface_area)
 
         # Thrust coefficient at max efficiency
-        c_t_eta_b = pc_ps.thrust_coefficient_at_max_efficiency(
-            mach, params.m_des, params.c_t_des
-        )
+        c_t_eta_b = pc_ps.thrust_coefficient_at_max_efficiency(mach, params.m_des, params.c_t_des)
 
         # Overall propulsion efficiency using pycontrails
         eta = pc_ps.overall_propulsion_efficiency(mach, c_t_pc, c_t_eta_b, params)
@@ -433,9 +425,7 @@ class TestPSModelValidation:
             f"pycontrails {ff_pycontrails:.4f} kg/s"
         )
 
-    def test_lift_coefficient_matches_pycontrails(
-        self, ps_model_validation, pycontrails_params
-    ):
+    def test_lift_coefficient_matches_pycontrails(self, ps_model_validation, pycontrails_params):
         """Test lift coefficient calculation matches pycontrails."""
         pytest.importorskip("pycontrails")
         from pycontrails.models.ps_model import ps_model as pc_ps
@@ -461,9 +451,7 @@ class TestPSModelValidation:
 
         assert c_lift_ae == pytest.approx(c_lift_pc, rel=0.001)
 
-    def test_reynolds_number_matches_pycontrails(
-        self, ps_model_validation, pycontrails_params
-    ):
+    def test_reynolds_number_matches_pycontrails(self, ps_model_validation, pycontrails_params):
         """Test Reynolds number calculation matches pycontrails."""
         pytest.importorskip("pycontrails")
         from pycontrails.models.ps_model import ps_model as pc_ps
@@ -694,9 +682,7 @@ class TestPSPhysicsExhaustive:
             (0.65, 0.72, 0.022),
         ],
     )
-    def test_thrust_coefficient_at_max_efficiency_exhaustive(
-        self, mach, m_des, c_t_des
-    ):
+    def test_thrust_coefficient_at_max_efficiency_exhaustive(self, mach, m_des, c_t_des):
         """Test thrust coefficient at max efficiency matches pycontrails."""
         pytest.importorskip("pycontrails")
         from pycontrails.models.ps_model import ps_model as pc_ps
@@ -777,19 +763,13 @@ class TestPSCruiseTrajectory:
         # PS model returns per-aircraft fuel flow for A320 cruise
         # Values typically range from ~0.15-0.35 kg/s for the PS model
         # (lower than other models due to different efficiency assumptions)
-        assert np.all(fuel_flow > 0.1), (
-            f"Fuel flow too low: min={np.min(fuel_flow):.3f} kg/s"
-        )
-        assert np.all(fuel_flow < 1.0), (
-            f"Fuel flow too high: max={np.max(fuel_flow):.3f} kg/s"
-        )
+        assert np.all(fuel_flow > 0.1), f"Fuel flow too low: min={np.min(fuel_flow):.3f} kg/s"
+        assert np.all(fuel_flow < 1.0), f"Fuel flow too high: max={np.max(fuel_flow):.3f} kg/s"
 
         # Fuel flow should decrease as mass decreases (less drag)
         # Allow small variations due to numerical effects
         ff_diff = np.diff(fuel_flow)
-        assert np.mean(ff_diff) < 0, (
-            "Fuel flow should generally decrease as mass decreases"
-        )
+        assert np.mean(ff_diff) < 0, "Fuel flow should generally decrease as mass decreases"
 
 
 # ==============================================================================
@@ -862,9 +842,7 @@ class TestPSLimitsScalar:
         A320: ceiling = 41000 ft.
         """
         max_alt = ps_model.limits.max_altitude({})
-        assert max_alt == pytest.approx(41000.0), (
-            f"PS A320 HMO should be 41000 ft, got {max_alt}"
-        )
+        assert max_alt == pytest.approx(41000.0), f"PS A320 HMO should be 41000 ft, got {max_alt}"
 
     def test_max_mach_exact(self, ps_model: PSModel):
         """Verify PS max_mach at high altitude returns MMO (A320: 0.82).

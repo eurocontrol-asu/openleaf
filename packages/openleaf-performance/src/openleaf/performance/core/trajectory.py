@@ -156,9 +156,7 @@ class TrajectoryData:
         """Return data column keys."""
         return self._data.keys()
 
-    def get(
-        self, key: str, default: ArrayScalarLike | None = None
-    ) -> ArrayScalarLike | None:
+    def get(self, key: str, default: ArrayScalarLike | None = None) -> ArrayScalarLike | None:
         """Get a data value with optional default."""
         try:
             return self[key]
@@ -286,8 +284,7 @@ class TrajectoryData:
         # Handle f=1 (constant speed): a=0
         # Handle vs=0 (level flight): a=0
         return np.where(
-            (np.abs(f - 1.0) < EPSILON_TOLERANCE)
-            | (np.abs(vs_geo) < EPSILON_TOLERANCE),
+            (np.abs(f - 1.0) < EPSILON_TOLERANCE) | (np.abs(vs_geo) < EPSILON_TOLERANCE),
             0.0,
             (isa.G / V) * vs_geo * (1.0 - f) / f,
         )
@@ -416,9 +413,7 @@ class AircraftTrajectoryData:
         """Return input data column keys."""
         return self._traj.keys()
 
-    def get(
-        self, key: str, default: ArrayScalarLike | None = None
-    ) -> ArrayScalarLike | None:
+    def get(self, key: str, default: ArrayScalarLike | None = None) -> ArrayScalarLike | None:
         """Get a value by key with optional default.
 
         Args:
@@ -756,9 +751,7 @@ class AircraftTrajectoryData:
         self._handle_envelope_violations(violations)
         return violations
 
-    def _handle_envelope_violations(
-        self, violations: dict[str, ArrayScalarLike]
-    ) -> None:
+    def _handle_envelope_violations(self, violations: dict[str, ArrayScalarLike]) -> None:
         """Handle violations based on envelope_mode setting.
 
         Args:

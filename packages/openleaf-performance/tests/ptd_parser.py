@@ -61,18 +61,14 @@ class PTDData(BaseModel):
     filename: str
     sections: list[PTDSection]
 
-    def get_section(
-        self, mass_category: str, phase: str = "climb"
-    ) -> PTDSection | None:
+    def get_section(self, mass_category: str, phase: str = "climb") -> PTDSection | None:
         """Get a specific section by mass category and phase."""
         for section in self.sections:
             if section.mass_category == mass_category and section.phase == phase:
                 return section
         return None
 
-    def get_row_at_fl(
-        self, fl: int, mass_category: str, phase: str = "climb"
-    ) -> PTDRow | None:
+    def get_row_at_fl(self, fl: int, mass_category: str, phase: str = "climb") -> PTDRow | None:
         """Get a specific row by flight level."""
         section = self.get_section(mass_category, phase)
         if section is None:

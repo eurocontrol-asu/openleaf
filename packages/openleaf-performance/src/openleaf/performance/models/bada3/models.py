@@ -415,9 +415,7 @@ class BADA3TurbineModel(BADA3EngineModel):
         h: ArrayScalarLike,
     ) -> ArrayScalarLike:
         h_ft = h / FT
-        return (
-            self.data.cf_3 * (1.0 - h_ft / self.data.cf_4) / _MINUTES_TO_SECONDS
-        )  # in kg/s
+        return self.data.cf_3 * (1.0 - h_ft / self.data.cf_4) / _MINUTES_TO_SECONDS  # in kg/s
 
 
 class BADA3PropellerModel(BADA3EngineModel):
@@ -441,9 +439,7 @@ class BADA3JetEngineModel(BADA3TurbineModel):
         h: ArrayScalarLike,
     ) -> ArrayScalarLike:
         h_ft = h / FT
-        return self.data.ct_1 * (
-            1.0 - h_ft / self.data.ct_2 + self.data.ct_3 * h_ft * h_ft
-        )
+        return self.data.ct_1 * (1.0 - h_ft / self.data.ct_2 + self.data.ct_3 * h_ft * h_ft)
 
     def _engine_efficiency(
         self,
@@ -480,9 +476,7 @@ class BADA3TurbopropEngineModel(BADA3TurbineModel, BADA3PropellerModel):
     ) -> ArrayScalarLike:
         v_kt = v / KT
         return (
-            self.data.cf_1
-            * (1.0 - v_kt / self.data.cf_2)
-            * (v_kt / _TURBOPROP_FF_COEF_CONVERSION)
+            self.data.cf_1 * (1.0 - v_kt / self.data.cf_2) * (v_kt / _TURBOPROP_FF_COEF_CONVERSION)
         )  # in kg/(s·N)
 
 
@@ -549,9 +543,7 @@ class BADA3AeroModel(AerodynamicsModel[BADA3AerodynamicsData]):
         Raises:
             MissingFieldError: If any required field is missing.
         """
-        logger.debug(
-            "Computing drag_coef with config=%s", data["aerodynamic_configuration"]
-        )
+        logger.debug("Computing drag_coef with config=%s", data["aerodynamic_configuration"])
 
         return self._drag_coef(
             cl=data["lift_coef"],

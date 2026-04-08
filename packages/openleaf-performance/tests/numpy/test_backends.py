@@ -226,12 +226,8 @@ class TestArrayAPIDispatch:
         x_torch = torch.tensor([0.0, np.pi / 4, np.pi / 2])
 
         # Use atol for values near zero (float32 vs float64 precision)
-        np.testing.assert_allclose(
-            sin(x_torch).numpy(), sin(x_np), rtol=1e-6, atol=1e-7
-        )
-        np.testing.assert_allclose(
-            cos(x_torch).numpy(), cos(x_np), rtol=1e-6, atol=1e-7
-        )
+        np.testing.assert_allclose(sin(x_torch).numpy(), sin(x_np), rtol=1e-6, atol=1e-7)
+        np.testing.assert_allclose(cos(x_torch).numpy(), cos(x_np), rtol=1e-6, atol=1e-7)
         # tan at pi/2 is undefined, so test only valid values
         x_np = np.array([0.0, np.pi / 4, np.pi / 3])
         x_torch = torch.tensor([0.0, np.pi / 4, np.pi / 3])
@@ -299,12 +295,8 @@ class TestArrayAPIDispatch:
         x_torch = torch.tensor([1.0, 5.0, 3.0])
         y_torch = torch.tensor([2.0, 2.0, 4.0])
 
-        np.testing.assert_allclose(
-            maximum(x_torch, y_torch).numpy(), maximum(x_np, y_np)
-        )
-        np.testing.assert_allclose(
-            minimum(x_torch, y_torch).numpy(), minimum(x_np, y_np)
-        )
+        np.testing.assert_allclose(maximum(x_torch, y_torch).numpy(), maximum(x_np, y_np))
+        np.testing.assert_allclose(minimum(x_torch, y_torch).numpy(), minimum(x_np, y_np))
 
     @pytest.mark.skipif(not Backend.TORCH.available, reason="PyTorch not installed")
     def test_clip_numpy_and_torch(self):
@@ -315,9 +307,7 @@ class TestArrayAPIDispatch:
         x_np = np.array([1.0, 5.0, 10.0, 15.0])
         x_torch = torch.tensor([1.0, 5.0, 10.0, 15.0])
 
-        np.testing.assert_allclose(
-            clip(x_torch, 3.0, 12.0).numpy(), clip(x_np, 3.0, 12.0)
-        )
+        np.testing.assert_allclose(clip(x_torch, 3.0, 12.0).numpy(), clip(x_np, 3.0, 12.0))
 
     @pytest.mark.skipif(not Backend.TORCH.available, reason="PyTorch not installed")
     def test_reshape_numpy_and_torch(self):
@@ -328,9 +318,7 @@ class TestArrayAPIDispatch:
         x_np = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
         x_torch = torch.tensor([1.0, 2.0, 3.0, 4.0, 5.0, 6.0])
 
-        np.testing.assert_allclose(
-            reshape(x_torch, (2, 3)).numpy(), reshape(x_np, (2, 3))
-        )
+        np.testing.assert_allclose(reshape(x_torch, (2, 3)).numpy(), reshape(x_np, (2, 3)))
 
     @pytest.mark.skipif(not Backend.TORCH.available, reason="PyTorch not installed")
     def test_concatenate_numpy_and_torch(self):
@@ -360,9 +348,7 @@ class TestArrayAPIDispatch:
         a_torch = torch.tensor([1.0, 2.0])
         b_torch = torch.tensor([3.0, 4.0])
 
-        np.testing.assert_allclose(
-            stack([a_torch, b_torch]).numpy(), stack([a_np, b_np])
-        )
+        np.testing.assert_allclose(stack([a_torch, b_torch]).numpy(), stack([a_np, b_np]))
 
     @pytest.mark.skipif(not Backend.TORCH.available, reason="PyTorch not installed")
     def test_zeros_like_ones_like_numpy_and_torch(self):
@@ -398,9 +384,7 @@ class TestArrayAPIDispatch:
         np.testing.assert_array_equal(
             logical_and(a_torch, b_torch).numpy(), logical_and(a_np, b_np)
         )
-        np.testing.assert_array_equal(
-            logical_or(a_torch, b_torch).numpy(), logical_or(a_np, b_np)
-        )
+        np.testing.assert_array_equal(logical_or(a_torch, b_torch).numpy(), logical_or(a_np, b_np))
         np.testing.assert_array_equal(logical_not(a_torch).numpy(), logical_not(a_np))
 
     @pytest.mark.skipif(not Backend.TORCH.available, reason="PyTorch not installed")

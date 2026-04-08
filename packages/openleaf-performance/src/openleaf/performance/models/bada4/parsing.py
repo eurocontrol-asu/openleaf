@@ -239,14 +239,10 @@ def parse_jet_engine_data(root: ET.Element) -> BADA4JetEngineData:
                 kink[s] = float(eng.find("kink").text)
 
             if eng.find("flat_rating") is not None:
-                b[s] = np.array(
-                    [float(x.text) for x in eng.find("flat_rating").findall("b")]
-                )
+                b[s] = np.array([float(x.text) for x in eng.find("flat_rating").findall("b")])
 
             if eng.find("temp_rating") is not None:
-                c[s] = np.array(
-                    [float(x.text) for x in eng.find("temp_rating").findall("c")]
-                )
+                c[s] = np.array([float(x.text) for x in eng.find("temp_rating").findall("c")])
 
     return BADA4JetEngineData(
         **base.model_dump(),  # unpack all fields from the base parser
@@ -291,9 +287,7 @@ def parse_turboprop_engine_data(
                 max_power[s] = float(eng.find("max_power").text)
 
             if eng.find("rating") is not None:
-                p[s] = np.array(
-                    [float(x.text) for x in eng.find("rating").findall("p")]
-                )
+                p[s] = np.array([float(x.text) for x in eng.find("rating").findall("p")])
 
     return BADA4TurbopropEngineData(
         **base.model_dump(),  # unpack all fields from the base parser
@@ -373,9 +367,7 @@ def parse_aero_data(
                 dpm = lg.find("DPM_clean")
 
                 if dpm is not None and d_clean is None:
-                    d_clean = np.array(
-                        [float(x.text) for x in dpm.find("CD_clean").findall("d")]
-                    )
+                    d_clean = np.array([float(x.text) for x in dpm.find("CD_clean").findall("d")])
 
                     mach_max = float(dpm.find("M_max").text)
                     scalar = float(dpm.find("scalar").text)
@@ -383,10 +375,7 @@ def parse_aero_data(
                     dpm = lg.find("DPM_nonclean")
                     if dpm is not None:
                         d_nonclean[(hlid, lg_enum)] = np.array(
-                            [
-                                float(x.text)
-                                for x in dpm.find("CD_nonclean").findall("d")
-                            ]
+                            [float(x.text) for x in dpm.find("CD_nonclean").findall("d")]
                         )
 
     return BADA4AerodynamicsData(
