@@ -1,0 +1,30 @@
+{
+  "cruise_mass_kg": 69000.0,
+  "n_cruise_points": 95,
+  "models": {
+    "PS": {
+      "cost_index_kg_min": 14.11857669181015,
+      "final_residual": 5.835842714124412e-09,
+      "solve_time_s": 2.701334001030773,
+      "success": true
+    },
+    "BADA3": {
+      "cost_index_kg_min": 13.26752053617969,
+      "final_residual": 5.360105814491975e-09,
+      "solve_time_s": 2.45764036802575,
+      "success": true
+    },
+    "BADA4": {
+      "cost_index_kg_min": 19.70427068285411,
+      "final_residual": 9.347965375417844e-09,
+      "solve_time_s": 1.60684127593413,
+      "success": true
+    },
+    "OPENAP": {
+      "cost_index_kg_min": 6.13959012721401,
+      "final_residual": 2.8041373443555572e-08,
+      "solve_time_s": 1.3344160930719227,
+      "success": true
+    }
+  }
+}

@@ -1,0 +1,824 @@
+"""
+Trajectory data container for aircraft performance calculations.
+
+This module provides a simple, lazy data container that holds trajectory data
+and automatically computes derived quantities on access.
+
+All columns are per-row arrays. No scalars, no attrs resolution magic.
+
+Altitude convention: PRESSURE altitude (Hp), as per BADA/aviation standard.
+Vertical speed convention: PRESSURE altitude rate (dHp/dt).
+
+Example:
+    >>> import numpy as np
+    >>> from openleaf.performance.core import TrajectoryData
+    >>>
+    >>> # From ADS-B data (has acceleration)
+    >>> data = {
+    ...     "altitude": np.array([10000.0, 10500.0]),
+    ...     "true_airspeed": np.array([230.0, 232.0]),
+    ...     "vertical_speed": np.array([5.0, 5.0]),
+    ...     "aircraft_mass": np.array([65000.0, 64900.0]),
+    ...     "acceleration": np.array([0.1, 0.1]),
+    ... }
+    >>> traj = TrajectoryData(data)
+    >>> print(traj.mach_number)  # Computed automatically
+    >>>
+    >>> # Add aircraft model for performance
+    >>> perf = traj.with_aircraft("BADA4", "A320")
+    >>> print(perf.fuel_flow)  # Computes drag → thrust → fuel_flow
+"""
+
+from __future__ import annotations
+
+
+__all__ = [
+    "TrajectoryData",
+    "AircraftTrajectoryData",
+]
+
+from functools import cached_property
+from typing import TYPE_CHECKING
+from typing import Any
+
+import openleaf.performance.numpy as np
+from openleaf.performance.core.types import EnvelopeMode
+from openleaf.performance.core.types import EnvelopeViolationError
+from openleaf.performance.logging import get_logger
+from openleaf.performance.physics import isa
+from openleaf.performance.physics import tem
+from openleaf.performance.physics.aero import AircraftAirspeed
+from openleaf.performance.physics.units import EPSILON_TOLERANCE
+from openleaf.performance.utils.types import ArrayScalarLike
+from openleaf.performance.utils.types import KeyedData
+
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
+    from openleaf.performance.core.perfos import AircraftModel
+
+logger = get_logger(__name__)
+
+
+class TrajectoryData:
+    """Lazy trajectory container with automatic derivation of flight state.
+
+    All columns are per-row arrays. Computed properties are cached.
+
+    Required columns:
+        - altitude: Pressure altitude Hp [m]
+        - true_airspeed: TAS [m/s]
+        - vertical_speed: Pressure altitude rate dHp/dt [m/s]
+        - aircraft_mass: Aircraft mass [kg]
+        - f OR acceleration: Energy share factor [-] or dV/dt [m/s²]
+
+    Computed properties (lazy):
+        - air_temperature, air_pressure, air_density (ISA from Hp)
+        - mach_number, calibrated_airspeed
+        - f ↔ acceleration (derive missing one)
+        - vertical_speed_geometric
+    """
+
+    REQUIRED = frozenset(
+        {
+            "altitude",  # Pressure altitude Hp [m]
+            "true_airspeed",  # TAS [m/s]
+            "vertical_speed",  # Pressure altitude rate dHp/dt [m/s]
+            "aircraft_mass",  # [kg]
+        }
+    )
+
+    ENERGY_COLUMNS = frozenset({"f", "acceleration"})
+
+    def __init__(self, data: KeyedData):
+        """Initialize trajectory data container.
+
+        Args:
+            data: Dictionary, DataFrame, or pycontrails Flight/Fleet.
+                Must contain REQUIRED columns plus either 'f' or 'acceleration'.
+
+        Raises:
+            ValueError: If required fields are missing.
+        """
+        self._data = dict(data)
+        self._attrs: Mapping[str, Any] = getattr(data, "attrs", {})
+        self._validate()
+
+    def _validate(self) -> None:
+        """Validate required columns are present."""
+        missing = self.REQUIRED - self._data.keys()
+        if missing:
+            raise ValueError(f"Missing required columns: {missing}")
+
+        if not (self.ENERGY_COLUMNS & self._data.keys()):
+            raise ValueError("Must provide 'f' or 'acceleration' column")
+
+    # ---- Direct access ----
+
+    def __getitem__(self, key: str) -> ArrayScalarLike:
+        """Get column or computed property."""
+        if key in self._data:
+            return self._data[key]
+
+        # Check for cached_property
+        attr = getattr(type(self), key, None)
+        if isinstance(attr, cached_property):
+            return getattr(self, key)
+
+        raise KeyError(f"Key '{key}' not found in data or computed properties")
+
+    def __contains__(self, key: str) -> bool:
+        """Check if key is available in data or as computed property."""
+        if key in self._data:
+            return True
+        attr = getattr(type(self), key, None)
+        return isinstance(attr, cached_property)
+
+    def __len__(self) -> int:
+        """Return number of data points."""
+        alt = self._data["altitude"]
+        if hasattr(alt, "__len__"):
+            return len(alt)
+        return 1
+
+    def __repr__(self) -> str:
+        """Return string representation."""
+        n = len(self)
+        cols = sorted(self._data.keys())
+        return f"TrajectoryData(n={n}, columns={cols})"
+
+    def __iter__(self):
+        """Iterate over data keys."""
+        return iter(self._data)
+
+    def keys(self):
+        """Return data column keys."""
+        return self._data.keys()
+
+    def get(
+        self, key: str, default: ArrayScalarLike | None = None
+    ) -> ArrayScalarLike | None:
+        """Get a data value with optional default."""
+        try:
+            return self[key]
+        except KeyError:
+            return default
+
+    @property
+    def data(self) -> dict:
+        """Expose the raw input data."""
+        return self._data
+
+    @property
+    def attrs(self) -> Mapping[str, Any]:
+        """Metadata dictionary (from DataFrame.attrs or Flight.attrs)."""
+        return self._attrs
+
+    # ---- Atmospheric (ISA from pressure altitude) ----
+
+    @cached_property
+    def air_temperature(self) -> ArrayScalarLike:
+        """Air temperature [K]. Uses provided value or ISA."""
+        if "air_temperature" in self._data:
+            return self._data["air_temperature"]
+        return isa.air_temperature(self._data["altitude"])
+
+    @cached_property
+    def air_pressure(self) -> ArrayScalarLike:
+        """Air pressure at pressure altitude [Pa]."""
+        return isa.air_pressure(self._data["altitude"])
+
+    @cached_property
+    def air_density(self) -> ArrayScalarLike:
+        """Air density [kg/m³]."""
+        return self.air_pressure / (isa.R * self.air_temperature)
+
+    @cached_property
+    def delta_isa(self) -> ArrayScalarLike:
+        """Temperature deviation from ISA [K]."""
+        if "air_temperature" not in self._data:
+            return np.zeros_like(self._data["altitude"])
+        T_isa = isa.air_temperature(self._data["altitude"])
+        return self._data["air_temperature"] - T_isa
+
+    # ---- Airspeed conversions ----
+
+    @cached_property
+    def _airspeed(self) -> AircraftAirspeed:
+        """Internal airspeed converter."""
+        return AircraftAirspeed(
+            T=self.air_temperature,
+            p=self.air_pressure,
+            v=self._data["true_airspeed"],
+        )
+
+    @cached_property
+    def mach_number(self) -> ArrayScalarLike:
+        """Mach number [-]."""
+        return self._airspeed.mach_number
+
+    @cached_property
+    def calibrated_airspeed(self) -> ArrayScalarLike:
+        """Calibrated airspeed [m/s]."""
+        return self._airspeed.calibrated_airspeed
+
+    # ---- Vertical speed conversions ----
+
+    @cached_property
+    def _temp_correction_factor(self) -> ArrayScalarLike:
+        """Temperature correction factor T_actual / T_ISA."""
+        T_isa = isa.air_temperature(self._data["altitude"])
+        return self.air_temperature / T_isa
+
+    @cached_property
+    def vertical_speed_geometric(self) -> ArrayScalarLike:
+        """Geometric vertical speed dh/dt [m/s].
+
+        Converts pressure altitude rate to geometric:
+            dh/dt = dHp/dt * (T_actual / T_ISA)
+        """
+        return self._data["vertical_speed"] * self._temp_correction_factor
+
+    # ---- Energy share factor ----
+
+    @cached_property
+    def f(self) -> ArrayScalarLike:
+        """Energy share factor [-] (per-row).
+
+        If not provided, derived from acceleration:
+            f = vs_geo / (vs_geo + (V/g) * a)
+        """
+        if "f" in self._data:
+            return self._data["f"]
+
+        # Derive from acceleration
+        vs_geo = self.vertical_speed_geometric
+        V = self._data["true_airspeed"]
+        a = self._data["acceleration"]
+
+        denominator = vs_geo + (V / isa.G) * a
+
+        # Handle level flight (vs=0, a=0): f is irrelevant, use 1.0
+        # Clamp denominator to avoid division by zero (np.where evaluates both branches)
+        safe_denom = np.where(np.abs(denominator) < EPSILON_TOLERANCE, 1.0, denominator)
+        return np.where(
+            np.abs(denominator) < EPSILON_TOLERANCE,
+            1.0,
+            vs_geo / safe_denom,
+        )
+
+    @cached_property
+    def acceleration(self) -> ArrayScalarLike:
+        """Longitudinal acceleration dV/dt [m/s²] (per-row).
+
+        If not provided, derived from f:
+            a = (g/V) * vs_geo * (1 - f) / f
+        """
+        if "acceleration" in self._data:
+            return self._data["acceleration"]
+
+        # Derive from f
+        vs_geo = self.vertical_speed_geometric
+        V = self._data["true_airspeed"]
+        f = self._data["f"]
+
+        # Handle f=1 (constant speed): a=0
+        # Handle vs=0 (level flight): a=0
+        return np.where(
+            (np.abs(f - 1.0) < EPSILON_TOLERANCE)
+            | (np.abs(vs_geo) < EPSILON_TOLERANCE),
+            0.0,
+            (isa.G / V) * vs_geo * (1.0 - f) / f,
+        )
+
+    # ---- Aircraft model attachment ----
+
+    def with_aircraft(
+        self,
+        model: AircraftModel | str,
+        icao: str | None = None,
+        envelope_mode: EnvelopeMode = EnvelopeMode.IGNORE,
+    ) -> AircraftTrajectoryData:
+        """Attach an aircraft model for performance calculations.
+
+        Args:
+            model: Either:
+                - An instantiated model: BADA4Model("A320")
+                - A model type string: "BADA3", "BADA4", "OpenAP", "PS"
+            icao: ICAO type code, required if model is a string.
+            envelope_mode: How to handle envelope violations (default: IGNORE).
+
+        Returns:
+            AircraftTrajectoryData with drag, thrust, fuel_flow, etc.
+
+        Examples:
+            # Option 1: Pre-built model
+            perf = traj.with_aircraft(BADA4Model("A320"))
+
+            # Option 2: Factory style
+            perf = traj.with_aircraft("BADA4", "A320")
+            perf = traj.with_aircraft("OpenAP", "A320")
+
+            # Option 3: With envelope checking
+            perf = traj.with_aircraft("BADA4", "A320", envelope_mode=EnvelopeMode.WARN)
+        """
+        if isinstance(model, str):
+            if icao is None:
+                raise ValueError("icao required when model is a string")
+            model = _create_model(model, icao)
+
+        return AircraftTrajectoryData(self, model, envelope_mode=envelope_mode)
+
+
+class AircraftTrajectoryData:
+    """Trajectory with aircraft model attached - adds performance properties.
+
+    This class wraps a TrajectoryData and adds aircraft-specific computed
+    properties like drag, thrust, and fuel_flow.
+
+    All TrajectoryData properties are accessible via delegation.
+
+    Args:
+        envelope_mode: How to handle flight envelope violations:
+            - IGNORE (default): Compute violations but take no action
+            - WARN: Log warnings when violations are detected
+            - RAISE: Raise EnvelopeViolationError when violations exist
+    """
+
+    def __init__(
+        self,
+        trajectory: TrajectoryData,
+        model: AircraftModel,
+        envelope_mode: EnvelopeMode = EnvelopeMode.IGNORE,
+    ):
+        """Initialize with trajectory and aircraft model.
+
+        Args:
+            trajectory: TrajectoryData instance.
+            model: Aircraft performance model.
+            envelope_mode: How to handle envelope violations (default: IGNORE).
+        """
+        self._traj = trajectory
+        self._model = model
+        self._envelope_mode = envelope_mode
+
+    def __getitem__(self, key: str) -> ArrayScalarLike:
+        """Get column or computed property from trajectory or aircraft.
+
+        Lookup order:
+        1. Input data (trajectory._data)
+        2. TrajectoryData computed properties (air_temperature, mach_number, etc.)
+        3. AircraftTrajectoryData computed properties (drag_coef, thrust, etc.)
+        """
+        # Check input data first
+        if key in self._traj._data:
+            return self._traj._data[key]
+
+        # Check TrajectoryData computed properties
+        if key in self._traj:
+            return self._traj[key]
+
+        # Check our cached_property
+        attr = getattr(type(self), key, None)
+        if isinstance(attr, cached_property):
+            return getattr(self, key)
+
+        raise KeyError(f"Key '{key}' not found in data or computed properties")
+
+    def __contains__(self, key: str) -> bool:
+        """Check if key is available in input data or TrajectoryData.
+
+        NOTE: This does NOT include AircraftTrajectoryData computed properties
+        (drag_coef, thrust, etc.) to allow models to distinguish "user provided
+        this value" from "system will compute this value on access".
+        """
+        # Only report keys that are in the input data or TrajectoryData
+        # Do NOT include our computed properties - those are outputs, not inputs
+        return key in self._traj
+
+    def __len__(self) -> int:
+        """Return number of data points in the trajectory."""
+        return len(self._traj)
+
+    def __repr__(self) -> str:
+        """Return string representation."""
+        n = len(self)
+        model_name = self._model.model
+        model_type = type(self._model).__name__
+        return f"AircraftTrajectoryData(n={n}, model={model_name!r}, type={model_type})"
+
+    def __iter__(self):
+        """Iterate over input data keys."""
+        return iter(self._traj)
+
+    def keys(self):
+        """Return input data column keys."""
+        return self._traj.keys()
+
+    def get(
+        self, key: str, default: ArrayScalarLike | None = None
+    ) -> ArrayScalarLike | None:
+        """Get a value by key with optional default.
+
+        Args:
+            key: Key to retrieve.
+            default: Default value if key not found.
+
+        Returns:
+            Value for key or default.
+        """
+        try:
+            return self[key]
+        except KeyError:
+            return default
+
+    @property
+    def data(self) -> dict:
+        """Raw input data dictionary from trajectory."""
+        return self._traj.data
+
+    @property
+    def attrs(self) -> Mapping[str, Any]:
+        """Metadata dictionary from trajectory."""
+        return self._traj.attrs
+
+    @property
+    def trajectory(self) -> TrajectoryData:
+        """Access the underlying TrajectoryData."""
+        return self._traj
+
+    @property
+    def model(self) -> AircraftModel:
+        """Access the aircraft model."""
+        return self._model
+
+    # ---- Delegated properties from TrajectoryData ----
+
+    @property
+    def air_temperature(self) -> ArrayScalarLike:
+        """Air temperature [K] from trajectory."""
+        return self._traj.air_temperature
+
+    @property
+    def air_pressure(self) -> ArrayScalarLike:
+        """Air pressure [Pa] from trajectory."""
+        return self._traj.air_pressure
+
+    @property
+    def air_density(self) -> ArrayScalarLike:
+        """Air density [kg/m³] from trajectory."""
+        return self._traj.air_density
+
+    @property
+    def mach_number(self) -> ArrayScalarLike:
+        """Mach number [-] from trajectory."""
+        return self._traj.mach_number
+
+    @property
+    def calibrated_airspeed(self) -> ArrayScalarLike:
+        """Calibrated airspeed [m/s] from trajectory."""
+        return self._traj.calibrated_airspeed
+
+    @property
+    def vertical_speed_geometric(self) -> ArrayScalarLike:
+        """Geometric vertical speed [m/s] from trajectory."""
+        return self._traj.vertical_speed_geometric
+
+    @property
+    def f(self) -> ArrayScalarLike:
+        """Energy share factor [-] from trajectory."""
+        return self._traj.f
+
+    @property
+    def acceleration(self) -> ArrayScalarLike:
+        """Longitudinal acceleration [m/s²] from trajectory."""
+        return self._traj.acceleration
+
+    # ---- Aircraft performance properties ----
+
+    @cached_property
+    def aircraft_mass(self) -> ArrayScalarLike:
+        """Aircraft mass [kg]."""
+        return self._traj["aircraft_mass"]
+
+    @cached_property
+    def delta_isa(self) -> ArrayScalarLike:
+        """Temperature deviation from ISA [K]."""
+        return self._traj.delta_isa
+
+    # ---- Flight phase and configuration ----
+
+    @cached_property
+    def flight_phase(self) -> ArrayScalarLike:
+        """Flight phase (CLIMB, CRUISE, DESCENT) from vertical speed.
+
+        Derived from vertical_speed using standard thresholds:
+        - vs > 0.5 m/s → CLIMB
+        - vs < -0.5 m/s → DESCENT
+        - otherwise → CRUISE
+        """
+        from openleaf.performance.models.common.config import determine_flight_phase
+
+        return determine_flight_phase(self._traj["vertical_speed"])
+
+    @cached_property
+    def aerodynamic_configuration(self) -> ArrayScalarLike:
+        """Aerodynamic configuration (TO, IC, CR, AP, LD) from model.
+
+        Configuration depends on flight phase, altitude, and speed.
+        Returns None for models without configuration (e.g., PS cruise-only).
+        """
+        return self._model.aerodynamic_configuration(self)
+
+    @cached_property
+    def high_lift(self) -> ArrayScalarLike:
+        """High-lift device state (hlid) from model.
+
+        Model-specific return type:
+        - BADA4: HLid string ("0", "1", etc.)
+        - OpenAP: Flap angle in degrees
+        - BADA3/PS: None
+        """
+        return self._model.high_lift(self)
+
+    @cached_property
+    def landing_gear(self) -> ArrayScalarLike:
+        """Landing gear state from model.
+
+        Returns True if gear extended, False if retracted.
+        May return None for models that don't track gear state.
+        """
+        return self._model.landing_gear(self)
+
+    @cached_property
+    def engine_setting(self) -> ArrayScalarLike:
+        """Engine setting derived from flight phase.
+
+        Maps flight phase to engine setting:
+        - CLIMB → MCMB (Maximum Continuous Climb)
+        - CRUISE → MCRZ (Maximum Continuous Cruise)
+        - DESCENT → LIDL (Idle)
+        """
+        from openleaf.performance.core.perfos import EngineSetting
+        from openleaf.performance.core.perfos import FlightPhase
+
+        return np.where(
+            np.equal(self.flight_phase, FlightPhase.CLIMB),
+            EngineSetting.MCMB,
+            np.where(
+                np.equal(self.flight_phase, FlightPhase.DESCENT),
+                EngineSetting.LIDL,
+                EngineSetting.MCRZ,  # CRUISE default
+            ),
+        )
+
+    # ---- Aerodynamic coefficients ----
+
+    @cached_property
+    def lift_coef(self) -> ArrayScalarLike:
+        """Lift coefficient [-]."""
+        return self._model.lift_coef(self)
+
+    @cached_property
+    def drag_coef(self) -> ArrayScalarLike:
+        """Drag coefficient [-].
+
+        Requires aerodynamic_configuration for BADA3/BADA4/OpenAP.
+        PS model uses cruise-only clean configuration.
+        """
+        return self._model.drag_coef(self)
+
+    @cached_property
+    def drag(self) -> ArrayScalarLike:
+        """Aerodynamic drag [N]."""
+        return self._model.drag(self)
+
+    # ---- Thrust from TEM ----
+
+    @cached_property
+    def thrust(self) -> ArrayScalarLike:
+        """Required thrust [N] from Total Energy Model.
+
+        Uses the TEM equation to compute thrust given:
+        - drag (from aerodynamic model)
+        - vertical_speed (pressure altitude rate)
+        - energy share factor f
+
+        Formula (BADA Manual 3.1-4):
+            T = D + (m · g · dh_geo/dt) / (V · f)
+
+        where dh_geo/dt is derived from pressure altitude rate using
+        temperature correction.
+        """
+        return tem.thrust_from_rocd(
+            rocd=self._traj["vertical_speed"],
+            drag=self.drag,
+            mass=self.aircraft_mass,
+            true_airspeed=self._traj["true_airspeed"],
+            f=self.f,
+            air_temperature=self.air_temperature,
+            altitude=self._traj["altitude"],
+        )
+
+    @cached_property
+    def thrust_max(self) -> ArrayScalarLike:
+        """Maximum available thrust [N]."""
+        return self._model.thrust_max(self)
+
+    @cached_property
+    def thrust_min(self) -> ArrayScalarLike:
+        """Minimum available thrust (idle) [N]."""
+        return self._model.thrust_min(self)
+
+    @cached_property
+    def fuel_flow(self) -> ArrayScalarLike:
+        """Fuel flow rate [kg/s]."""
+        return self._model.fuel_flow(self)
+
+    @cached_property
+    def fuel_flow_min(self) -> ArrayScalarLike:
+        """Minimum fuel flow rate (idle) [kg/s]."""
+        return self._model.fuel_flow_min(self)
+
+    # ---- Flight envelope limits ----
+
+    @cached_property
+    def max_cas(self) -> ArrayScalarLike:
+        """Maximum calibrated airspeed [kt].
+
+        Configuration-dependent:
+        - BADA4: Depends on hl_position and lg_extended (VMO, VFE, VLE)
+        - BADA3: Returns VMO from OPF data
+        - PS: Returns VMO from aircraft data
+        """
+        return self._model.max_cas(self)
+
+    @cached_property
+    def min_cas(self) -> ArrayScalarLike:
+        """Minimum calibrated airspeed (stall speed) [kt].
+
+        Configuration and mass dependent:
+        - BADA4: Uses CL_max model with mass/mach/config
+        - BADA3: Uses reference stall speeds scaled by sqrt(m/mref)
+        - PS: Not typically available (cruise-only model)
+        """
+        return self._model.min_cas(self)
+
+    @cached_property
+    def max_mach(self) -> ArrayScalarLike:
+        """Maximum Mach number [-].
+
+        Configuration-dependent:
+        - BADA4: Depends on lg_extended (MMO, MLE)
+        - BADA3: Returns MMO from OPF data
+        - PS: May include altitude-dependent impact pressure limits
+        """
+        return self._model.max_mach(self)
+
+    @cached_property
+    def max_altitude(self) -> ArrayScalarLike:
+        """Maximum operating altitude [ft].
+
+        Configuration and conditions dependent:
+        - BADA4: Depends on hl_position (HMO, MFA)
+        - BADA3: Mass and temperature dependent ceiling
+        - PS: Returns HMO from aircraft data
+        """
+        return self._model.max_altitude(self)
+
+    # ---- Envelope mode and violation detection ----
+
+    @property
+    def envelope_mode(self) -> EnvelopeMode:
+        """Current envelope violation handling mode."""
+        return self._envelope_mode
+
+    @cached_property
+    def envelope_violations(self) -> dict[str, ArrayScalarLike]:
+        """Detect flight envelope violations (pure computation, no side effects).
+
+        Compares current flight state against aircraft limits.
+        Returns boolean arrays (True = violation) for each constraint.
+
+        For mode-based handling (WARN/RAISE), use check_envelope() instead.
+
+        Returns:
+            Dictionary with violation flags:
+            - overspeed_cas: CAS exceeds max_cas (VMO/VFE/VLE)
+            - overspeed_mach: Mach exceeds max_mach (MMO/MLE)
+            - underspeed: CAS below min_cas (stall warning)
+            - ceiling: Altitude exceeds max_altitude
+            - mass_overweight: Mass exceeds MTOM
+            - mass_underweight: Mass below OEM
+
+        Example:
+            >>> violations = traj.envelope_violations
+            >>> if np.any(violations["overspeed_mach"]):
+            ...     print("Mach overspeed detected!")
+        """
+        from openleaf.performance.physics.units import M_TO_FT
+        from openleaf.performance.physics.units import MS_TO_KT
+
+        # Convert trajectory values to same units as limits
+        cas_kt = self.calibrated_airspeed * MS_TO_KT  # m/s → kt
+        altitude_ft = self._traj["altitude"] * M_TO_FT  # m → ft
+        mass = self.aircraft_mass
+
+        # Get mass limits from model
+        oem = self._model.oem
+        mtom = self._model.mtom
+
+        return {
+            "overspeed_cas": cas_kt > self.max_cas,
+            "overspeed_mach": self.mach_number > self.max_mach,
+            "underspeed": cas_kt < self.min_cas,
+            "ceiling": altitude_ft > self.max_altitude,
+            "mass_overweight": mass > mtom,
+            "mass_underweight": mass < oem,
+        }
+
+    def check_envelope(self) -> dict[str, ArrayScalarLike]:
+        """Check envelope violations and handle according to envelope_mode.
+
+        Computes violations (or uses cached result) and then:
+            - IGNORE: Just return violations dict (default)
+            - WARN: Log warnings for each violation type detected
+            - RAISE: Raise EnvelopeViolationError if any violations exist
+
+        Returns:
+            Dictionary with violation flags (same as envelope_violations).
+
+        Raises:
+            EnvelopeViolationError: If envelope_mode is RAISE and violations exist.
+        """
+        violations = self.envelope_violations
+        self._handle_envelope_violations(violations)
+        return violations
+
+    def _handle_envelope_violations(
+        self, violations: dict[str, ArrayScalarLike]
+    ) -> None:
+        """Handle violations based on envelope_mode setting.
+
+        Args:
+            violations: Dictionary of violation flags.
+
+        Raises:
+            EnvelopeViolationError: If mode is RAISE and violations exist.
+        """
+        if self._envelope_mode == EnvelopeMode.IGNORE:
+            return
+
+        # Find which violation types have any True values
+        active_violations = {
+            name: int(np.sum(mask)) for name, mask in violations.items() if np.any(mask)
+        }
+
+        if not active_violations:
+            return
+
+        total_points = len(self)
+        message = "Flight envelope violations detected"
+
+        if self._envelope_mode == EnvelopeMode.WARN:
+            logger.warning(
+                message,
+                violations=active_violations,
+                total_points=total_points,
+                aircraft=self._model.model,
+            )
+        elif self._envelope_mode == EnvelopeMode.RAISE:
+            raise EnvelopeViolationError(f"{message}: {active_violations}", violations)
+
+
+def _create_model(model_type: str, icao: str) -> AircraftModel:
+    """Factory function to create aircraft models.
+
+    Args:
+        model_type: Model type string ("BADA3", "BADA4", "OpenAP", "PS").
+        icao: ICAO aircraft type code.
+
+    Returns:
+        Instantiated aircraft model.
+
+    Raises:
+        ValueError: If model_type is unknown.
+    """
+    from openleaf.performance.core.factory import ModelFactory
+    from openleaf.performance.core.factory import ModelType
+
+    # Normalize model type string
+    type_map = {
+        "BADA3": ModelType.BADA3,
+        "BADA4": ModelType.BADA4,
+        "OPENAP": ModelType.OPENAP,
+        "PS": ModelType.PS,
+    }
+
+    key = model_type.upper()
+    if key not in type_map:
+        valid = list(type_map.keys())
+        raise ValueError(f"Unknown model type: {model_type}. Valid types: {valid}")
+
+    return ModelFactory.load(icao, model_type=type_map[key])

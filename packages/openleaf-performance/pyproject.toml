@@ -1,0 +1,408 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "openleaf-performance"
+dynamic = ["version"]
+description = "A modular, differentiable aircraft performance modeling framework supporting BADA, Poll-Schumann, OpenAP and more"
+readme = "README.md"
+license = { text = "EUPL-1.2" }
+requires-python = ">=3.12"
+authors = [
+    { name = "Ramon Dalmau" },
+]
+keywords = [
+    "aircraft",
+    "performance",
+    "aviation",
+    "trajectory",
+    "optimization",
+    "BADA",
+    "CasADi",
+    "differentiable",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: European Union Public Licence 1.2 (EUPL 1.2)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Typing :: Typed",
+]
+dependencies = [
+    "openleaf-core",
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "scipy>=1.10.0",
+    "pydantic>=2.0.0",
+    "structlog>=24.4.0",
+    "pydantic-settings>=2.7.0",
+    "rich>=13.9.0",
+    "pycontrails>=0.60.2,<0.60.5",
+    "openap>=2.4,<2.5",
+    "array-api-compat>=1.4.0",  # Array API standard for multi-backend support
+    "jax>=0.9.1",
+]
+
+[project.optional-dependencies]
+# Computational backends (optional)
+casadi = [
+    "casadi>=3.6.0",
+]
+torch = [
+    "torch>=2.0.0",
+]
+# JAX GPU extras — user picks based on their CUDA version
+cuda11 = [
+    "jax[cuda11_pip]>=0.9.1",
+]
+cuda12 = [
+    "jax[cuda12]>=0.9.1",
+]
+# Backend aliases
+optimization = ["openleaf-performance[casadi]"]  # Trajectory optimization requires CasADi
+gpu = ["openleaf-performance[torch]"]            # GPU acceleration via PyTorch
+# Optional aircraft performance data sources
+openap = [
+    "openap>=2.4,<2.5",
+]
+ps = [
+    "pycontrails>=0.60.2,<0.60.5",
+]
+# Testing dependencies
+test = [
+    "pytest>=8.0.0",
+    "pytest-cov>=6.0.0",
+    "pytest-asyncio>=0.24.0",
+    "hypothesis>=6.100.0",
+    "xarray>=2023.0.0",
+]
+# Development dependencies
+dev = [
+    "ruff>=0.9.0",
+    "mypy>=1.13.0",
+    "pandas-stubs>=2.0.0",
+    "pip-audit>=2.7.0",
+    "openap>=2.4,<2.5",
+    "pycontrails>=0.60.2,<0.60.5",
+    "casadi>=3.6.0",
+    "cyclopts>=3.0.0",
+]
+# Documentation dependencies
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.24.0",
+    "mkdocs-gen-files>=0.5.0",
+    "mkdocs-literate-nav>=0.6.0",
+    "mkdocs-section-index>=0.3.0",
+]
+# All optional dependencies
+all = [
+    "aetherx[casadi,torch,openap,ps,test,dev,docs]",
+]
+
+[project.urls]
+Homepage = "https://github.com/ramondalmau/openleaf"
+Documentation = "https://ramondalmau.github.io/openleaf/"
+Repository = "https://github.com/ramondalmau/openleaf.git"
+Issues = "https://github.com/ramondalmau/openleaf/issues"
+Changelog = "https://github.com/ramondalmau/openleaf/blob/main/CHANGELOG.md"
+
+# ============================================
+# DEPENDENCY GROUPS (PEP 735 - for uv sync)
+# ============================================
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=6.0.0",
+    "pytest-asyncio>=0.24.0",
+    "hypothesis>=6.100.0",
+    "ruff>=0.9.0",
+    "mypy>=1.13.0",
+    "pandas-stubs>=2.0.0",
+    "pip-audit>=2.7.0",
+    "casadi>=3.6.0",
+    "torch>=2.0.0",
+    "cyclopts>=3.0.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.24.0",
+    "mkdocs-gen-files>=0.5.0",
+    "mkdocs-literate-nav>=0.6.0",
+    "mkdocs-section-index>=0.3.0",
+]
+
+# ============================================
+# UV - Workspace source for openleaf-core
+# ============================================
+[tool.uv.sources]
+openleaf-core = { workspace = true }
+
+# ============================================
+# HATCH - Build & Versioning
+# ============================================
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "0.0.0"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/openleaf/performance/_version.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/openleaf"]
+
+# ============================================
+# RUFF - Linting & Formatting
+# ============================================
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+src = ["src", "tests"]
+exclude = ["*/_version.py", "examples", "scripts"]
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+    "SIM",    # flake8-simplify
+    "TC",     # flake8-type-checking
+    "PTH",    # flake8-use-pathlib
+    "RUF",    # Ruff-specific rules
+    "PERF",   # perflint
+    "T20",    # flake8-print (no print statements)
+]
+ignore = [
+    "E501",     # line too long (handled by formatter)
+    "B008",     # do not perform function calls in argument defaults
+    "B905",     # zip without explicit strict parameter
+    "SIM108",   # use ternary operator instead of if-else
+    "TC001",    # move application import into TYPE_CHECKING
+    "TC002",    # move third-party import into TYPE_CHECKING
+    "RUF022",   # __all__ not sorted (prefer categorical organization)
+    "UP046",    # Generic[T] syntax works better with mypy for duck-typed generics
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "F403"]
+"tests/**/*.py" = [
+    "S101",     # assert allowed in tests
+    "ARG",      # unused arguments (fixtures)
+    "PLR2004",  # magic values in tests OK
+    "T20",      # print allowed in tests
+    "B011",     # assert False allowed in tests
+    "E402",     # late imports allowed in tests
+]
+"examples/**/*.py" = [
+    "T20",      # print allowed in CLI examples
+    "C408",     # dict() calls OK in examples (matplotlib style)
+    "PTH123",   # open() OK in examples
+]
+"experiments/**/*.py" = [
+    "T20",      # print allowed in CLI scripts
+    "C408",     # dict() calls OK (matplotlib style)
+    "PTH123",   # open() OK in scripts
+    "RUF059",   # unused variables OK (fig, ax patterns)
+]
+"src/openleaf/performance/_version.py" = ["UP007"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["openleaf"]
+force-single-line = true
+lines-after-imports = 2
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = true
+
+# ============================================
+# MYPY - Type Checking
+# ============================================
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
+check_untyped_defs = false
+ignore_missing_imports = true
+show_error_codes = true
+show_column_numbers = true
+pretty = true
+strict_optional = false
+warn_redundant_casts = true
+warn_unused_ignores = false
+no_implicit_optional = false
+
+[[tool.mypy.overrides]]
+module = [
+    "openap.*",
+    "pycontrails.*",
+    "casadi.*",
+    "pandas.*",
+    "scipy.*",
+    "xarray.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "openleaf.performance.numpy.*",
+]
+# CasADi dispatch layer has complex type unions - targeted ignores
+disable_error_code = ["arg-type", "return-value", "assignment", "union-attr"]
+
+[[tool.mypy.overrides]]
+module = [
+    "openleaf.performance.physics.*",
+    "openleaf.performance.models.*",
+]
+# Physics and models modules: allow flexible return types for CasADi compat
+# call-overload: np.equal/np.where with enum types
+# operator: bitwise ops with ArrayScalarLike unions
+# attr-defined: duck-typed generics access attributes via TypeVar
+# assignment: flexible type assignments in parsing/initialization
+warn_return_any = false
+disable_error_code = ["arg-type", "return-value", "call-overload", "operator", "attr-defined", "assignment", "override"]
+
+[[tool.mypy.overrides]]
+module = [
+    "openleaf.performance.core.*",
+]
+# Core modules: disable return-value for ArrayScalarLike and attr-defined for duck-typed generics
+warn_return_any = false
+disable_error_code = ["return-value", "attr-defined", "call-overload", "override"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_untyped_decorators = false
+
+# ============================================
+# PYTEST - Testing
+# ============================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--strict-config",
+    "-ra",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning:hypothesis.*:",
+    # PyTorch has not updated Tensor.__array_wrap__() for NumPy 2.0 yet.
+    # Triggered when numpy scalars from np.where(enum_condition, ...) are
+    # multiplied with torch tensors. Resolves with a future PyTorch release.
+    "ignore:__array_wrap__ must accept context:DeprecationWarning",
+]
+
+# ============================================
+# COVERAGE
+# ============================================
+[tool.coverage.run]
+source = ["src"]
+branch = true
+parallel = true
+omit = [
+    "*/_version.py",
+    "*/tests/*",
+    "*/__init__.py",
+    # CasADi-specific code paths tested separately
+    "*/numpy/interpolate.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "@abstractmethod",
+    "@overload",
+    "def __repr__",
+    "raise AssertionError",
+]
+fail_under = 65
+show_missing = true
+
+[tool.coverage.paths]
+source = [
+    "src/",
+    "*/site-packages/",
+]
+
+# ============================================
+# GIT-CLIFF - Changelog Generation
+# ============================================
+[tool.git-cliff.changelog]
+header = """
+# Changelog\n
+All notable changes to this project will be documented in this file.\n
+"""
+body = """
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group | striptags | trim | upper_first }}
+    {% for commit in commits %}
+        - {% if commit.scope %}*({{ commit.scope }})* {% endif %}\
+            {{ commit.message | upper_first }}\
+    {% endfor %}
+{% endfor %}\n
+"""
+trim = true
+
+[tool.git-cliff.git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+commit_parsers = [
+    { message = "^feat", group = "Added" },
+    { message = "^fix", group = "Fixed" },
+    { message = "^doc", group = "Documentation" },
+    { message = "^perf", group = "Performance" },
+    { message = "^refactor", group = "Changed" },
+    { message = "^style", group = "Styling" },
+    { message = "^test", group = "Testing" },
+    { message = "^ci", group = "CI/CD" },
+    { message = "^chore\\(release\\)", skip = true },
+    { message = "^chore", group = "Miscellaneous" },
+]
+protect_breaking_commits = false
+filter_commits = false
+tag_pattern = "v[0-9].*"
+topo_order = false
+sort_commits = "oldest"
