@@ -8,9 +8,9 @@ from unittest.mock import patch
 import pytest
 
 from openleaf.performance import config
-from openleaf.performance.config import OpenLeafSettings
 from openleaf.performance.config import Bada3Settings
 from openleaf.performance.config import Bada4Settings
+from openleaf.performance.config import OpenLeafSettings
 from openleaf.performance.exceptions import ConfigurationError
 
 

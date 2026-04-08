@@ -19,8 +19,9 @@ except Exception:
     pytest.skip("BADA4 data not configured", allow_module_level=True)
 
 import casadi as ca
-
 import numpy as np
+from ptd_parser import parse_ptd_file
+
 from openleaf.performance.core.perfos import EngineSetting
 from openleaf.performance.core.perfos import EngineType
 from openleaf.performance.core.types import LandingGearPosition
@@ -35,7 +36,6 @@ from openleaf.performance.models.bada_types import AerodynamicConfig
 from openleaf.performance.physics import isa
 from openleaf.performance.physics.units import FT
 from openleaf.performance.physics.units import KT
-from ptd_parser import parse_ptd_file
 
 
 class TestBADA4Parsing:

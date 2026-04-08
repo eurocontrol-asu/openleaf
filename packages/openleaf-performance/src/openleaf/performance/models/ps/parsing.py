@@ -41,9 +41,7 @@ def load_from_pycontrails(aircraft_type: str) -> PSData:
         AttributeError: If required parameter is missing from pycontrails.
     """
     try:
-        from pycontrails.models.ps_model.ps_aircraft_params import (
-            load_aircraft_engine_params,
-        )
+        from pycontrails.models.ps_model.ps_aircraft_params import load_aircraft_engine_params
         from pycontrails.models.ps_model.ps_model import get_aircraft_synonym_dict_ps
     except ImportError as e:
         raise ImportError(

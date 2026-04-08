@@ -667,7 +667,7 @@ def parse_bada4_file(xml_path: str) -> BADA4Data:
     Raises:
         ValueError: If engine type is not recognized.
     """
-    tree = ET.parse(xml_path)
+    tree = ET.parse(xml_path)  # noqa: S314 — trusted local BADA4 data files
     root = tree.getroot()
 
     # Parse aircraft data

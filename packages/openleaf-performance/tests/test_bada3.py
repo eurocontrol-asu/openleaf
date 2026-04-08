@@ -19,8 +19,9 @@ except Exception:
 from pathlib import Path
 
 import casadi as ca
-
 import numpy as np
+from ptd_parser import parse_ptd_file
+
 from openleaf.performance.core.perfos import EngineSetting
 from openleaf.performance.core.perfos import EngineType
 from openleaf.performance.models.bada3 import BADA3AeroModel
@@ -34,7 +35,6 @@ from openleaf.performance.models.bada_types import AerodynamicConfig
 from openleaf.performance.physics import isa
 from openleaf.performance.physics.units import FT
 from openleaf.performance.physics.units import KT
-from ptd_parser import parse_ptd_file
 
 
 class TestBADA3Parsing:

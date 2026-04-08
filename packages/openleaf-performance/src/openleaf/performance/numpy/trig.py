@@ -22,10 +22,11 @@ __all__ = [
 
 from typing import TYPE_CHECKING
 
+from numpy import pi as _pi
+
 from openleaf.performance.numpy.backends import Backend
 from openleaf.performance.numpy.backends import get_array_namespace
 from openleaf.performance.numpy.backends import is_casadi_type
-from numpy import pi as _pi
 
 
 if TYPE_CHECKING:

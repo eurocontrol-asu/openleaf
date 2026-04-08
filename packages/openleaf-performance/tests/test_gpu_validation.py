@@ -7,9 +7,8 @@ present, so they are safe to run in any environment.
 
 from __future__ import annotations
 
-import pytest
-
 import numpy as np
+import pytest
 
 
 torch = pytest.importorskip("torch", reason="PyTorch not installed")

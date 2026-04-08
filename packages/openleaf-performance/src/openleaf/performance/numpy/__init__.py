@@ -37,6 +37,68 @@ The following functions are NumPy-only (will NOT work with CasADi):
 from __future__ import annotations
 
 # =============================================================================
+# NumPy re-exports (functions that don't need CasADi overrides)
+# These either work with CasADi naturally or are array-creation only
+# =============================================================================
+from numpy import allclose
+from numpy import arange
+from numpy import argmax  # NumPy-only
+from numpy import argmin  # NumPy-only
+from numpy import argsort  # NumPy-only
+from numpy import asarray
+from numpy import atleast_1d
+from numpy import atleast_2d
+from numpy import bool_
+from numpy import broadcast_to
+from numpy import cross
+from numpy import cumprod  # NumPy-only
+from numpy import cumsum  # NumPy-only
+from numpy import diff  # NumPy-only
+from numpy import dot
+from numpy import e
+from numpy import empty
+from numpy import expand_dims
+from numpy import eye
+from numpy import flip
+from numpy import fliplr
+from numpy import flipud
+from numpy import float32
+from numpy import float64
+from numpy import full
+from numpy import gradient  # NumPy-only
+from numpy import identity
+from numpy import inf
+from numpy import int32
+from numpy import int64
+from numpy import isclose
+from numpy import isfinite
+from numpy import isinf
+from numpy import isnan
+from numpy import isscalar
+from numpy import linspace
+from numpy import logspace
+from numpy import meshgrid
+from numpy import nan
+from numpy import ndarray
+from numpy import newaxis
+from numpy import ones
+from numpy import outer
+from numpy import pi
+from numpy import pow
+from numpy import rot90
+from numpy import round
+from numpy import searchsorted  # NumPy-only
+from numpy import sort  # NumPy-only
+from numpy import squeeze
+from numpy import std  # NumPy-only
+from numpy import swapaxes
+from numpy import testing
+from numpy import transpose
+from numpy import unique  # NumPy-only
+from numpy import var  # NumPy-only
+from numpy import zeros
+
+# =============================================================================
 # CasADi-compatible function overrides
 # These work with both NumPy arrays and CasADi symbolic types
 # =============================================================================
@@ -135,68 +197,6 @@ from openleaf.performance.numpy.trig import degrees
 from openleaf.performance.numpy.trig import radians
 from openleaf.performance.numpy.trig import sind
 from openleaf.performance.numpy.trig import tand
-
-# =============================================================================
-# NumPy re-exports (functions that don't need CasADi overrides)
-# These either work with CasADi naturally or are array-creation only
-# =============================================================================
-from numpy import allclose
-from numpy import arange
-from numpy import argmax  # NumPy-only
-from numpy import argmin  # NumPy-only
-from numpy import argsort  # NumPy-only
-from numpy import asarray
-from numpy import atleast_1d
-from numpy import atleast_2d
-from numpy import bool_
-from numpy import broadcast_to
-from numpy import cross
-from numpy import cumprod  # NumPy-only
-from numpy import cumsum  # NumPy-only
-from numpy import diff  # NumPy-only
-from numpy import dot
-from numpy import e
-from numpy import empty
-from numpy import expand_dims
-from numpy import eye
-from numpy import flip
-from numpy import fliplr
-from numpy import flipud
-from numpy import float32
-from numpy import float64
-from numpy import full
-from numpy import gradient  # NumPy-only
-from numpy import identity
-from numpy import inf
-from numpy import int32
-from numpy import int64
-from numpy import isclose
-from numpy import isfinite
-from numpy import isinf
-from numpy import isnan
-from numpy import isscalar
-from numpy import linspace
-from numpy import logspace
-from numpy import meshgrid
-from numpy import nan
-from numpy import ndarray
-from numpy import newaxis
-from numpy import ones
-from numpy import outer
-from numpy import pi
-from numpy import pow
-from numpy import rot90
-from numpy import round
-from numpy import searchsorted  # NumPy-only
-from numpy import sort  # NumPy-only
-from numpy import squeeze
-from numpy import std  # NumPy-only
-from numpy import swapaxes
-from numpy import testing
-from numpy import transpose
-from numpy import unique  # NumPy-only
-from numpy import var  # NumPy-only
-from numpy import zeros
 
 
 # =============================================================================

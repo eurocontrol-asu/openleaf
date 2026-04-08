@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import numpy as np
 import pytest
 
-import numpy as np
 from openleaf.performance.exceptions import MissingFieldError
 from openleaf.performance.exceptions import ValueRangeError
 from openleaf.performance.utils.validation import get_optional

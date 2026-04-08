@@ -46,9 +46,6 @@ from openleaf.performance.config import set_bada3_synonyms
 from openleaf.performance.config import set_bada4_path
 from openleaf.performance.config import set_bada4_synonyms
 from openleaf.performance.config import show_config
-
-# Exception hierarchy - available at top level for easy catching
-from openleaf.performance.exceptions import OpenLeafError
 from openleaf.performance.exceptions import BADA3ParseError
 from openleaf.performance.exceptions import BADA4ParseError
 from openleaf.performance.exceptions import ConfigurationError
@@ -57,6 +54,9 @@ from openleaf.performance.exceptions import MissingFieldError
 from openleaf.performance.exceptions import ModelDataError
 from openleaf.performance.exceptions import ModelError
 from openleaf.performance.exceptions import ModelNotFoundError
+
+# Exception hierarchy - available at top level for easy catching
+from openleaf.performance.exceptions import OpenLeafError
 from openleaf.performance.exceptions import ParsingError
 from openleaf.performance.exceptions import ValidationError
 from openleaf.performance.exceptions import ValueRangeError

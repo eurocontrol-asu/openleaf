@@ -2,9 +2,9 @@
 Tests for TrajectoryData, AircraftTrajectoryData, and validation.
 """
 
+import numpy as np
 import pytest
 
-import numpy as np
 from openleaf.performance.core.trajectory import TrajectoryData
 from openleaf.performance.core.validation import StateSchema
 from openleaf.performance.core.validation import get_required_fields

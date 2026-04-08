@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import numpy as np
 import pytest
 
-import numpy as np
 from openleaf.performance.numpy.backends import Backend
 from openleaf.performance.numpy.backends import get_backend
 from openleaf.performance.numpy.backends import is_casadi_type
