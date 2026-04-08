@@ -21,6 +21,7 @@ Usage:
 from __future__ import annotations
 
 import importlib.util
+from collections.abc import Callable
 from enum import Enum
 from enum import auto
 from typing import Any
@@ -50,6 +51,11 @@ class Backend(Enum):
     def available(self) -> bool:
         """Check if this backend is installed."""
         return _check_available(self)
+
+    @available.setter
+    def available(self, value: bool) -> None:
+        """Override availability (useful for testing)."""
+        _BACKEND_AVAILABLE[self] = value
 
     @property
     def module(self) -> Any:
@@ -190,6 +196,34 @@ def require_backend(backend: Backend, feature: str = "This feature") -> None:
         )
 
 
+_SCALAR_TYPES: frozenset[type] = frozenset(
+    {float, int, complex, bool, str, range, type(None), bytes, bytearray, memoryview}
+)
+
+
+def _check_container(obj: Any, checker: Callable[..., bool], *, np: Any) -> bool:
+    """Check if a container holds elements satisfying *checker*.
+
+    Handles object-dtype numpy arrays (including 0-d), list, tuple, set, and
+    dict.  Returns ``False`` for non-container types so the caller can fall
+    through.
+    """
+    t = type(obj)
+
+    if t == np.ndarray and obj.dtype == "O":
+        if obj.ndim == 0:
+            return checker(obj.item(), recursive=True)
+        return any(checker(element, recursive=True) for element in obj)
+
+    if isinstance(obj, (list, tuple, set)):
+        return any(checker(element, recursive=True) for element in obj)
+
+    if isinstance(obj, dict):
+        return any(checker(v, recursive=True) for v in obj.values())
+
+    return False
+
+
 def is_casadi_type(obj: Any, recursive: bool = True) -> bool:
     """Check if an object is or contains a CasADi data type.
 
@@ -218,18 +252,7 @@ def is_casadi_type(obj: Any, recursive: bool = True) -> bool:
         return False
 
     # Skip Python scalar types
-    if t in (
-        float,
-        int,
-        complex,
-        bool,
-        str,
-        range,
-        type(None),
-        bytes,
-        bytearray,
-        memoryview,
-    ):
+    if t in _SCALAR_TYPES:
         return False
 
     # Direct CasADi type check
@@ -238,18 +261,7 @@ def is_casadi_type(obj: Any, recursive: bool = True) -> bool:
 
     # Recursive check for containers
     if recursive:
-        # Object-dtype numpy arrays
-        if t == np.ndarray and obj.dtype == "O":
-            if obj.ndim == 0:
-                return is_casadi_type(obj.item(), recursive=True)
-            return any(is_casadi_type(element, recursive=True) for element in obj)
-
-        # Standard containers
-        if isinstance(obj, (list, tuple, set)):
-            return any(is_casadi_type(element, recursive=True) for element in obj)
-
-        if isinstance(obj, dict):
-            return any(is_casadi_type(v, recursive=True) for v in obj.values())
+        return _check_container(obj, is_casadi_type, np=np)
 
     return False
 
@@ -278,18 +290,7 @@ def is_torch_type(obj: Any, recursive: bool = True) -> bool:
         return False
 
     # Skip Python scalar types
-    if t in (
-        float,
-        int,
-        complex,
-        bool,
-        str,
-        range,
-        type(None),
-        bytes,
-        bytearray,
-        memoryview,
-    ):
+    if t in _SCALAR_TYPES:
         return False
 
     # Direct PyTorch tensor check
@@ -298,10 +299,6 @@ def is_torch_type(obj: Any, recursive: bool = True) -> bool:
 
     # Recursive check for containers
     if recursive:
-        if isinstance(obj, (list, tuple, set)):
-            return any(is_torch_type(element, recursive=True) for element in obj)
-
-        if isinstance(obj, dict):
-            return any(is_torch_type(v, recursive=True) for v in obj.values())
+        return _check_container(obj, is_torch_type, np=np)
 
     return False
