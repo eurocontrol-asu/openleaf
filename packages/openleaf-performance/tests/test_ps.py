@@ -5,9 +5,9 @@ and CasADi symbolic compatibility.
 """
 
 import casadi as ca
+import numpy as np
 import pytest
 
-import numpy as np
 from openleaf.performance.core.perfos import EngineType
 from openleaf.performance.models.ps import PSModel
 from openleaf.performance.physics import isa
@@ -267,9 +267,7 @@ def ps_model_validation():
 def pycontrails_params():
     """Load pycontrails A320 parameters."""
     pytest.importorskip("pycontrails")
-    from pycontrails.models.ps_model.ps_aircraft_params import (
-        load_aircraft_engine_params,
-    )
+    from pycontrails.models.ps_model.ps_aircraft_params import load_aircraft_engine_params
 
     return load_aircraft_engine_params()["A320"]
 
@@ -731,7 +729,9 @@ class TestPSPhysicsExhaustive:
         pytest.importorskip("pycontrails")
         from pycontrails.models.ps_model import ps_model as pc_ps
 
-        from openleaf.performance.models.ps.ps_physics import overall_propulsion_efficiency as ae_eta
+        from openleaf.performance.models.ps.ps_physics import (
+            overall_propulsion_efficiency as ae_eta,
+        )
 
         params = pycontrails_params
 

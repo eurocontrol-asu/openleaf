@@ -1,8 +1,8 @@
 """Tests for Total Energy Model (TEM) functions."""
 
+import numpy as np
 import pytest
 
-import numpy as np
 from openleaf.performance.physics import esf
 from openleaf.performance.physics import isa
 from openleaf.performance.physics import tem

@@ -701,9 +701,7 @@ class PSModel(AircraftModel):
             ImportError: If pycontrails is not installed.
         """
         try:
-            from pycontrails.models.ps_model.ps_aircraft_params import (
-                load_aircraft_engine_params,
-            )
+            from pycontrails.models.ps_model.ps_aircraft_params import load_aircraft_engine_params
         except ImportError as e:
             raise ImportError(
                 "pycontrails is required for PSModel.available_aircraft(). "

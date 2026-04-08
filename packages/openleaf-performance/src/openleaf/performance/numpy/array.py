@@ -35,6 +35,7 @@ from typing import Any
 from typing import Literal
 
 import numpy as _onp
+
 from openleaf.performance.numpy.backends import Backend
 from openleaf.performance.numpy.backends import get_array_namespace
 from openleaf.performance.numpy.backends import is_casadi_type

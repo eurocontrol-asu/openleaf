@@ -5,9 +5,9 @@ Tests cover aerodynamics, engine model, and CasADi symbolic compatibility.
 """
 
 import casadi as ca
+import numpy as np
 import pytest
 
-import numpy as np
 from openleaf.performance.core.perfos import EngineType
 from openleaf.performance.core.types import AerodynamicConfig
 from openleaf.performance.physics import isa

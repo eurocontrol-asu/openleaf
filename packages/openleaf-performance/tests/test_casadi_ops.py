@@ -7,10 +7,10 @@ that aren't reached by the default NumPy tests.
 from __future__ import annotations
 
 import casadi as ca
+import numpy as np
 import pytest
 
 import openleaf.performance.numpy as anp
-import numpy as np
 
 
 # =============================================================================

@@ -7,13 +7,13 @@ Includes property-based tests using Hypothesis.
 """
 
 import casadi as ca
+import numpy as np
 import pytest
 from hypothesis import assume
 from hypothesis import given
 from hypothesis import strategies as st
 
 import openleaf.performance.physics.isa as isa
-import numpy as np
 from openleaf.performance.physics.aero import AircraftAirspeed
 from openleaf.performance.physics.aero import crossover_altitude
 from openleaf.performance.physics.aero import dynamic_pressure

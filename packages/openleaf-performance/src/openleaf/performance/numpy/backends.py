@@ -26,7 +26,6 @@ from enum import auto
 from typing import Any
 
 import array_api_compat
-
 import numpy as np
 
 

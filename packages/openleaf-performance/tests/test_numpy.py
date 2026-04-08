@@ -6,10 +6,10 @@ Tests both NumPy and CasADi backends for mathematical operations.
 from __future__ import annotations
 
 import casadi as cas
+import numpy as np
 import pytest
 
 import openleaf.performance.numpy as anp
-import numpy as np
 
 
 class TestLogicals:

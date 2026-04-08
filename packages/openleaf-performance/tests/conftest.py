@@ -32,9 +32,8 @@ if "OPENLEAF_BADA4_PATH" not in os.environ and _local_data_dir.exists():
     if flat_exists or folder_exists:
         os.environ["OPENLEAF_BADA4_PATH"] = str(_local_data_dir)
 
-import pytest
-
 import numpy as np
+import pytest
 
 
 # --- Helper Functions ---

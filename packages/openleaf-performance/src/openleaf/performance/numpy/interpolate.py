@@ -17,9 +17,9 @@ __all__ = [
 from typing import Literal
 
 import casadi as _cas
+import numpy as _onp
 from scipy import interpolate as _interpolate
 
-import numpy as _onp
 from openleaf.performance.numpy.array import array
 from openleaf.performance.numpy.array import zeros_like
 from openleaf.performance.numpy.conditionals import where
@@ -224,7 +224,9 @@ def interpn(
 
         if xi.shape[1] != n_dimensions:
             xi = xi.T
-            assert xi.shape[1] == n_dimensions
+            if xi.shape[1] != n_dimensions:
+                msg = f"Expected {n_dimensions} dimensions, got {xi.shape[1]}"
+                raise ValueError(msg)
 
         ### Calculate the minimum and maximum values along each axis.
         axis_values_min = [_onp.min(axis_values) for axis_values in points]

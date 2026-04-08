@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import numpy as np
 import pytest
 
-import numpy as np
 from openleaf.performance.core.types import AerodynamicConfig
 from openleaf.performance.core.types import EngineSetting
 from openleaf.performance.core.types import EngineType

@@ -9,9 +9,9 @@ Verifies that PyTorch tensors flow correctly through:
 
 from __future__ import annotations
 
+import numpy as np
 import pytest
 
-import numpy as np
 from openleaf.performance.numpy.backends import Backend
 
 

@@ -4,6 +4,7 @@ from pathlib import Path
 
 import mkdocs_gen_files
 
+
 packages_dir = Path("packages")
 
 for pkg_dir in sorted(packages_dir.iterdir()):

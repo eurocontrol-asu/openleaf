@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import pytest
 
-from openleaf.performance.exceptions import OpenLeafError
 from openleaf.performance.exceptions import BADA3ParseError
 from openleaf.performance.exceptions import BADA4ParseError
 from openleaf.performance.exceptions import ConfigurationError
@@ -13,6 +12,7 @@ from openleaf.performance.exceptions import MissingFieldError
 from openleaf.performance.exceptions import ModelDataError
 from openleaf.performance.exceptions import ModelError
 from openleaf.performance.exceptions import ModelNotFoundError
+from openleaf.performance.exceptions import OpenLeafError
 from openleaf.performance.exceptions import ParsingError
 from openleaf.performance.exceptions import ValidationError
 from openleaf.performance.exceptions import ValueRangeError
