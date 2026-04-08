@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "ast/v*"
+      - "audit/v*"
+      - "init/v*"
+      - "git/v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Generate Changelog & Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Detect package from tag
+        id: detect
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          PREFIX="${TAG%%/*}"
+          if [[ "$TAG" == ast/* ]]; then
+            echo "package=axm-ast" >> "$GITHUB_OUTPUT"
+            echo "package-dir=packages/axm-ast" >> "$GITHUB_OUTPUT"
+          elif [[ "$TAG" == audit/* ]]; then
+            echo "package=axm-audit" >> "$GITHUB_OUTPUT"
+            echo "package-dir=packages/axm-audit" >> "$GITHUB_OUTPUT"
+          elif [[ "$TAG" == init/* ]]; then
+            echo "package=axm-init" >> "$GITHUB_OUTPUT"
+            echo "package-dir=packages/axm-init" >> "$GITHUB_OUTPUT"
+          elif [[ "$TAG" == git/* ]]; then
+            echo "package=axm-git" >> "$GITHUB_OUTPUT"
+            echo "package-dir=packages/axm-git" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Unknown tag prefix: $TAG"
+            exit 1
+          fi
+          echo "tag-prefix=${PREFIX}" >> "$GITHUB_OUTPUT"
+
+      - name: Generate changelog
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
+        with:
+          config: ${{ steps.detect.outputs.package-dir }}/pyproject.toml
+          args: >-
+            --latest
+            --strip header
+            --tag-pattern '${{ steps.detect.outputs.tag-prefix }}/v*'
+            --include-path '${{ steps.detect.outputs.package-dir }}/**'
+        env:
+          OUTPUT: CHANGELOG.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body: ${{ steps.git-cliff.outputs.content }}
+          token: ${{ secrets.GITHUB_TOKEN }}

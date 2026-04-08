@@ -1,0 +1,17 @@
+site_name: "openleaf"
+site_url: "https://ramondalmau.github.io/openleaf"
+repo_url: "https://github.com/ramondalmau/openleaf"
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+
+plugins:
+  - search
+  - monorepo
+
+nav:
+  - Home: index.md
+  - openleaf-performance: '!include ./packages/openleaf-performance/mkdocs.yml'

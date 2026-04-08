@@ -1,13 +1,53 @@
+[project]
+name = "openleaf"
+version = "0.1.0"
+description = "A modern Python workspace"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "EUPL-1.2" }
+authors = [{ name = "JarryGabriel", email = "jarry.gabriel@gmail.com" }]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.0",
+    "ruff==0.15.9",
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "pytest-mock>=3.0",
+    "mypy>=1.0",
+]
+
 [tool.uv.workspace]
 members = ["packages/*"]
 
-[[tool.uv.index]]
-name = "jax-releases"
-url = "https://storage.googleapis.com/jax-releases/jax_cuda_releases.html"
-explicit = true
+[tool.ruff]
+target-version = "py312"
+line-length = 99
 
-[tool.uv]
-constraint-dependencies = [
-    "pygments>=2.20.0",   # CVE-2026-4539
-    "requests>=2.33.0",   # CVE-2026-25645
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "C4", "S", "T20", "RUF"]
+per-file-ignores = { "tests/**" = ["S101"] }
+
+[tool.pytest.ini_options]
+testpaths = ["packages",
+    "packages/openleaf-performance/tests",
 ]
+addopts = "-q --import-mode=importlib"
+
+[tool.coverage.run]
+source_pkgs = []
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 80
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_configs = true
+
+[tool.uv.sources.openleaf-core]
+workspace = true
+
+[tool.uv.sources.openleaf-performance]
+workspace = true

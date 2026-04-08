@@ -7,31 +7,62 @@ on:
     branches: [main]
 
 jobs:
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v7
+      - run: uv python install 3.12
+      - run: uv sync --all-groups
+      - name: Ruff check
+        run: uv run ruff check .
+      - name: Ruff format
+        run: uv run ruff format --check .
+      - name: MyPy (axm-ast)
+        run: uv run --package axm-ast mypy --config-file packages/axm-ast/pyproject.toml packages/axm-ast/src/ packages/axm-ast/tests/
+      - name: MyPy (axm-audit)
+        run: uv run --package axm-audit mypy --config-file packages/axm-audit/pyproject.toml packages/axm-audit/src/ packages/axm-audit/tests/
+      - name: MyPy (axm-init)
+        run: uv run --package axm-init mypy --config-file packages/axm-init/pyproject.toml packages/axm-init/src/ packages/axm-init/tests/
+      - name: MyPy (axm-git)
+        run: uv run --package axm-git mypy --config-file packages/axm-git/pyproject.toml packages/axm-git/src/ packages/axm-git/tests/
+
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v7
+      - run: uv python install 3.12
+      - run: uv sync --all-groups
+      - run: uv run pip-audit
+        continue-on-error: true  # warn-only until all transitive CVEs have upstream fixes
+
   test:
+    name: Test ${{ matrix.package }} (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        package: [openleaf-core, openleaf-performance]
-        python-version: ["3.12"]
-
+        package: [axm-ast, axm-audit, axm-init, axm-git]
+        python-version: ["3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up uv
-        uses: astral-sh/setup-uv@v4
+      - uses: actions/checkout@v6
         with:
-          version: "latest"
-
-      - name: Set up Python ${{ matrix.python-version }}
-        run: uv python install ${{ matrix.python-version }}
-
-      - name: Install dependencies
-        run: uv sync --all-packages
-
-      - name: Run tests
-        run: |
-          uv run --package ${{ matrix.package }} pytest packages/${{ matrix.package }}/tests/ -v
-        env:
-          OPENLEAF_BADA3_PATH: ${{ secrets.OPENLEAF_BADA3_PATH }}
-          OPENLEAF_BADA4_PATH: ${{ secrets.OPENLEAF_BADA4_PATH }}
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v7
+      - run: uv python install ${{ matrix.python-version }}
+      - run: uv sync --all-groups
+      - run: uv run --package ${{ matrix.package }} --directory packages/${{ matrix.package }} pytest --cov
+      - name: Upload coverage
+        if: matrix.python-version == '3.12'
+        uses: codecov/codecov-action@v6
+        with:
+          files: packages/${{ matrix.package }}/coverage.xml
+          flags: ${{ matrix.package }}
+          fail_ci_if_error: false
