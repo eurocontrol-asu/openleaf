@@ -88,9 +88,7 @@ F_DECEL_DESCENT = 0.3
 # -----------------------------------------------------------------------------
 
 
-def f_constant_mach(
-    mach: ArrayScalarLike, altitude: ArrayScalarLike
-) -> ArrayScalarLike:
+def f_constant_mach(mach: ArrayScalarLike, altitude: ArrayScalarLike) -> ArrayScalarLike:
     """Energy share factor for constant Mach number speed schedule.
 
     Above tropopause: f = 1.0 (temperature constant, no acceleration needed)
@@ -135,16 +133,12 @@ def f_constant_cas(mach: ArrayScalarLike, altitude: ArrayScalarLike) -> ArraySca
     A = 1.0 + 0.5 * (isa.GAMMA - 1.0) * mach * mach
 
     # B term from isentropic relations
-    B = np.power(A, -1.0 / (isa.GAMMA - 1.0)) * (
-        np.power(A, isa.GAMMA / (isa.GAMMA - 1.0)) - 1.0
-    )
+    B = np.power(A, -1.0 / (isa.GAMMA - 1.0)) * (np.power(A, isa.GAMMA / (isa.GAMMA - 1.0)) - 1.0)
 
     # Above tropopause (3.1-8): no temperature lapse term
     f_above = 1.0 / (1.0 + B)
 
     # Below tropopause (3.1-7): includes temperature lapse contribution
-    f_below = 1.0 / (
-        1.0 - 0.5 * isa.GAMMA * isa.TAU_H * isa.R * mach * mach / isa.G + B
-    )
+    f_below = 1.0 / (1.0 - 0.5 * isa.GAMMA * isa.TAU_H * isa.R * mach * mach / isa.G + B)
 
     return np.where(altitude > isa.H_TROPO, f_above, f_below)

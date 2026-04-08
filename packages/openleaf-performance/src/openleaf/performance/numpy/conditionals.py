@@ -47,9 +47,7 @@ def _promote_to_common_backend(*args):
             if isinstance(a, torch.Tensor):
                 if ref_device is None:
                     ref_device = a.device
-                if a.dtype.is_floating_point and (
-                    ref_dtype is None or a.dtype == torch.float64
-                ):
+                if a.dtype.is_floating_point and (ref_dtype is None or a.dtype == torch.float64):
                     ref_dtype = a.dtype
 
         def _to_tensor(x):

@@ -75,9 +75,7 @@ class TestOpenAPModel:
 class TestOpenAPAerodynamics:
     """Tests for OpenAP aerodynamic model."""
 
-    def test_drag_increases_with_mass(
-        self, openap_model: OpenAPModel, cruise_state: dict
-    ):
+    def test_drag_increases_with_mass(self, openap_model: OpenAPModel, cruise_state: dict):
         """Test induced drag behavior with mass."""
         cds = [
             openap_model.aerodynamics.drag_coef({**cruise_state, "aircraft_mass": m})
@@ -116,9 +114,7 @@ class TestOpenAPEngine:
 
         assert np.all(np.diff(thrusts) < 0)
 
-    def test_fuel_flow_increases_with_mass(
-        self, openap_model: OpenAPModel, cruise_state: dict
-    ):
+    def test_fuel_flow_increases_with_mass(self, openap_model: OpenAPModel, cruise_state: dict):
         """Test fuel flow increases with mass (higher drag → higher thrust)."""
         altitude = cruise_state["altitude"]
         tas = cruise_state["true_airspeed"]
@@ -265,9 +261,7 @@ class TestOpenAPSymbolic:
 
         # Verify both can be evaluated numerically
         f_clean = ca.Function("cd_clean", [mass_sym, tas_sym, alt_sym], [cd_clean])
-        f_nonclean = ca.Function(
-            "cd_nonclean", [mass_sym, tas_sym, alt_sym], [cd_nonclean]
-        )
+        f_nonclean = ca.Function("cd_nonclean", [mass_sym, tas_sym, alt_sym], [cd_nonclean])
 
         result_clean = float(f_clean(65000, 250, 10000))
         result_nonclean = float(f_nonclean(65000, 250, 10000))
@@ -379,9 +373,7 @@ class TestOpenAPModelValidation:
             (10000, 300, 65000),  # FL100
         ],
     )
-    def test_drag_matches_openap(
-        self, openap_model, openap_refs, altitude_ft, tas_kt, mass
-    ):
+    def test_drag_matches_openap(self, openap_model, openap_refs, altitude_ft, tas_kt, mass):
         """Test drag matches openap library within tolerance."""
         altitude_m = altitude_ft * 0.3048
         theta = isa.theta(altitude_m)  # Temperature ratio [-]
@@ -396,9 +388,7 @@ class TestOpenAPModelValidation:
         }
 
         # Reference OpenAP
-        drag_ref_N = float(
-            openap_refs["drag"].clean(mass=mass, tas=tas_kt, alt=altitude_ft, vs=0)
-        )
+        drag_ref_N = float(openap_refs["drag"].clean(mass=mass, tas=tas_kt, alt=altitude_ft, vs=0))
 
         # Aetherx - clean configuration specified in state dict
         drag_coef = openap_model.aerodynamics.drag_coef(state)
@@ -462,9 +452,7 @@ class TestOpenAPModelValidation:
             (40000, 450, 65000),
         ],
     )
-    def test_fuel_flow_matches_openap(
-        self, openap_model, openap_refs, altitude_ft, tas_kt, mass
-    ):
+    def test_fuel_flow_matches_openap(self, openap_model, openap_refs, altitude_ft, tas_kt, mass):
         """Test fuel flow matches openap library within tolerance.
 
         This test uses the thrust-based fuel_flow method. We compute thrust
@@ -506,9 +494,7 @@ class TestOpenAPModelValidation:
         "thrust",
         [10000, 20000, 30000, 40000, 50000, 60000, 80000, 100000],
     )
-    def test_fuel_flow_at_thrust_matches_openap(
-        self, openap_model, openap_refs, thrust
-    ):
+    def test_fuel_flow_at_thrust_matches_openap(self, openap_model, openap_refs, thrust):
         """Test fuel_flow.at_thrust matches openap for various thrust levels."""
         # Aetherx
         ff_ae = float(openap_model.engine.fuel_flow({"thrust": thrust}))
@@ -532,9 +518,7 @@ class TestOpenAPModelValidation:
             (40000, 450),
         ],
     )
-    def test_takeoff_thrust_matches_openap(
-        self, openap_model, openap_refs, altitude_ft, tas_kt
-    ):
+    def test_takeoff_thrust_matches_openap(self, openap_model, openap_refs, altitude_ft, tas_kt):
         """Test takeoff thrust matches openap library."""
         from openleaf.performance.core.perfos import EngineSetting
 
@@ -584,9 +568,7 @@ class TestOpenAPModelValidation:
         }
 
         # Reference OpenAP
-        thrust_ref = float(
-            openap_refs["thrust"].climb(tas=tas_kt, alt=altitude_ft, roc=roc_fpm)
-        )
+        thrust_ref = float(openap_refs["thrust"].climb(tas=tas_kt, alt=altitude_ft, roc=roc_fpm))
 
         # Aetherx with MCMB setting
         thrust_ae = float(openap_model.engine.thrust_max(state))
@@ -604,9 +586,7 @@ class TestOpenAPModelValidation:
             (40000, 450),
         ],
     )
-    def test_cruise_thrust_matches_openap(
-        self, openap_model, openap_refs, altitude_ft, tas_kt
-    ):
+    def test_cruise_thrust_matches_openap(self, openap_model, openap_refs, altitude_ft, tas_kt):
         """Test cruise thrust (climb with ROC=0) matches openap library."""
         altitude_m = altitude_ft * 0.3048
 
@@ -637,9 +617,7 @@ class TestOpenAPModelValidation:
             (10000, 300),
         ],
     )
-    def test_idle_thrust_matches_openap(
-        self, openap_model, openap_refs, altitude_ft, tas_kt
-    ):
+    def test_idle_thrust_matches_openap(self, openap_model, openap_refs, altitude_ft, tas_kt):
         """Test idle/descent thrust matches openap library."""
         altitude_m = altitude_ft * 0.3048
 
@@ -649,9 +627,7 @@ class TestOpenAPModelValidation:
         }
 
         # Reference OpenAP
-        thrust_ref = float(
-            openap_refs["thrust"].descent_idle(tas=tas_kt, alt=altitude_ft)
-        )
+        thrust_ref = float(openap_refs["thrust"].descent_idle(tas=tas_kt, alt=altitude_ft))
 
         # Aetherx
         thrust_ae = float(openap_model.engine.thrust_min(state))
@@ -721,9 +697,9 @@ class TestCrossModelComparison:
             "PS drag should increase with altitude"
         )
 
-        assert all(
-            openap_drags[i] < openap_drags[i + 1] for i in range(len(openap_drags) - 1)
-        ), "OpenAP drag should increase with altitude"
+        assert all(openap_drags[i] < openap_drags[i + 1] for i in range(len(openap_drags) - 1)), (
+            "OpenAP drag should increase with altitude"
+        )
 
     def test_fuel_flow_in_reasonable_range(self, ps_model, openap_model):
         """Test that both models give fuel flow in reasonable range for A320."""
@@ -778,9 +754,7 @@ class TestCrossModelComparison:
         # Total: 1.0-2.0 kg/s for twin engine
         # More typical: 0.6-0.8 kg/s
         assert 0.4 < ff_ps < 1.2, f"PS fuel flow {ff_ps} outside reasonable range"
-        assert 0.4 < ff_openap < 1.2, (
-            f"OpenAP fuel flow {ff_openap} outside reasonable range"
-        )
+        assert 0.4 < ff_openap < 1.2, f"OpenAP fuel flow {ff_openap} outside reasonable range"
 
         # Both should be in similar ballpark (within 30% of each other)
         ratio = ff_ps / ff_openap
@@ -822,19 +796,13 @@ class TestOpenAPCruiseTrajectory:
 
         # A320 twin-engine cruise fuel flow: ~0.5-1.2 kg/s total
         # (roughly 0.25-0.6 kg/s per engine)
-        assert np.all(fuel_flow > 0.3), (
-            f"Fuel flow too low: min={np.min(fuel_flow):.3f} kg/s"
-        )
-        assert np.all(fuel_flow < 1.5), (
-            f"Fuel flow too high: max={np.max(fuel_flow):.3f} kg/s"
-        )
+        assert np.all(fuel_flow > 0.3), f"Fuel flow too low: min={np.min(fuel_flow):.3f} kg/s"
+        assert np.all(fuel_flow < 1.5), f"Fuel flow too high: max={np.max(fuel_flow):.3f} kg/s"
 
         # Fuel flow should decrease as mass decreases (less drag)
         # Allow small variations due to numerical effects
         ff_diff = np.diff(fuel_flow)
-        assert np.mean(ff_diff) < 0, (
-            "Fuel flow should generally decrease as mass decreases"
-        )
+        assert np.mean(ff_diff) < 0, "Fuel flow should generally decrease as mass decreases"
 
 
 class TestOpenAPLimits:
@@ -874,15 +842,9 @@ class TestOpenAPLimits:
 
     def test_limits_consistent_with_aircraft_data(self, openap_model: OpenAPModel):
         """Verify limits match the aircraft data stored in the model."""
-        assert openap_model.limits.data.hmo == pytest.approx(
-            openap_model.limits.max_altitude({})
-        )
-        assert openap_model.limits.data.vmo == pytest.approx(
-            openap_model.limits.max_cas({})
-        )
-        assert openap_model.limits.data.mmo == pytest.approx(
-            openap_model.limits.max_mach({})
-        )
+        assert openap_model.limits.data.hmo == pytest.approx(openap_model.limits.max_altitude({}))
+        assert openap_model.limits.data.vmo == pytest.approx(openap_model.limits.max_cas({}))
+        assert openap_model.limits.data.mmo == pytest.approx(openap_model.limits.max_mach({}))
 
     def test_wtc_classification(self):
         """Verify Wake Turbulence Category classification thresholds.

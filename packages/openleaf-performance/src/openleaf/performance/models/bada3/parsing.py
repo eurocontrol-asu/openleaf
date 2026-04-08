@@ -165,9 +165,7 @@ def _parse_floats(pattern: str, text: str, section: str, count: int) -> list[flo
 
     values = [float(v) for v in match.groups()]
     if len(values) != count:
-        raise BADA3ParseError(
-            f"Expected {count} values, found {len(values)}", section=section
-        )
+        raise BADA3ParseError(f"Expected {count} values, found {len(values)}", section=section)
     return values
 
 
@@ -192,9 +190,7 @@ def _parse_aircraft(text: str) -> BADA3AircraftData:
     try:
         engine_type = EngineType.from_string(engine_type_str.upper())
     except (ValueError, KeyError) as e:
-        raise BADA3ParseError(
-            f"Invalid engine type: {engine_type_str}", section="Header"
-        ) from e
+        raise BADA3ParseError(f"Invalid engine type: {engine_type_str}", section="Header") from e
 
     return BADA3AircraftData(
         model=model,
@@ -294,9 +290,7 @@ def _parse_engine(text: str) -> BADA3EngineData:
     cruise_section = _extract_section(_Sections.CRUISE_CORR, text)
     match = _FLOAT_RE.search(cruise_section)
     if not match:
-        raise BADA3ParseError(
-            "Cruise correction not found", section=_Sections.CRUISE_CORR
-        )
+        raise BADA3ParseError("Cruise correction not found", section=_Sections.CRUISE_CORR)
     cf_crz = float(match.group(1))
 
     return BADA3EngineData(
@@ -360,9 +354,7 @@ def _parse_limits(
         )
     except BADA3ParseError:
         # Fall back to 5 values; use mass-section gradient as Gw [ft/kg]
-        vmo, mmo, hmo, hmax, gt = _parse_floats(
-            pattern_5, envelope_section, _Sections.ENVELOPE, 5
-        )
+        vmo, mmo, hmo, hmax, gt = _parse_floats(pattern_5, envelope_section, _Sections.ENVELOPE, 5)
         gw = gw_mass
 
     # Buffet coefficients (2 values)

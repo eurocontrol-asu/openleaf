@@ -149,9 +149,7 @@ class BADA4BuffetLimitsData(BaseModel):
     mach_min: float | None = None
     mach_max: float | None = None
     cl_mach0: float | None = None
-    cl_max_nonclean: dict[tuple[str, LandingGearPosition], float] = Field(
-        default_factory=dict
-    )
+    cl_max_nonclean: dict[tuple[str, LandingGearPosition], float] = Field(default_factory=dict)
     cl_max_config: dict[AerodynamicConfig, float] = Field(default_factory=dict)
 
     @property

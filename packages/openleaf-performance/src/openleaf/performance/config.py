@@ -287,9 +287,7 @@ def _update_config_file(section: str, key: str, value: str) -> None:
             final_lines.append(line)
             if line.strip() == f"[{section}]":
                 section_found = True
-            elif section_found and (
-                line.strip().startswith("[") or line == new_lines[-1]
-            ):
+            elif section_found and (line.strip().startswith("[") or line == new_lines[-1]):
                 # Insert before next section or at end
                 if not line.strip().startswith("["):
                     final_lines.append(f'{key} = "{value}"')

@@ -16,9 +16,7 @@ from openleaf.performance.numpy.backends import Backend
 
 
 # Skip entire module if PyTorch is not installed
-pytestmark = pytest.mark.skipif(
-    not Backend.TORCH.available, reason="PyTorch not installed"
-)
+pytestmark = pytest.mark.skipif(not Backend.TORCH.available, reason="PyTorch not installed")
 
 torch = pytest.importorskip("torch")
 
@@ -35,19 +33,13 @@ def to_torch(x, dtype=torch.float64, requires_grad=False):
 
 def assert_parity(torch_result, numpy_result, rtol=1e-6, atol=1e-7):
     """Assert that a torch result matches a numpy result."""
-    t = (
-        torch_result.detach().numpy()
-        if isinstance(torch_result, torch.Tensor)
-        else torch_result
-    )
+    t = torch_result.detach().numpy() if isinstance(torch_result, torch.Tensor) else torch_result
     np.testing.assert_allclose(t, numpy_result, rtol=rtol, atol=atol)
 
 
 def assert_is_tensor(result):
     """Assert result is a torch.Tensor."""
-    assert isinstance(result, torch.Tensor), (
-        f"Expected torch.Tensor, got {type(result)}"
-    )
+    assert isinstance(result, torch.Tensor), f"Expected torch.Tensor, got {type(result)}"
 
 
 # =============================================================================
@@ -524,11 +516,7 @@ class TestAeroWithTorch:
         result = dynamic_pressure(v, rho)
         assert_is_tensor(result)
 
-        expected = (
-            0.5
-            * np.array([1.225, 0.7364, 0.4135])
-            * np.array([100.0, 200.0, 250.0]) ** 2
-        )
+        expected = 0.5 * np.array([1.225, 0.7364, 0.4135]) * np.array([100.0, 200.0, 250.0]) ** 2
         assert_parity(result, expected)
 
     def test_aerodynamic_coefficient_and_force(self):
@@ -709,9 +697,7 @@ class TestOpenAPWithTorch:
         h = to_torch([10668.0])
         mach = to_torch([0.78])
         T = isa.air_temperature(h)
-        tas = mach * torch.sqrt(
-            torch.tensor(isa.GAMMA * isa.R, dtype=torch.float64) * T
-        )
+        tas = mach * torch.sqrt(torch.tensor(isa.GAMMA * isa.R, dtype=torch.float64) * T)
         return {
             "altitude": h,
             "mach_number": mach,
@@ -778,9 +764,7 @@ class TestPSWithTorch:
         mach = to_torch([0.78])
         T = isa.air_temperature(h)
         p = isa.air_pressure(h)
-        tas = mach * torch.sqrt(
-            torch.tensor(isa.GAMMA * isa.R, dtype=torch.float64) * T
-        )
+        tas = mach * torch.sqrt(torch.tensor(isa.GAMMA * isa.R, dtype=torch.float64) * T)
         sigma = isa.delta(h) / isa.theta(h)
         rho = sigma * isa.RHO_SL
         mass = to_torch([70000.0])

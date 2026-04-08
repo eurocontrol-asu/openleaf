@@ -68,12 +68,8 @@ def interp(x, xp, fp, left=None, right=None, period=None):
 
         ### Do the interpolation
         if is_casadi_type([x, xp], recursive=True):
-            grid = [
-                xp.shape[0]
-            ]  # size of grid, list is used since can be multi-dimensional
-            cas_interp = _cas.interpolant(
-                "cs_interp", "linear", grid, 1, {"inline": True}
-            )
+            grid = [xp.shape[0]]  # size of grid, list is used since can be multi-dimensional
+            cas_interp = _cas.interpolant("cs_interp", "linear", grid, 1, {"inline": True})
             f = cas_interp(x, xp, fp)
         else:
             f = _cas.interp1d(xp, fp, x)
@@ -109,9 +105,7 @@ def is_data_structured(
             if len(coordinates.shape) != 1:
                 return False
 
-        implied_y_data_shape = tuple(
-            len(coordinates) for coordinates in x_data_coordinates
-        )
+        implied_y_data_shape = tuple(len(coordinates) for coordinates in x_data_coordinates)
         if y_data_structured.shape != implied_y_data_shape:
             return False
     except TypeError:  # if x_data_coordinates is not iterable, for instance
@@ -165,9 +159,7 @@ def interpn(
     """
     ### Check input types for points and values
     if is_casadi_type([points, values], recursive=True):
-        raise TypeError(
-            "The underlying dataset (points, values) must consist of NumPy arrays."
-        )
+        raise TypeError("The underlying dataset (points, values) must consist of NumPy arrays.")
 
     ### Check dimensions of points
     for points_axis in points:
@@ -266,9 +258,7 @@ def interpn(
 
         ### Do the interpolation
         values_flattened = _onp.ravel(values, order="F")
-        interpolator = _cas.interpolant(
-            "Interpolator", method, points, values_flattened
-        )
+        interpolator = _cas.interpolant("Interpolator", method, points, values_flattened)
 
         fi = interpolator(xi.T).T
 

@@ -70,9 +70,7 @@ def assert_close(actual, expected, rtol=1e-5, atol=1e-6, label=""):
     a, e = to_float(actual), to_float(expected)
     if math.isnan(a) and math.isnan(e):
         return
-    assert abs(a - e) <= atol + rtol * abs(e), (
-        f"{label}: {a} != {e} (rtol={rtol}, atol={atol})"
-    )
+    assert abs(a - e) <= atol + rtol * abs(e), f"{label}: {a} != {e} (rtol={rtol}, atol={atol})"
 
 
 def assert_positive(x, label=""):
@@ -162,22 +160,14 @@ class TestBADA3Limits:
         assert to_float(result) <= self.model.limits.hmo + 1
 
     def test_numpy_max_altitude_mass_dependence(self):
-        h_heavy = to_float(
-            self.model.limits.max_altitude(self._max_alt_state(mass=70_000))
-        )
-        h_light = to_float(
-            self.model.limits.max_altitude(self._max_alt_state(mass=50_000))
-        )
+        h_heavy = to_float(self.model.limits.max_altitude(self._max_alt_state(mass=70_000)))
+        h_light = to_float(self.model.limits.max_altitude(self._max_alt_state(mass=50_000)))
         # Lighter aircraft can fly higher (or at same ceiling)
         assert h_light >= h_heavy - 1
 
     def test_numpy_max_altitude_isa_dependence(self):
-        h_isa = to_float(
-            self.model.limits.max_altitude(self._max_alt_state(delta_isa=0.0))
-        )
-        h_hot = to_float(
-            self.model.limits.max_altitude(self._max_alt_state(delta_isa=15.0))
-        )
+        h_isa = to_float(self.model.limits.max_altitude(self._max_alt_state(delta_isa=0.0)))
+        h_hot = to_float(self.model.limits.max_altitude(self._max_alt_state(delta_isa=15.0)))
         # Hotter day lowers ceiling
         assert h_hot <= h_isa + 1
 
@@ -320,12 +310,8 @@ class TestBADA4Limits:
 
     def test_numpy_hl_lowers_altitude_limit(self):
         """High-lift configs should have lower max_altitude than cruise."""
-        h_cr = to_float(
-            self.model.limits.max_altitude(self._state(AerodynamicConfig.CR))
-        )
-        h_ap = to_float(
-            self.model.limits.max_altitude(self._state(AerodynamicConfig.AP))
-        )
+        h_cr = to_float(self.model.limits.max_altitude(self._state(AerodynamicConfig.CR)))
+        h_ap = to_float(self.model.limits.max_altitude(self._state(AerodynamicConfig.AP)))
         assert h_ap < h_cr, f"AP max_alt ({h_ap}) should be < CR max_alt ({h_cr})"
 
     def test_numpy_min_cas_mass_dependence(self):
@@ -542,9 +528,7 @@ class TestPSLimits:
         """Below FL100, ATM 250kt limit applies — max Mach should be lower."""
         alt_low = 5_000.0
         p_low = float(isa.air_pressure(alt_low * 0.3048))
-        m_low = to_float(
-            self.model.limits.max_mach({"altitude": alt_low, "air_pressure": p_low})
-        )
+        m_low = to_float(self.model.limits.max_mach({"altitude": alt_low, "air_pressure": p_low}))
         m_high = to_float(self.model.limits.max_mach(self._state()))
         assert m_low < m_high
 
@@ -573,9 +557,7 @@ class TestPSLimits:
             [float(isa.air_pressure(a * 0.3048)) for a in [5_000, 15_000, 35_000]],
             dtype=torch.float64,
         )
-        result = self.model.limits.max_mach(
-            {"altitude": alts, "air_pressure": pressures}
-        )
+        result = self.model.limits.max_mach({"altitude": alts, "air_pressure": pressures})
         assert isinstance(result, torch.Tensor)
         assert result.shape == (3,)
         # Low altitude should have lower max Mach than cruise
@@ -600,9 +582,7 @@ class TestPSLimits:
         pressures = jnp.array(
             [float(isa.air_pressure(a * 0.3048)) for a in [5_000, 15_000, 35_000]]
         )
-        result = self.model.limits.max_mach(
-            {"altitude": alts, "air_pressure": pressures}
-        )
+        result = self.model.limits.max_mach({"altitude": alts, "air_pressure": pressures})
         assert isinstance(result, jax.Array)
         assert result.shape == (3,)
         assert float(result[0]) < float(result[2])

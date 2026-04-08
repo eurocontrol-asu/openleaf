@@ -94,9 +94,7 @@ def assert_close(actual, expected, rtol=1e-5, atol=1e-7, label=""):
     # Handle NaN: both NaN is OK
     if math.isnan(a) and math.isnan(e):
         return
-    assert abs(a - e) <= atol + rtol * abs(e), (
-        f"{label}: {a} != {e} (rtol={rtol}, atol={atol})"
-    )
+    assert abs(a - e) <= atol + rtol * abs(e), f"{label}: {a} != {e} (rtol={rtol}, atol={atol})"
 
 
 # ============================================================================

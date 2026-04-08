@@ -176,9 +176,7 @@ class BADA4Limits(LimitsModel[BADA4LimitsData]):
 
         # Vectorized selection per Eq. 6.2-1
         v_clean = np.where(lg_extended, kin.vle, kin.vmo)
-        v_hl_deployed = np.where(
-            lg_extended, np.minimum(vfe_nonclean, kin.vle), vfe_nonclean
-        )
+        v_hl_deployed = np.where(lg_extended, np.minimum(vfe_nonclean, kin.vle), vfe_nonclean)
         return np.where(is_clean, v_clean, v_hl_deployed)
 
     def max_mach(self, data: KeyedData) -> ArrayScalarLike:
@@ -277,9 +275,7 @@ class BADA4Limits(LimitsModel[BADA4LimitsData]):
         cl_max = np.where(cl_max > _INF_THRESHOLD, _CL_MAX_FALLBACK, cl_max)
 
         # Stall speed formula: V_stall = sqrt(2 * m * g / (rho_SL * S * CL_max))
-        v_stall_ms = np.sqrt(
-            2.0 * mass * isa.G / (isa.RHO_SL * self._surface_area * cl_max)
-        )
+        v_stall_ms = np.sqrt(2.0 * mass * isa.G / (isa.RHO_SL * self._surface_area * cl_max))
 
         # Convert to knots and apply CVmin coefficient
         return self._cvmin * v_stall_ms * MS_TO_KT
@@ -288,9 +284,7 @@ class BADA4Limits(LimitsModel[BADA4LimitsData]):
     def _cl_poly(self, mach: ArrayScalarLike) -> ArrayScalarLike:
         """Evaluate CL_max polynomial (Eq. 6.3-1)."""
         bf = self._bada4_data.buffet.bf
-        return (
-            bf[0] + bf[1] * mach + bf[2] * mach**2 + bf[3] * mach**3 + bf[4] * mach**4
-        )
+        return bf[0] + bf[1] * mach + bf[2] * mach**2 + bf[3] * mach**3 + bf[4] * mach**4
 
     def _cl_der(self, mach: ArrayScalarLike) -> ArrayScalarLike:
         """Evaluate derivative of CL_max polynomial (Eq. 6.3-3)."""
@@ -329,9 +323,7 @@ class BADA4Limits(LimitsModel[BADA4LimitsData]):
         Returns:
             Maximum lift coefficient, or inf if not defined.
         """
-        return self._bada4_data.buffet.cl_max_nonclean.get(
-            (hl_position, lg_position), np.inf
-        )
+        return self._bada4_data.buffet.cl_max_nonclean.get((hl_position, lg_position), np.inf)
 
     def cl_max_by_config(
         self,
@@ -358,18 +350,10 @@ class BADA4Limits(LimitsModel[BADA4LimitsData]):
         cl_max_clean = self.cl_max_clean(mach)
 
         # Get CL_max for each non-clean configuration from lookup table
-        cl_max_ic = self._bada4_data.buffet.cl_max_config.get(
-            AerodynamicConfig.IC, np.inf
-        )
-        cl_max_to = self._bada4_data.buffet.cl_max_config.get(
-            AerodynamicConfig.TO, np.inf
-        )
-        cl_max_ap = self._bada4_data.buffet.cl_max_config.get(
-            AerodynamicConfig.AP, np.inf
-        )
-        cl_max_ld = self._bada4_data.buffet.cl_max_config.get(
-            AerodynamicConfig.LD, np.inf
-        )
+        cl_max_ic = self._bada4_data.buffet.cl_max_config.get(AerodynamicConfig.IC, np.inf)
+        cl_max_to = self._bada4_data.buffet.cl_max_config.get(AerodynamicConfig.TO, np.inf)
+        cl_max_ap = self._bada4_data.buffet.cl_max_config.get(AerodynamicConfig.AP, np.inf)
+        cl_max_ld = self._bada4_data.buffet.cl_max_config.get(AerodynamicConfig.LD, np.inf)
 
         # Only CR is truly clean; IC, TO, AP, LD all have HL deployed
         is_clean = _is_clean(config)

@@ -104,9 +104,7 @@ class TestTrajectoryDataAccess:
         """Test __getitem__ for data columns."""
         traj = TrajectoryData(basic_trajectory_data)
 
-        np.testing.assert_array_equal(
-            traj["altitude"], basic_trajectory_data["altitude"]
-        )
+        np.testing.assert_array_equal(traj["altitude"], basic_trajectory_data["altitude"])
         np.testing.assert_array_equal(
             traj["true_airspeed"], basic_trajectory_data["true_airspeed"]
         )
@@ -259,9 +257,7 @@ class TestTrajectoryDataVerticalSpeed:
 
         vs_geo = traj.vertical_speed_geometric
         # Under ISA, correction factor = 1.0
-        np.testing.assert_array_almost_equal(
-            vs_geo, basic_trajectory_data["vertical_speed"]
-        )
+        np.testing.assert_array_almost_equal(vs_geo, basic_trajectory_data["vertical_speed"])
 
     def test_vertical_speed_geometric_non_isa(self, basic_trajectory_data):
         """Test vertical_speed_geometric under non-ISA conditions."""
@@ -315,9 +311,7 @@ class TestTrajectoryDataEnergyFactor:
         """Test acceleration taken directly from data."""
         traj = TrajectoryData(basic_trajectory_data)
 
-        np.testing.assert_array_equal(
-            traj.acceleration, basic_trajectory_data["acceleration"]
-        )
+        np.testing.assert_array_equal(traj.acceleration, basic_trajectory_data["acceleration"])
 
     def test_acceleration_derived_from_f(self):
         """Test acceleration derived from f when not provided."""
@@ -391,9 +385,7 @@ class TestAircraftTrajectoryData:
         perf = traj.with_aircraft(ps_model)
 
         # Data columns via delegation
-        np.testing.assert_array_equal(
-            perf["altitude"], basic_trajectory_data["altitude"]
-        )
+        np.testing.assert_array_equal(perf["altitude"], basic_trajectory_data["altitude"])
 
         # Computed properties via delegation
         np.testing.assert_array_equal(perf.mach_number, traj.mach_number)
@@ -404,9 +396,7 @@ class TestAircraftTrajectoryData:
         traj = TrajectoryData(basic_trajectory_data)
         perf = traj.with_aircraft(ps_model)
 
-        np.testing.assert_array_equal(
-            perf.aircraft_mass, basic_trajectory_data["aircraft_mass"]
-        )
+        np.testing.assert_array_equal(perf.aircraft_mass, basic_trajectory_data["aircraft_mass"])
 
     def test_lift_coef(self, basic_trajectory_data, ps_model):
         """Test lift_coef computed by model."""
@@ -594,7 +584,5 @@ class TestValidationDecorator:
         perf = traj.with_aircraft(ps_model)
 
         result = model.compute(perf)
-        expected = (
-            basic_trajectory_data["altitude"] + basic_trajectory_data["true_airspeed"]
-        )
+        expected = basic_trajectory_data["altitude"] + basic_trajectory_data["true_airspeed"]
         np.testing.assert_array_almost_equal(result, expected)

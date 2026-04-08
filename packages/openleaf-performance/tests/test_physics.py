@@ -285,9 +285,7 @@ class TestAircraftAirspeed:
 
         # FL350 (colder)
         theta = 0.7519
-        mach_fl350 = AircraftAirspeed(
-            T=theta * isa.TAU_SL, p=0.2234 * isa.P_SL, v=tas
-        ).mach_number
+        mach_fl350 = AircraftAirspeed(T=theta * isa.TAU_SL, p=0.2234 * isa.P_SL, v=tas).mach_number
 
         assert mach_fl350 > mach_sl
 
