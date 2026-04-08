@@ -21,14 +21,10 @@ jobs:
         run: uv run ruff check .
       - name: Ruff format
         run: uv run ruff format --check .
-      - name: MyPy (axm-ast)
-        run: uv run --package axm-ast mypy --config-file packages/axm-ast/pyproject.toml packages/axm-ast/src/ packages/axm-ast/tests/
-      - name: MyPy (axm-audit)
-        run: uv run --package axm-audit mypy --config-file packages/axm-audit/pyproject.toml packages/axm-audit/src/ packages/axm-audit/tests/
-      - name: MyPy (axm-init)
-        run: uv run --package axm-init mypy --config-file packages/axm-init/pyproject.toml packages/axm-init/src/ packages/axm-init/tests/
-      - name: MyPy (axm-git)
-        run: uv run --package axm-git mypy --config-file packages/axm-git/pyproject.toml packages/axm-git/src/ packages/axm-git/tests/
+      - name: MyPy (openleaf-core)
+        run: uv run --package openleaf-core mypy --config-file packages/openleaf-core/pyproject.toml packages/openleaf-core/src/ packages/openleaf-core/tests/
+      - name: MyPy (openleaf-performance)
+        run: uv run --package openleaf-performance mypy --config-file packages/openleaf-performance/pyproject.toml packages/openleaf-performance/src/ packages/openleaf-performance/tests/
 
   security:
     name: Security Audit
@@ -49,7 +45,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: [axm-ast, axm-audit, axm-init, axm-git]
+        package: [openleaf-core, openleaf-performance]
         python-version: ["3.12", "3.13"]
     steps:
       - uses: actions/checkout@v6

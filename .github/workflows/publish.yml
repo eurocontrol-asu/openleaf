@@ -3,10 +3,8 @@ name: Publish to PyPI
 on:
   push:
     tags:
-      - "ast/v*"
-      - "audit/v*"
-      - "init/v*"
-      - "git/v*"
+      - "core/v*"
+      - "performance/v*"
 
 jobs:
   detect-package:
@@ -19,18 +17,12 @@ jobs:
       - id: detect
         run: |
           TAG="${GITHUB_REF#refs/tags/}"
-          if [[ "$TAG" == ast/* ]]; then
-            echo "package=axm-ast" >> "$GITHUB_OUTPUT"
-            echo "package-dir=packages/axm-ast" >> "$GITHUB_OUTPUT"
-          elif [[ "$TAG" == audit/* ]]; then
-            echo "package=axm-audit" >> "$GITHUB_OUTPUT"
-            echo "package-dir=packages/axm-audit" >> "$GITHUB_OUTPUT"
-          elif [[ "$TAG" == init/* ]]; then
-            echo "package=axm-init" >> "$GITHUB_OUTPUT"
-            echo "package-dir=packages/axm-init" >> "$GITHUB_OUTPUT"
-          elif [[ "$TAG" == git/* ]]; then
-            echo "package=axm-git" >> "$GITHUB_OUTPUT"
-            echo "package-dir=packages/axm-git" >> "$GITHUB_OUTPUT"
+          if [[ "$TAG" == core/* ]]; then
+            echo "package=openleaf-core" >> "$GITHUB_OUTPUT"
+            echo "package-dir=packages/openleaf-core" >> "$GITHUB_OUTPUT"
+          elif [[ "$TAG" == performance/* ]]; then
+            echo "package=openleaf-performance" >> "$GITHUB_OUTPUT"
+            echo "package-dir=packages/openleaf-performance" >> "$GITHUB_OUTPUT"
           else
             echo "::error::Unknown tag prefix: $TAG"
             exit 1
