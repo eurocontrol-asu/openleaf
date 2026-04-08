@@ -244,9 +244,7 @@ class TestExceptionHierarchy:
         ]
 
         for exc in exceptions:
-            assert isinstance(exc, OpenLeafError), (
-                f"{type(exc).__name__} should be OpenLeafError"
-            )
+            assert isinstance(exc, OpenLeafError), f"{type(exc).__name__} should be OpenLeafError"
 
     def test_model_errors_hierarchy(self):
         """Test model error hierarchy."""

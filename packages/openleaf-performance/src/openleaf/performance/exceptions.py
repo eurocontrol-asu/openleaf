@@ -246,9 +246,7 @@ class MissingFieldError(ValidationError):
     ):
         if message is None:
             if method:
-                message = (
-                    f"Required field '{field}' missing from data (needed by {method})"
-                )
+                message = f"Required field '{field}' missing from data (needed by {method})"
             else:
                 message = f"Required field '{field}' missing from data"
         super().__init__(message)
@@ -276,9 +274,7 @@ class ValueRangeError(ValidationError):
     ):
         if message is None:
             if min_value is not None and max_value is not None:
-                message = (
-                    f"'{field}' value {value} outside range [{min_value}, {max_value}]"
-                )
+                message = f"'{field}' value {value} outside range [{min_value}, {max_value}]"
             elif min_value is not None:
                 message = f"'{field}' value {value} below minimum {min_value}"
             elif max_value is not None:

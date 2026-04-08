@@ -309,9 +309,7 @@ class BADA4EngineModel(EngineModel[BADA4EngineData]):
             theta=theta,
         )
 
-    def _get_atm_ratios(
-        self, data: KeyedData
-    ) -> tuple[ArrayScalarLike, ArrayScalarLike]:
+    def _get_atm_ratios(self, data: KeyedData) -> tuple[ArrayScalarLike, ArrayScalarLike]:
         """Compute atmospheric ratios from actual air pressure and temperature.
 
         BADA4 requires actual atmospheric conditions - no ISA assumptions.
@@ -331,9 +329,7 @@ class BADA4EngineModel(EngineModel[BADA4EngineData]):
         theta = data["air_temperature"] / isa.TAU_SL
         return delta, theta
 
-    @requires(
-        "mach_number", "air_pressure", "air_temperature", "engine_setting", "delta_isa"
-    )
+    @requires("mach_number", "air_pressure", "air_temperature", "engine_setting", "delta_isa")
     def thrust_max(self, data: KeyedData) -> ArrayScalarLike:
         """Get maximum thrust from flight state dictionary.
 
@@ -928,9 +924,7 @@ class BADA4TurbopropEngineModel(BADA4TurbineModel, BADA4PropellerModel):
             theta=theta,
         )
 
-        v = (
-            mach * isa.A_SL * np.sqrt(theta)
-        )  # TAS = Mach * a = Mach * a_SL * sqrt(theta)
+        v = mach * isa.A_SL * np.sqrt(theta)  # TAS = Mach * a = Mach * a_SL * sqrt(theta)
         cp_max = self._wp_to_cp(
             wp=self.data.max_power[setting],
             delta=delta,
@@ -1051,11 +1045,7 @@ class BADA4PistonEngineModel(BADA4PropellerModel):
         # Derated power coefficient at high altitude (Eq. 3.3-18)
         cp_derated = np.minimum(
             cp_std_msl,
-            cp_max_std_msl
-            * delta
-            / delta_turbo
-            * np.sqrt(theta_turbo)
-            / np.sqrt(theta),
+            cp_max_std_msl * delta / delta_turbo * np.sqrt(theta_turbo) / np.sqrt(theta),
         )
 
         # Select based on density ratio
@@ -1104,9 +1094,7 @@ class BADA4PistonEngineModel(BADA4PropellerModel):
 
         CT = η · a0 · CP · δ^-1 · V_TAS^-1
         """
-        v = (
-            mach * isa.A_SL * np.sqrt(theta)
-        )  # TAS = Mach * a = Mach * a_SL * sqrt(theta)
+        v = mach * isa.A_SL * np.sqrt(theta)  # TAS = Mach * a = Mach * a_SL * sqrt(theta)
         sigma = delta / theta
 
         # All-engine power: WP = Wmref · a0 · CP (Eq. 3.3-15)
@@ -1203,9 +1191,7 @@ class BADA4PistonEngineModel(BADA4PropellerModel):
         A·η³ + η - η_max = 0, the equation simplifies to a quadratic:
         k·η² + η - η_max = 0, which is solved analytically.
         """
-        v = (
-            mach * isa.A_SL * np.sqrt(theta)
-        )  # TAS = Mach * a = Mach * a_SL * sqrt(theta)
+        v = mach * isa.A_SL * np.sqrt(theta)  # TAS = Mach * a = Mach * a_SL * sqrt(theta)
         sigma = delta / theta
 
         # Thrust from CT: T = δ · Wmref · CT
@@ -1444,9 +1430,7 @@ class BADA4AeroModel(AerodynamicsModel[BADA4AerodynamicsData]):
 
         Example:
             >>> # Using AerodynamicConfig (unified API with BADA3)
-            >>> cd = aero.drag_coef_from_inputs(
-            ...     cl=0.5, mach=0.78, conf=AerodynamicConfig.CR
-            ... )
+            >>> cd = aero.drag_coef_from_inputs(cl=0.5, mach=0.78, conf=AerodynamicConfig.CR)
             >>> # Using hlid/lg (BADA4 native)
             >>> cd = aero.drag_coef_from_inputs(
             ...     cl=0.5, mach=0.78, hlid="0", lg=LandingGearPosition.UP
@@ -1880,11 +1864,7 @@ class BADA4Model(AircraftModel):
 
         # Stall speed formula: V_stall = sqrt(2 * m * g * n / (rho0 * S * CL_max))
         v_stall_m_s = np.sqrt(
-            2.0
-            * mass
-            * isa.G
-            * n
-            / (isa.RHO_SL * self.aerodynamics.surface_area * cl_max)
+            2.0 * mass * isa.G * n / (isa.RHO_SL * self.aerodynamics.surface_area * cl_max)
         )
 
         return v_stall_m_s / KT
@@ -2082,21 +2062,11 @@ class BADA4Model(AircraftModel):
             return lg_val == LandingGearPosition.DOWN if lg_val is not None else None
 
         lg_mapping = {
-            AerodynamicConfig.CR: lg_to_bool(
-                self._arpm.lg_map.get(AerodynamicConfig.CR)
-            ),
-            AerodynamicConfig.IC: lg_to_bool(
-                self._arpm.lg_map.get(AerodynamicConfig.IC)
-            ),
-            AerodynamicConfig.TO: lg_to_bool(
-                self._arpm.lg_map.get(AerodynamicConfig.TO)
-            ),
-            AerodynamicConfig.AP: lg_to_bool(
-                self._arpm.lg_map.get(AerodynamicConfig.AP)
-            ),
-            AerodynamicConfig.LD: lg_to_bool(
-                self._arpm.lg_map.get(AerodynamicConfig.LD)
-            ),
+            AerodynamicConfig.CR: lg_to_bool(self._arpm.lg_map.get(AerodynamicConfig.CR)),
+            AerodynamicConfig.IC: lg_to_bool(self._arpm.lg_map.get(AerodynamicConfig.IC)),
+            AerodynamicConfig.TO: lg_to_bool(self._arpm.lg_map.get(AerodynamicConfig.TO)),
+            AerodynamicConfig.AP: lg_to_bool(self._arpm.lg_map.get(AerodynamicConfig.AP)),
+            AerodynamicConfig.LD: lg_to_bool(self._arpm.lg_map.get(AerodynamicConfig.LD)),
         }
 
         return select_by_config(config, lg_mapping)

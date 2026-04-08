@@ -118,9 +118,7 @@ def max_mach_number_by_altitude(
     # Below crossover pressure, compute Mach from impact pressure limit
     # Above crossover, use max_mach_num
     mach_from_pressure = (
-        2.0**0.5
-        * ((1.0 + (2.0 / units.GAMMA) * (p_i_max_eff / air_pressure)) ** 0.5 - 1.0)
-        ** 0.5
+        2.0**0.5 * ((1.0 + (2.0 / units.GAMMA) * (p_i_max_eff / air_pressure)) ** 0.5 - 1.0) ** 0.5
     )
 
     return (
@@ -422,9 +420,7 @@ def propulsion_efficiency_over_max(
         + 33.3333
         * (-1.0 - 0.97 * (sigma - 0.43) + 0.8281 * sigma * 0.43)
         * (c_t_over_c_t_eta_b**2)
-        + 37.037
-        * (1.0 + (sigma - 0.43) - 0.9163 * sigma * 0.43)
-        * (c_t_over_c_t_eta_b**3)
+        + 37.037 * (1.0 + (sigma - 0.43) - 0.9163 * sigma * 0.43) * (c_t_over_c_t_eta_b**3)
     )
 
     eta_over_eta_b_hi = (
@@ -496,11 +492,7 @@ def normalised_max_throttle_parameter(
     """
     return (
         (tet_mcc / air_temperature)
-        / (
-            tr_ec
-            * (1.0 - 0.53 * (mach_number - m_ec) ** 2)
-            * (1.0 + 0.2 * mach_number**2)
-        )
+        / (tr_ec * (1.0 - 0.53 * (mach_number - m_ec) ** 2) * (1.0 + 0.2 * mach_number**2))
         * (1.0 + buffer)
     )
 

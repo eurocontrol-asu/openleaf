@@ -205,9 +205,7 @@ class TestSelectByConfig:
 
     def test_vectorized(self):
         """Vectorized config selects per-element."""
-        configs = np.array(
-            [AerodynamicConfig.CR, AerodynamicConfig.TO, AerodynamicConfig.LD]
-        )
+        configs = np.array([AerodynamicConfig.CR, AerodynamicConfig.TO, AerodynamicConfig.LD])
         result = select_by_config(
             configs,
             {

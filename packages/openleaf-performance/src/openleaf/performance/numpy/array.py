@@ -136,9 +136,7 @@ def stack(arrays: Sequence, axis: int = 0):
                     raise ValueError("Can only stack Nx1 CasADi arrays!")
             else:
                 if not len(arr.shape) == 1:
-                    raise ValueError(
-                        "Can only stack 1D NumPy ndarrays alongside CasADi arrays!"
-                    )
+                    raise ValueError("Can only stack 1D NumPy ndarrays alongside CasADi arrays!")
 
         if axis == 0 or axis == -2:
             return ca.transpose(ca.horzcat(*arrays))
@@ -286,9 +284,7 @@ def diag(v, k=0):
             else:
                 return array([v[i - k, i] for i in range(n + k)])
         else:
-            raise NotImplementedError(
-                "Haven't yet added logic for non-square matrices."
-            )
+            raise NotImplementedError("Haven't yet added logic for non-square matrices.")
 
     if is_torch_type(v, recursive=False):
         torch = _get_torch()
@@ -405,9 +401,7 @@ def reshape(a, newshape, order: _OrderCF = "C"):
         elif len(newshape) == 2:
             newshape = tuple(newshape)
         elif len(newshape) > 2:
-            raise ValueError(
-                "CasADi data types are limited to no more than 2 dimensions."
-            )
+            raise ValueError("CasADi data types are limited to no more than 2 dimensions.")
 
         if order == "C":
             return ca.reshape(a.T, newshape[::-1]).T
@@ -459,9 +453,7 @@ def tile(A, reps):
         elif len(reps) == 2:
             return ca.repmat(A, reps[0], reps[1])
         else:
-            raise ValueError(
-                "Cannot have >2D arrays when using CasADi numeric backend!"
-            )
+            raise ValueError("Cannot have >2D arrays when using CasADi numeric backend!")
 
     # Use Array API for NumPy/PyTorch/CuPy/JAX
     xp = get_array_namespace(A)
@@ -488,9 +480,7 @@ def ones_like(a, dtype=None, order: _OrderKACF = "K", subok: bool = True, shape=
     return xp.ones_like(a, dtype=dtype)
 
 
-def empty_like(
-    prototype, dtype=None, order: _OrderKACF = "K", subok: bool = True, shape=None
-):
+def empty_like(prototype, dtype=None, order: _OrderKACF = "K", subok: bool = True, shape=None):
     """Return a new array with the same shape and type as a given array."""
     if is_casadi_type(prototype, recursive=False):
         return zeros_like(prototype)
@@ -500,9 +490,7 @@ def empty_like(
     return xp.empty_like(prototype, dtype=dtype)
 
 
-def full_like(
-    a, fill_value, dtype=None, order: _OrderKACF = "K", subok: bool = True, shape=None
-):
+def full_like(a, fill_value, dtype=None, order: _OrderKACF = "K", subok: bool = True, shape=None):
     """Return a full array with the same shape and type as a given array."""
     if is_casadi_type(a, recursive=False):
         return fill_value * ones_like(a)
@@ -548,6 +536,4 @@ def assert_equal_shape(
                 raise ValueError("The given arrays do not have the same shape!")
             else:
                 namelist = ", ".join(names)
-                raise ValueError(
-                    f"The given arrays {namelist} do not have the same shape!"
-                )
+                raise ValueError(f"The given arrays {namelist} do not have the same shape!")

@@ -263,14 +263,7 @@ class PSEngineModel(EngineModel[PSEngineData]):
         Returns:
             Thrust [N].
         """
-        return (
-            c_t
-            * 0.5
-            * units.GAMMA
-            * air_pressure
-            * mach_num**2
-            * self.aero_data.surface_area
-        )
+        return c_t * 0.5 * units.GAMMA * air_pressure * mach_num**2 * self.aero_data.surface_area
 
     @requires("mach_number", "air_temperature", "air_pressure")
     def thrust_max(self, data: KeyedData) -> ArrayScalarLike:
@@ -308,9 +301,7 @@ class PSEngineModel(EngineModel[PSEngineData]):
             Maximum thrust [N].
         """
         # Thrust coefficient at max efficiency
-        c_t_eta_b = thrust_coefficient_at_max_efficiency(
-            mach, self.data.m_des, self.data.c_t_des
-        )
+        c_t_eta_b = thrust_coefficient_at_max_efficiency(mach, self.data.m_des, self.data.c_t_des)
 
         # Max available thrust coefficient
         c_t_max = max_available_thrust_coefficient(
@@ -398,9 +389,7 @@ class PSEngineModel(EngineModel[PSEngineData]):
         c_t = self.thrust_coefficient(thrust, mach, air_pressure)
 
         # Thrust coefficient at max efficiency
-        c_t_eta_b = thrust_coefficient_at_max_efficiency(
-            mach, self.data.m_des, self.data.c_t_des
-        )
+        c_t_eta_b = thrust_coefficient_at_max_efficiency(mach, self.data.m_des, self.data.c_t_des)
 
         # Clamp c_t to available range
         c_t_max = max_available_thrust_coefficient(
@@ -668,9 +657,7 @@ class PSModel(AircraftModel):
         return cls(file, thrust_buffer=thrust_buffer)
 
     @classmethod
-    def from_pycontrails(
-        cls, aircraft_type: str, *, thrust_buffer: float = 0.0
-    ) -> PSModel:
+    def from_pycontrails(cls, aircraft_type: str, *, thrust_buffer: float = 0.0) -> PSModel:
         """Create PS model using pycontrails aircraft parameters.
 
         Requires pycontrails to be installed.
@@ -770,10 +757,7 @@ class PSModel(AircraftModel):
         climb_angle_rad = climb_angle * np.pi / 180.0
         lift_force = aircraft_mass * units.G * np.cos(climb_angle_rad)
         denom = (
-            (units.GAMMA / 2.0)
-            * air_pressure
-            * mach_num**2
-            * self.aerodynamics.data.surface_area
+            (units.GAMMA / 2.0) * air_pressure * mach_num**2 * self.aerodynamics.data.surface_area
         )
         return lift_force / denom
 

@@ -119,9 +119,7 @@ class TestBADA4Parsing:
         assert AerodynamicConfig.LD in cl_cfg, "LD must have CL_max entry"
         # CL_max values must be physically plausible (1.5-3.5 for transport a/c)
         for conf, cl_max in cl_cfg.items():
-            assert 1.0 < cl_max < 4.0, (
-                f"CL_max[{conf}]={cl_max} outside plausible range"
-            )
+            assert 1.0 < cl_max < 4.0, f"CL_max[{conf}]={cl_max} outside plausible range"
         # IC (HLid=2, LG=UP) must be less than LD (HLid=5, LG=DN) — more flaps = higher CL
         assert cl_cfg[AerodynamicConfig.IC] < cl_cfg[AerodynamicConfig.LD], (
             "LD CL_max must exceed IC CL_max (more flap deflection)"
@@ -153,15 +151,11 @@ class TestBADA4Parsing:
 
         # CR (clean): must return VMO=350
         cas_cr = limits.max_cas({"aerodynamic_configuration": AerodynamicConfig.CR})
-        assert cas_cr == pytest.approx(350.0), (
-            f"CR max_cas should be VMO=350, got {cas_cr}"
-        )
+        assert cas_cr == pytest.approx(350.0), f"CR max_cas should be VMO=350, got {cas_cr}"
 
         # IC (HL deployed): must return VFE=215, NOT VMO=350
         cas_ic = limits.max_cas({"aerodynamic_configuration": AerodynamicConfig.IC})
-        assert cas_ic == pytest.approx(215.0), (
-            f"IC max_cas should be VFE=215, got {cas_ic}"
-        )
+        assert cas_ic == pytest.approx(215.0), f"IC max_cas should be VFE=215, got {cas_ic}"
 
         # LD (HL deployed, LG down): min(VFE=177, VLE=280) = 177
         cas_ld = limits.max_cas({"aerodynamic_configuration": AerodynamicConfig.LD})
@@ -191,9 +185,7 @@ class TestBADA4Parsing:
         mach_cr = limits.max_mach({"aerodynamic_configuration": AerodynamicConfig.CR})
         mach_ld = limits.max_mach({"aerodynamic_configuration": AerodynamicConfig.LD})
 
-        assert mach_cr == pytest.approx(0.82), (
-            f"CR max_mach should be MMO=0.82, got {mach_cr}"
-        )
+        assert mach_cr == pytest.approx(0.82), f"CR max_mach should be MMO=0.82, got {mach_cr}"
         assert mach_ld == pytest.approx(0.67), (
             f"LD max_mach should be MLE=0.67 (not MMO=0.82), got {mach_ld}"
         )
@@ -296,8 +288,7 @@ class TestBADA4Engine:
             delta_isa=0.0,
         )
         fuel_flows = [
-            bada4_model.engine.fuel_flow({**state, "thrust": t})
-            for t in [20000, 40000, 60000]
+            bada4_model.engine.fuel_flow({**state, "thrust": t}) for t in [20000, 40000, 60000]
         ]
         assert np.all(np.diff(fuel_flows) > 0)
 
@@ -347,12 +338,8 @@ class TestBADA4Aerodynamics:
 
         # Test each non-clean configuration in the data
         for hlid, lg in bada4_model.aerodynamics.data.d_nonclean:
-            cd_nc = bada4_model.aerodynamics.drag_coef(
-                {**state, "hlid": hlid, "lg": lg}
-            )
-            assert cd_nc > cd_clean, (
-                f"hlid={hlid}, lg={lg}: CD {cd_nc} not > clean {cd_clean}"
-            )
+            cd_nc = bada4_model.aerodynamics.drag_coef({**state, "hlid": hlid, "lg": lg})
+            assert cd_nc > cd_clean, f"hlid={hlid}, lg={lg}: CD {cd_nc} not > clean {cd_clean}"
 
 
 class TestBADA4Integration:
@@ -497,9 +484,7 @@ def bada4_sr20_ptd(bada4_data_dir: Path):
     """Load BADA4 SR20 piston PTD file."""
     path = _find_bada4_ptd(bada4_data_dir, "SR20")
     if path is None:
-        pytest.skip(
-            f"PTD file not found: {bada4_data_dir}/SR20_ISA.PTD or SR20/SR20_ISA.PTD"
-        )
+        pytest.skip(f"PTD file not found: {bada4_data_dir}/SR20_ISA.PTD or SR20/SR20_ISA.PTD")
     return parse_ptd_file(path)
 
 
@@ -630,9 +615,7 @@ class TestBADA4TurbopropPTDValidation:
     BADA4_TURBOPROP_HIGH_FL_TOLERANCE = 0.005  # 0.5% for FL >= 60
 
     @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
-    def test_thrust_matches_ptd(
-        self, bada4_turboprop_model, bada4_at72_ptd, mass_category
-    ):
+    def test_thrust_matches_ptd(self, bada4_turboprop_model, bada4_at72_ptd, mass_category):
         """Test maximum thrust matches PTD table values within tolerance.
 
         At high altitude (FL >= 60): Model matches PTD within 0.5% (equation 3.3-12).
@@ -671,9 +654,7 @@ class TestBADA4TurbopropPTDValidation:
             )
 
     @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
-    def test_fuel_flow_matches_ptd(
-        self, bada4_turboprop_model, bada4_at72_ptd, mass_category
-    ):
+    def test_fuel_flow_matches_ptd(self, bada4_turboprop_model, bada4_at72_ptd, mass_category):
         """Test fuel flow matches PTD table values within tolerance.
 
         Uses PTD thrust for fuel calculation to isolate fuel model accuracy.
@@ -698,17 +679,13 @@ class TestBADA4TurbopropPTDValidation:
             }
             fuel_model = bada4_turboprop_model.engine.fuel_flow(state) * 60
 
-            assert fuel_model == pytest.approx(
-                row.fuel_flow, rel=PROPELLER_FUEL_TOLERANCE
-            ), (
+            assert fuel_model == pytest.approx(row.fuel_flow, rel=PROPELLER_FUEL_TOLERANCE), (
                 f"FL{row.fl} {mass_category}: fuel {fuel_model:.2f} kg/min != "
                 f"PTD {row.fuel_flow:.2f} kg/min"
             )
 
     @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
-    def test_drag_matches_ptd(
-        self, bada4_turboprop_model, bada4_at72_ptd, mass_category
-    ):
+    def test_drag_matches_ptd(self, bada4_turboprop_model, bada4_at72_ptd, mass_category):
         """Test drag matches PTD table values within tolerance."""
         section = bada4_at72_ptd.get_section(mass_category, "climb")
         if section is None:
@@ -733,9 +710,7 @@ class TestBADA4TurbopropPTDValidation:
                 hlid = "0"
                 lg = "UP"
 
-            cl = bada4_turboprop_model.lift_coef_from_inputs(
-                v=tas, m=row.mass, sigma=sigma
-            )
+            cl = bada4_turboprop_model.lift_coef_from_inputs(v=tas, m=row.mass, sigma=sigma)
             cd = bada4_turboprop_model.aerodynamics.drag_coef(
                 {
                     "lift_coef": cl,
@@ -744,13 +719,9 @@ class TestBADA4TurbopropPTDValidation:
                     "lg": lg,
                 }
             )
-            drag_model = bada4_turboprop_model.drag_from_inputs(
-                v=tas, sigma=sigma, cd=cd
-            )
+            drag_model = bada4_turboprop_model.drag_from_inputs(v=tas, sigma=sigma, cd=cd)
 
-            assert drag_model == pytest.approx(
-                row.drag, rel=PROPELLER_DRAG_TOLERANCE
-            ), (
+            assert drag_model == pytest.approx(row.drag, rel=PROPELLER_DRAG_TOLERANCE), (
                 f"FL{row.fl} {mass_category} ({row.config}): drag {drag_model:.0f} N != "
                 f"PTD {row.drag:.0f} N (hlid={hlid}, lg={lg})"
             )
@@ -760,9 +731,7 @@ class TestBADA4PistonPTDValidation:
     """Validate BADA4 piston model against official performance tables."""
 
     @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
-    def test_thrust_matches_ptd(
-        self, bada4_piston_model, bada4_sr20_ptd, mass_category
-    ):
+    def test_thrust_matches_ptd(self, bada4_piston_model, bada4_sr20_ptd, mass_category):
         """Test maximum thrust matches PTD table values within tolerance."""
         section = bada4_sr20_ptd.get_section(mass_category, "climb")
         if section is None:
@@ -783,9 +752,7 @@ class TestBADA4PistonPTDValidation:
             }
             thrust_model = bada4_piston_model.engine.thrust_max(state)
 
-            assert thrust_model == pytest.approx(
-                row.thrust, rel=PROPELLER_THRUST_TOLERANCE
-            ), (
+            assert thrust_model == pytest.approx(row.thrust, rel=PROPELLER_THRUST_TOLERANCE), (
                 f"FL{row.fl} {mass_category}: thrust {thrust_model:.0f} N != "
                 f"PTD {row.thrust:.0f} N"
             )
@@ -816,9 +783,7 @@ class TestBADA4PistonPTDValidation:
                 hlid = "0"
                 lg = "UP"
 
-            cl = bada4_piston_model.lift_coef_from_inputs(
-                v=tas, m=row.mass, sigma=sigma
-            )
+            cl = bada4_piston_model.lift_coef_from_inputs(v=tas, m=row.mass, sigma=sigma)
             cd = bada4_piston_model.aerodynamics.drag_coef(
                 {
                     "lift_coef": cl,
@@ -829,9 +794,7 @@ class TestBADA4PistonPTDValidation:
             )
             drag_model = bada4_piston_model.drag_from_inputs(v=tas, sigma=sigma, cd=cd)
 
-            assert drag_model == pytest.approx(
-                row.drag, rel=PROPELLER_DRAG_TOLERANCE
-            ), (
+            assert drag_model == pytest.approx(row.drag, rel=PROPELLER_DRAG_TOLERANCE), (
                 f"FL{row.fl} {mass_category} ({row.config}): drag {drag_model:.0f} N != "
                 f"PTD {row.drag:.0f} N (hlid={hlid}, lg={lg})"
             )
@@ -868,12 +831,8 @@ class TestBADA4CruiseTrajectory:
         assert np.all(fuel_flow > 0), "Fuel flow must be positive"
 
         # A320 twin-engine cruise fuel flow: ~0.5-1.2 kg/s total
-        assert np.all(fuel_flow > 0.3), (
-            f"Fuel flow too low: min={np.min(fuel_flow):.3f} kg/s"
-        )
-        assert np.all(fuel_flow < 1.5), (
-            f"Fuel flow too high: max={np.max(fuel_flow):.3f} kg/s"
-        )
+        assert np.all(fuel_flow > 0.3), f"Fuel flow too low: min={np.min(fuel_flow):.3f} kg/s"
+        assert np.all(fuel_flow < 1.5), f"Fuel flow too high: max={np.max(fuel_flow):.3f} kg/s"
 
 
 # ==============================================================================
@@ -895,12 +854,8 @@ class TestBADA4LimitsScalar:
 
     def test_max_cas_gear_down_reduces_limit(self, bada4_model):
         """Test max_cas with gear down is <= clean config."""
-        max_cas_clean = bada4_model.limits.max_cas(
-            {"hl_position": "0", "lg_extended": False}
-        )
-        max_cas_gear = bada4_model.limits.max_cas(
-            {"hl_position": "0", "lg_extended": True}
-        )
+        max_cas_clean = bada4_model.limits.max_cas({"hl_position": "0", "lg_extended": False})
+        max_cas_gear = bada4_model.limits.max_cas({"hl_position": "0", "lg_extended": True})
 
         assert max_cas_gear <= max_cas_clean, "VLE should be <= VMO"
 
@@ -951,13 +906,10 @@ class TestBADA4LimitsScalar:
         masses = [50000.0, 65000.0, 78000.0]
 
         min_cas_values = [
-            bada4_model.limits.min_cas({**state_base, "aircraft_mass": m})
-            for m in masses
+            bada4_model.limits.min_cas({**state_base, "aircraft_mass": m}) for m in masses
         ]
 
-        assert np.all(np.diff(min_cas_values) > 0), (
-            "Stall speed should increase with mass"
-        )
+        assert np.all(np.diff(min_cas_values) > 0), "Stall speed should increase with mass"
 
 
 class TestBADA4LimitsArray:

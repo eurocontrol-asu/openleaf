@@ -103,10 +103,7 @@ class TestValidateRange:
         """Test validate_range with raise_error=False returns bool."""
         assert validate_range(-0.1, "mach", min_value=0.0, raise_error=False) is False
         assert validate_range(1.5, "mach", max_value=1.0, raise_error=False) is False
-        assert (
-            validate_range(0.5, "mach", min_value=0.0, max_value=1.0, raise_error=False)
-            is True
-        )
+        assert validate_range(0.5, "mach", min_value=0.0, max_value=1.0, raise_error=False) is True
 
     def test_validate_range_min_only(self):
         """Test validating with min_value only."""

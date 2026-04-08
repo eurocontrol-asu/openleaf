@@ -153,9 +153,7 @@ def thrust_from_rocd(
     # Solve TEM for thrust: T = D + (m · g · rocd_geo) / (V · f)
     # Clamp denominator to avoid division by zero (level flight with f→0)
     denom = true_airspeed * f
-    safe_denom = np.maximum(np.abs(denom), EPSILON_CLAMP) * np.sign(
-        denom + EPSILON_CLAMP
-    )
+    safe_denom = np.maximum(np.abs(denom), EPSILON_CLAMP) * np.sign(denom + EPSILON_CLAMP)
     return drag + (mass * isa.G * rocd_geo) / safe_denom
 
 
@@ -196,9 +194,7 @@ def f_from_state(
     # When T=D (level flight), f is undefined; return default (1.0)
     excess_thrust = thrust - drag
     denom = excess_thrust * true_airspeed
-    safe_denom = np.maximum(np.abs(denom), EPSILON_CLAMP) * np.sign(
-        denom + EPSILON_CLAMP
-    )
+    safe_denom = np.maximum(np.abs(denom), EPSILON_CLAMP) * np.sign(denom + EPSILON_CLAMP)
 
     # Compute f, but return default when excess_thrust ≈ 0
     f_computed = (mass * isa.G * rocd_geo) / safe_denom
@@ -237,9 +233,7 @@ def residual(
     Returns:
         TEM residual [m/s]. Zero when equation is satisfied.
     """
-    rocd_computed = rocd_pressure(
-        thrust, drag, mass, true_airspeed, f, air_temperature, altitude
-    )
+    rocd_computed = rocd_pressure(thrust, drag, mass, true_airspeed, f, air_temperature, altitude)
     return rocd_computed - rocd
 
 
@@ -333,9 +327,7 @@ class TotalEnergyModel:
         self._true_airspeed = true_airspeed
         self._altitude = altitude
         self._air_temperature = (
-            air_temperature
-            if air_temperature is not None
-            else isa.air_temperature(altitude)
+            air_temperature if air_temperature is not None else isa.air_temperature(altitude)
         )
 
         # Store user-provided values (may contain NaN for per-row branching)

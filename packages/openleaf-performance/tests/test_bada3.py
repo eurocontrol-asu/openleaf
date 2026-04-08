@@ -185,8 +185,7 @@ class TestBADA3Engine:
             "delta_isa": 0.0,
         }
         fuel_flows = [
-            bada3_model.engine.fuel_flow({**state, "thrust": t})
-            for t in [20000, 40000, 60000]
+            bada3_model.engine.fuel_flow({**state, "thrust": t}) for t in [20000, 40000, 60000]
         ]
         assert np.all(np.diff(fuel_flows) > 0)
 
@@ -199,8 +198,7 @@ class TestBADA3Engine:
             "delta_isa": 0.0,
         }
         fuel_flows = [
-            bada3_piston_model.engine.fuel_flow({**state, "thrust": t})
-            for t in [1000, 2000, 3000]
+            bada3_piston_model.engine.fuel_flow({**state, "thrust": t}) for t in [1000, 2000, 3000]
         ]
         assert np.allclose(fuel_flows, fuel_flows[0])
 
@@ -416,9 +414,7 @@ class TestBADA3PerformanceTableValidation:
 
             # Get aerodynamic configuration from PTD (TO, IC, CR, AP, LD)
             config = (
-                AerodynamicConfig.from_string(row.config)
-                if row.config
-                else AerodynamicConfig.CR
+                AerodynamicConfig.from_string(row.config) if row.config else AerodynamicConfig.CR
             )
 
             cl = bada3_model.lift_coef_from_inputs(v=tas, m=row.mass, sigma=sigma)
@@ -441,9 +437,7 @@ class TestBADA3TurbopropPTDValidation:
     """Validate BADA3 turboprop model against official performance tables."""
 
     @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
-    def test_thrust_matches_ptd(
-        self, bada3_turboprop_model, bada3_at72_ptd, mass_category
-    ):
+    def test_thrust_matches_ptd(self, bada3_turboprop_model, bada3_at72_ptd, mass_category):
         """Test maximum thrust matches PTD table values within tolerance."""
         section = bada3_at72_ptd.get_section(mass_category, "climb")
         if section is None:
@@ -464,17 +458,13 @@ class TestBADA3TurbopropPTDValidation:
             }
             thrust_model = bada3_turboprop_model.engine.thrust_max(state)
 
-            assert thrust_model == pytest.approx(
-                row.thrust, rel=propeller_thrust_tolerance
-            ), (
+            assert thrust_model == pytest.approx(row.thrust, rel=propeller_thrust_tolerance), (
                 f"FL{row.fl} {mass_category}: thrust {thrust_model:.0f} N != "
                 f"PTD {row.thrust:.0f} N"
             )
 
     @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
-    def test_drag_matches_ptd(
-        self, bada3_turboprop_model, bada3_at72_ptd, mass_category
-    ):
+    def test_drag_matches_ptd(self, bada3_turboprop_model, bada3_at72_ptd, mass_category):
         """Test drag matches PTD table values within tolerance."""
         section = bada3_at72_ptd.get_section(mass_category, "climb")
         if section is None:
@@ -488,14 +478,10 @@ class TestBADA3TurbopropPTDValidation:
 
             # Get aerodynamic configuration from PTD (TO, IC, CR, AP, LD)
             config = (
-                AerodynamicConfig.from_string(row.config)
-                if row.config
-                else AerodynamicConfig.CR
+                AerodynamicConfig.from_string(row.config) if row.config else AerodynamicConfig.CR
             )
 
-            cl = bada3_turboprop_model.lift_coef_from_inputs(
-                v=tas, m=row.mass, sigma=sigma
-            )
+            cl = bada3_turboprop_model.lift_coef_from_inputs(v=tas, m=row.mass, sigma=sigma)
             cd = bada3_turboprop_model.aerodynamics.drag_coef(
                 {
                     "lift_coef": cl,
@@ -503,13 +489,9 @@ class TestBADA3TurbopropPTDValidation:
                     "aerodynamic_configuration": config,
                 }
             )
-            drag_model = bada3_turboprop_model.drag_from_inputs(
-                v=tas, sigma=sigma, cd=cd
-            )
+            drag_model = bada3_turboprop_model.drag_from_inputs(v=tas, sigma=sigma, cd=cd)
 
-            assert drag_model == pytest.approx(
-                row.drag, rel=PROPELLER_DRAG_TOLERANCE
-            ), (
+            assert drag_model == pytest.approx(row.drag, rel=PROPELLER_DRAG_TOLERANCE), (
                 f"FL{row.fl} {mass_category} {config.value}: drag {drag_model:.0f} N != "
                 f"PTD {row.drag:.0f} N"
             )
@@ -519,9 +501,7 @@ class TestBADA3PistonPTDValidation:
     """Validate BADA3 piston model against official performance tables."""
 
     @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
-    def test_thrust_matches_ptd(
-        self, bada3_piston_model, bada3_sr20_ptd, mass_category
-    ):
+    def test_thrust_matches_ptd(self, bada3_piston_model, bada3_sr20_ptd, mass_category):
         """Test maximum thrust matches PTD table values within tolerance."""
         section = bada3_sr20_ptd.get_section(mass_category, "climb")
         if section is None:
@@ -542,9 +522,7 @@ class TestBADA3PistonPTDValidation:
             }
             thrust_model = bada3_piston_model.engine.thrust_max(state)
 
-            assert thrust_model == pytest.approx(
-                row.thrust, rel=propeller_thrust_tolerance
-            ), (
+            assert thrust_model == pytest.approx(row.thrust, rel=propeller_thrust_tolerance), (
                 f"FL{row.fl} {mass_category}: thrust {thrust_model:.0f} N != "
                 f"PTD {row.thrust:.0f} N"
             )
@@ -564,14 +542,10 @@ class TestBADA3PistonPTDValidation:
 
             # Get aerodynamic configuration from PTD (TO, IC, CR, AP, LD)
             config = (
-                AerodynamicConfig.from_string(row.config)
-                if row.config
-                else AerodynamicConfig.CR
+                AerodynamicConfig.from_string(row.config) if row.config else AerodynamicConfig.CR
             )
 
-            cl = bada3_piston_model.lift_coef_from_inputs(
-                v=tas, m=row.mass, sigma=sigma
-            )
+            cl = bada3_piston_model.lift_coef_from_inputs(v=tas, m=row.mass, sigma=sigma)
             cd = bada3_piston_model.aerodynamics.drag_coef(
                 {
                     "lift_coef": cl,
@@ -581,9 +555,7 @@ class TestBADA3PistonPTDValidation:
             )
             drag_model = bada3_piston_model.drag_from_inputs(v=tas, sigma=sigma, cd=cd)
 
-            assert drag_model == pytest.approx(
-                row.drag, rel=PROPELLER_DRAG_TOLERANCE
-            ), (
+            assert drag_model == pytest.approx(row.drag, rel=PROPELLER_DRAG_TOLERANCE), (
                 f"FL{row.fl} {mass_category} {config.value}: drag {drag_model:.0f} N != "
                 f"PTD {row.drag:.0f} N"
             )
@@ -620,12 +592,8 @@ class TestBADA3CruiseTrajectory:
         assert np.all(fuel_flow > 0), "Fuel flow must be positive"
 
         # A320 twin-engine cruise fuel flow: ~0.5-1.2 kg/s total
-        assert np.all(fuel_flow > 0.3), (
-            f"Fuel flow too low: min={np.min(fuel_flow):.3f} kg/s"
-        )
-        assert np.all(fuel_flow < 1.5), (
-            f"Fuel flow too high: max={np.max(fuel_flow):.3f} kg/s"
-        )
+        assert np.all(fuel_flow > 0.3), f"Fuel flow too low: min={np.min(fuel_flow):.3f} kg/s"
+        assert np.all(fuel_flow < 1.5), f"Fuel flow too high: max={np.max(fuel_flow):.3f} kg/s"
 
 
 # ==============================================================================
@@ -661,15 +629,11 @@ class TestBADA3LimitsScalar:
         masses = [50000.0, 65000.0, 78000.0]
 
         min_cas_values = [
-            bada3_model.limits.min_cas(
-                {"aerodynamic_configuration": config, "aircraft_mass": m}
-            )
+            bada3_model.limits.min_cas({"aerodynamic_configuration": config, "aircraft_mass": m})
             for m in masses
         ]
 
-        assert np.all(np.diff(min_cas_values) > 0), (
-            "Stall speed should increase with mass"
-        )
+        assert np.all(np.diff(min_cas_values) > 0), "Stall speed should increase with mass"
 
     def test_max_altitude_sensible_values(self, bada3_model):
         """Test max_altitude returns sensible ceiling."""
@@ -689,8 +653,7 @@ class TestBADA3LimitsScalar:
         masses = [50000.0, 65000.0, 78000.0]
 
         max_alts = [
-            bada3_model.limits.max_altitude({**state_base, "aircraft_mass": m})
-            for m in masses
+            bada3_model.limits.max_altitude({**state_base, "aircraft_mass": m}) for m in masses
         ]
 
         assert np.all(np.diff(max_alts) <= 0), "Ceiling should decrease with mass"
@@ -701,14 +664,11 @@ class TestBADA3LimitsScalar:
         delta_isas = [0.0, 10.0, 20.0]  # ISA, ISA+10, ISA+20
 
         max_alts = [
-            bada3_model.limits.max_altitude({**state_base, "delta_isa": dt})
-            for dt in delta_isas
+            bada3_model.limits.max_altitude({**state_base, "delta_isa": dt}) for dt in delta_isas
         ]
 
         # Hot day reduces ceiling (Gt is negative)
-        assert np.all(np.diff(max_alts) <= 0), (
-            "Ceiling should decrease in hot conditions"
-        )
+        assert np.all(np.diff(max_alts) <= 0), "Ceiling should decrease in hot conditions"
 
 
 class TestBADA3LimitsArray:

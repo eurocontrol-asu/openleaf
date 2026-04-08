@@ -223,9 +223,7 @@ def available_bada3_aircraft(
                 continue
             # Try alternate underscore patterns
             base = entry.file_prefix.rstrip("_")
-            if any(
-                (data_path / f"{base}{s}.OPF").exists() for s in ("__", "___", "_", "")
-            ):
+            if any((data_path / f"{base}{s}.OPF").exists() for s in ("__", "___", "_", "")):
                 available.append(icao)
         return sorted(available)
 

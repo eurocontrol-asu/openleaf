@@ -129,9 +129,7 @@ def configure_logging(
     _logging_configured = True
 
 
-def get_logger(
-    name: str | None = None, **initial_context: Any
-) -> structlog.BoundLogger:
+def get_logger(name: str | None = None, **initial_context: Any) -> structlog.BoundLogger:
     """Get a structured logger for AetherX modules.
 
     Returns a structlog bound logger with optional initial context.

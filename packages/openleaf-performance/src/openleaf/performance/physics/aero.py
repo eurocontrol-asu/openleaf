@@ -86,9 +86,7 @@ def aerodynamic_force(
     return coefficient * q * surface_area
 
 
-def f_from_gradient(
-    true_airspeed: ArrayScalarLike, dv_dh: ArrayScalarLike
-) -> ArrayScalarLike:
+def f_from_gradient(true_airspeed: ArrayScalarLike, dv_dh: ArrayScalarLike) -> ArrayScalarLike:
     """Calculate energy share factor f from speed gradient (generic formula).
 
     This is the fundamental f formula from the TEM derivation.
@@ -173,10 +171,7 @@ def crossover_altitude(cas: ArrayScalarLike, mach: ArrayScalarLike) -> ArrayScal
             )
             - 1.0
         )
-        / (
-            np.power(1 + ((isa.GAMMA - 1.0) / 2.0) * (mach**2), np.power(isa.MU, -1))
-            - 1.0
-        )
+        / (np.power(1 + ((isa.GAMMA - 1.0) / 2.0) * (mach**2), np.power(isa.MU, -1)) - 1.0)
     )
 
     return isa.pressure_altitude(p_trans)

@@ -35,6 +35,21 @@ if "OPENLEAF_BADA4_PATH" not in os.environ and _local_data_dir.exists():
 import numpy as np
 import pytest
 
+# Patch CasADi's broken SWIG __hash__ binding (GenSharedObject___hash__)
+# so that CasADi types can be used in sets and as dict keys in tests.
+try:
+    import casadi
+
+    for _cls in (casadi.DM, casadi.MX, casadi.SX):
+        if not callable(getattr(_cls, "__hash__", None)):
+            continue
+        try:
+            hash(_cls(0))
+        except (NotImplementedError, TypeError):
+            _cls.__hash__ = lambda self: id(self)
+except ImportError:
+    pass
+
 
 # --- Helper Functions ---
 
@@ -68,9 +83,7 @@ def _find_bada4_file(data_dir: Path, aircraft_name: str) -> Path | None:
     return None
 
 
-def _find_bada4_ptd(
-    data_dir: Path, aircraft_name: str, isa_suffix: str = "_ISA"
-) -> Path | None:
+def _find_bada4_ptd(data_dir: Path, aircraft_name: str, isa_suffix: str = "_ISA") -> Path | None:
     """Find BADA4 PTD file supporting both flat and folder structures.
 
     Supports:
