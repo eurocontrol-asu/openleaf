@@ -234,6 +234,7 @@ openleaf/
 │   ├── perfos.py          # Abstract base classes and interfaces
 │   ├── factory.py         # Model factory (ModelType → AircraftModel)
 │   ├── trajectory.py      # AircraftTrajectoryData container
+│   ├── envelope.py        # EnvelopeChecker (flight envelope logic)
 │   ├── types.py           # StandardFlightState and shared types
 │   └── validation.py      # Input validation utilities
 ├── models/
