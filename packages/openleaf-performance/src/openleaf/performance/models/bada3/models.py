@@ -49,8 +49,11 @@ from openleaf.performance.physics.units import KT
 
 logger = get_logger(__name__)
 
-data_path = get_bada3_path()
-synonym_path = get_bada3_synonyms_path()
+
+def _get_paths() -> tuple[Path, Path | None]:
+    """Lazy path resolution -- only fails when BADA3 is actually used."""
+    return get_bada3_path(), get_bada3_synonyms_path()
+
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -662,6 +665,7 @@ class BADA3Model(AircraftModel):
             77000.0
         """
         logger.info("Loading BADA3 model for %s", icao)
+        data_path, synonym_path = _get_paths()
         opf_file = resolve_bada3_file(icao, data_path, synonym_path)
         logger.debug("Resolved OPF file: %s", opf_file)
         data = parse_bada3_file(str(opf_file))
@@ -740,6 +744,7 @@ class BADA3Model(AircraftModel):
         Raises:
             ConfigurationError: If BADA3 data path is not configured.
         """
+        data_path, synonym_path = _get_paths()
         return available_bada3_aircraft(data_path, synonym_path)
 
     def aerodynamic_configuration(self, data: KeyedData) -> ArrayScalarLike:

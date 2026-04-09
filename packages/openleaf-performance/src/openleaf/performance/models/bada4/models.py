@@ -57,8 +57,11 @@ from openleaf.performance.physics.units import MS_TO_KT
 
 logger = get_logger(__name__)
 
-data_path = get_bada4_path()
-synonym_path = get_bada4_synonyms_path()
+
+def _get_paths() -> tuple[Path, Path | None]:
+    """Lazy path resolution -- only fails when BADA4 is actually used."""
+    return get_bada4_path(), get_bada4_synonyms_path()
+
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -1578,6 +1581,7 @@ class BADA4Model(AircraftModel):
             78000.0
         """
         logger.info("Loading BADA4 model for %s", icao)
+        data_path, synonym_path = _get_paths()
         xml_file = resolve_bada4_file(icao, data_path, synonym_path)
         logger.debug("Resolved XML file: %s", xml_file)
         data = parse_bada4_file(str(xml_file))
@@ -1655,6 +1659,7 @@ class BADA4Model(AircraftModel):
         Raises:
             ConfigurationError: If BADA4 data path is not configured.
         """
+        data_path, synonym_path = _get_paths()
         return available_bada4_aircraft(data_path, synonym_path)
 
     # -------------------------------------------------------------------------
