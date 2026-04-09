@@ -11,9 +11,19 @@ hide:
 
     ---
 
-    A modular, differentiable aircraft performance modeling framework supporting BADA, Poll-Schumann, OpenAP and more.
+    Modular, differentiable aircraft performance modeling with BADA, Poll-Schumann, OpenAP and more.
+
+    [![cov](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/coverage.json)](https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml)
 
     [:octicons-arrow-right-24: Getting Started](../openleaf-performance/)
+
+-   :material-cube-outline:{ .lg .middle } **openleaf-core**
+
+    ---
+
+    Shared types and interfaces for the OpenLeaf suite.
+
+    *Documentation coming soon.*
 
 </div>
 
@@ -21,9 +31,9 @@ hide:
 
 ```mermaid
 graph TD
-    classDef perf fill:#42A5F5,stroke:#1E88E5
-    classDef core fill:#78909C,stroke:#546E7A
+    classDef perf fill:#B3D4F0,stroke:#023961
+    classDef core fill:#C4DFF5,stroke:#15588F
 
-    PERF["openleaf-performance\nAircraft performance"]:::perf --> CORE
-    CORE["openleaf-core\nShared types & interfaces"]:::core
+    PERF["openleaf-performance<br/>Aircraft performance"]:::perf --> CORE
+    CORE["openleaf-core<br/>Shared types & interfaces"]:::core
 ```

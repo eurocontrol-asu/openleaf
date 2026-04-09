@@ -6,7 +6,7 @@
 <p align="center">
   <!-- Status -->
   <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://coveralls.io/github/eurocontrol-asu/openleaf?branch=main"><img src="https://coveralls.io/repos/github/eurocontrol-asu/openleaf/badge.svg?branch=main" alt="Coverage"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/coverage.json" alt="Coverage"></a>
   <!-- Stack -->
   <img src="https://img.shields.io/badge/python-3.12%2B-blue" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/casadi-symbolic-orange" alt="CasADi">

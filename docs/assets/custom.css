@@ -1,20 +1,20 @@
-/* OpenLeaf custom theme — green-tinted palette for aviation sustainability */
+/* OpenLeaf custom theme — colors derived from logo.svg gradients */
 
 /* -- Light mode -- */
 [data-md-color-scheme="default"] {
-    --md-primary-fg-color: #1b5e20;
-    --md-primary-fg-color--light: #2e7d32;
-    --md-primary-fg-color--dark: #0d3d12;
+    --md-primary-fg-color: #023961;
+    --md-primary-fg-color--light: #15588F;
+    --md-primary-fg-color--dark: #03355A;
     --md-primary-bg-color: #ffffff;
-    --md-accent-fg-color: #00897b;
+    --md-accent-fg-color: #2983CD;
 }
 
 /* -- Dark mode -- */
 [data-md-color-scheme="slate"] {
-    --md-primary-fg-color: #66bb6a;
-    --md-primary-fg-color--light: #81c784;
-    --md-primary-fg-color--dark: #4caf50;
-    --md-accent-fg-color: #26a69a;
+    --md-primary-fg-color: #74BBE4;
+    --md-primary-fg-color--light: #409DDF;
+    --md-primary-fg-color--dark: #2373B2;
+    --md-accent-fg-color: #409DDF;
 }
 
 /* -- Header: center search -- */
@@ -96,7 +96,7 @@
 
 /* -- Sidebar: active page highlight -- */
 .md-nav__link--active {
-    background: rgba(0, 137, 123, 0.1) !important;
+    background: rgba(41, 131, 205, 0.1) !important;
     border-radius: 6px !important;
     padding-left: 0.6rem !important;
     border-left: 3px solid var(--md-accent-fg-color) !important;
@@ -105,18 +105,6 @@
 }
 
 .md-nav__link:hover {
-    background: rgba(0, 137, 123, 0.05);
+    background: rgba(41, 131, 205, 0.05);
     border-radius: 6px;
-}
-
-/* -- Mermaid: white text in colored nodes (light mode) -- */
-[data-md-color-scheme="default"] .mermaid .node .nodeLabel,
-[data-md-color-scheme="default"] .mermaid .node .label div,
-[data-md-color-scheme="default"] .mermaid .node .label span {
-    color: #ffffff !important;
-}
-
-[data-md-color-scheme="default"] .mermaid .node text,
-[data-md-color-scheme="default"] .mermaid .node tspan {
-    fill: #ffffff !important;
 }

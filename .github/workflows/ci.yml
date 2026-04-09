@@ -10,6 +10,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 jobs:
   lint:
     name: Lint & Type Check
@@ -73,12 +76,82 @@ jobs:
         env:
           OPENLEAF_BADA3_PATH: ${{ github.workspace }}/bada_data/3.16
           OPENLEAF_BADA4_PATH: ${{ github.workspace }}/bada_data/4.2.1
-        run: uv run --package ${{ matrix.package }} --directory packages/${{ matrix.package }} pytest --cov --cov-report=xml
+        run: |
+          uv run --package ${{ matrix.package }} --directory packages/${{ matrix.package }} \
+            pytest --cov --cov-report=json:coverage.json --no-cov-on-fail -q
 
-      - name: Upload coverage
+      - name: Upload coverage artifact
         if: matrix.python-version == '3.12'
-        uses: codecov/codecov-action@v6
+        uses: actions/upload-artifact@v4
         with:
-          files: packages/${{ matrix.package }}/coverage.xml
-          flags: ${{ matrix.package }}
-          fail_ci_if_error: false
+          name: coverage-${{ matrix.package }}
+          path: packages/${{ matrix.package }}/coverage.json
+
+  badges:
+    name: Coverage Badges
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: _artifacts
+
+      - name: Generate badge JSON
+        id: badges
+        run: |
+          mkdir -p _publish/badges
+
+          score_color() {
+            local SCORE=$1
+            if [ "$SCORE" -ge 95 ]; then echo "brightgreen"
+            elif [ "$SCORE" -ge 80 ]; then echo "green"
+            elif [ "$SCORE" -ge 60 ]; then echo "yellow"
+            else echo "red"; fi
+          }
+
+          write_badge() {
+            local DIR=$1 NAME=$2 LABEL=$3 VALUE=$4
+            mkdir -p "$DIR"
+            local SCORE_INT=$(python3 -c "print(int(float('${VALUE}')))")
+            local COLOR=$(score_color "$SCORE_INT")
+            jq -n --arg l "$LABEL" --arg v "$VALUE" --arg c "$COLOR" \
+              '{schemaVersion:1, label:$l, message:"\($v)%", color:$c, style:"flat"}' \
+              > "$DIR/$NAME.json"
+          }
+
+          TOTAL_COV=0
+          COUNT=0
+
+          for PKG in openleaf-core openleaf-performance; do
+            COV_FILE="_artifacts/coverage-$PKG/coverage.json"
+            if [ -f "$COV_FILE" ]; then
+              COV=$(jq '.totals.percent_covered_display' "$COV_FILE" | tr -d '"')
+            else
+              COV=0
+            fi
+
+            echo ":: $PKG — Coverage ${COV}%"
+            write_badge "_publish/badges/$PKG" "coverage" "coverage" "$COV"
+
+            TOTAL_COV=$(python3 -c "print(round($TOTAL_COV + float('${COV}'), 1))")
+            COUNT=$((COUNT + 1))
+          done
+
+          AVG_COV=$(python3 -c "print(round($TOTAL_COV / $COUNT))")
+          write_badge "_publish/badges" "coverage" "coverage" "$AVG_COV"
+
+          echo "coverage=$AVG_COV" >> "$GITHUB_OUTPUT"
+          echo ":: Average coverage: ${AVG_COV}%"
+
+      - name: Push badges to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./_publish
+          keep_files: true
+          commit_message: "ci: coverage=${{ steps.badges.outputs.coverage }}%"
