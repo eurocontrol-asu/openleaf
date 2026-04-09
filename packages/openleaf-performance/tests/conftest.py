@@ -5,32 +5,12 @@ Provides fixtures for aircraft models, test data paths, and common test utilitie
 Tests requiring proprietary BADA data are automatically skipped if data is unavailable.
 """
 
-import os
 import sys
 from pathlib import Path
 
 
 # Add tests directory to path for local test modules (e.g., ptd_parser)
 sys.path.insert(0, str(Path(__file__).parent))
-
-# Local data directory (for backwards compatibility)
-_local_data_dir = Path(__file__).parent.parent / "data"
-
-# Configure BADA paths from environment variables BEFORE importing aetherx
-# Priority: env var > local data/ folder
-if (
-    "OPENLEAF_BADA3_PATH" not in os.environ
-    and _local_data_dir.exists()
-    and (_local_data_dir / "A320__.OPF").exists()
-):
-    os.environ["OPENLEAF_BADA3_PATH"] = str(_local_data_dir)
-
-if "OPENLEAF_BADA4_PATH" not in os.environ and _local_data_dir.exists():
-    # Check for flat structure (A320-212.xml) or folder structure (A320-212/A320-212.xml)
-    flat_exists = (_local_data_dir / "A320-212.xml").exists()
-    folder_exists = (_local_data_dir / "A320-212" / "A320-212.xml").exists()
-    if flat_exists or folder_exists:
-        os.environ["OPENLEAF_BADA4_PATH"] = str(_local_data_dir)
 
 import numpy as np
 import pytest
@@ -108,29 +88,62 @@ def _find_bada4_ptd(data_dir: Path, aircraft_name: str, isa_suffix: str = "_ISA"
 # --- Path Fixtures ---
 
 
+def _resolve_bada3_dir() -> Path | None:
+    """Resolve BADA3 data directory from config API, with local fallback."""
+    try:
+        from openleaf.performance.config import get_bada3_path
+
+        return get_bada3_path()
+    except Exception:
+        # Fallback to local data/ directory (backwards compatibility)
+        local = Path(__file__).parent.parent / "data"
+        if local.exists() and (local / "A320__.OPF").exists():
+            return local
+        return None
+
+
+def _resolve_bada4_dir() -> Path | None:
+    """Resolve BADA4 data directory from config API, with local fallback."""
+    try:
+        from openleaf.performance.config import get_bada4_path
+
+        return get_bada4_path()
+    except Exception:
+        # Fallback to local data/ directory (backwards compatibility)
+        local = Path(__file__).parent.parent / "data"
+        if local.exists():
+            flat = (local / "A320-212.xml").exists()
+            folder = (local / "A320-212" / "A320-212.xml").exists()
+            if flat or folder:
+                return local
+        return None
+
+
 @pytest.fixture
 def data_dir() -> Path:
-    """Return the path to the test data directory (from env var or local)."""
-    # Prefer environment variable if set
-    if "OPENLEAF_BADA3_PATH" in os.environ:
-        return Path(os.environ["OPENLEAF_BADA3_PATH"])
-    return Path(__file__).parent.parent / "data"
+    """Return the path to the test data directory."""
+    path = _resolve_bada3_dir()
+    if path is None:
+        pytest.skip("BADA3 data not configured")
+    return path
 
 
 @pytest.fixture
 def bada3_data_dir() -> Path:
     """Return the path to BADA3 data directory."""
-    if "OPENLEAF_BADA3_PATH" in os.environ:
-        return Path(os.environ["OPENLEAF_BADA3_PATH"])
-    return Path(__file__).parent.parent / "data"
+    path = _resolve_bada3_dir()
+    if path is None:
+        pytest.skip("BADA3 data not configured")
+    return path
 
 
 @pytest.fixture
 def bada4_data_dir() -> Path:
     """Return the path to BADA4 data directory."""
-    if "OPENLEAF_BADA4_PATH" in os.environ:
-        return Path(os.environ["OPENLEAF_BADA4_PATH"])
-    return Path(__file__).parent.parent / "data"
+    path = _resolve_bada4_dir()
+    if path is None:
+        pytest.skip("BADA4 data not configured")
+    return path
 
 
 @pytest.fixture
