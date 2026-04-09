@@ -14,17 +14,12 @@ __all__ = [
     "is_keyed_data",
 ]
 
-from typing import TYPE_CHECKING
 from typing import Any
 from typing import Protocol
 
 import casadi as ca
 import numpy.typing as npt
 import pandas as pd
-
-
-if TYPE_CHECKING:
-    from collections.abc import Mapping
 
 
 # Extended ArrayScalarLike to include object arrays (like string arrays)
@@ -39,24 +34,8 @@ class KeyedData(Protocol):
     allowing flexible data structure support (dicts, pandas DataFrames,
     pycontrails Flight objects, etc.).
 
-    Attributes:
-        attrs: Metadata dictionary for storing additional attributes.
-               Compatible with pandas DataFrame.attrs and pycontrails Flight.attrs.
+    The ``attrs`` property is optional -- plain dicts are valid KeyedData.
     """
-
-    @property
-    def attrs(self) -> Mapping[str, Any]:
-        """Metadata dictionary for additional attributes.
-
-        This property provides access to metadata associated with the data,
-        following the pandas DataFrame.attrs convention. For pycontrails
-        Flight objects, this includes flight metadata like flight_id,
-        aircraft_type, etc.
-
-        Returns:
-            Mapping of attribute names to values.
-        """
-        ...
 
     def __getitem__(self, key: str) -> ArrayScalarLike:
         """Get value by key.
