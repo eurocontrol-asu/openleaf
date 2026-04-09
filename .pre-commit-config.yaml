@@ -1,0 +1,37 @@
+repos:
+  # Ruff - linting and formatting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.9
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # MyPy - type checking (local hooks, one per package)
+  - repo: local
+    hooks:
+      - id: mypy-performance
+        name: mypy (openleaf-performance)
+        entry: uv run --package openleaf-performance mypy --config-file packages/openleaf-performance/pyproject.toml
+        language: system
+        types: [python]
+        files: "^packages/openleaf-performance/"
+        pass_filenames: false
+        args: [packages/openleaf-performance/src/]
+
+  # Conventional commits
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.4.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+
+  # Basic checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: [--unsafe]
+      - id: check-added-large-files
