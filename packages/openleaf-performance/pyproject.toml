@@ -245,6 +245,7 @@ addopts = [
     "--tb=short",
     "--strict-markers",
     "--strict-config",
+    "--import-mode=importlib",
     "-ra",
 ]
 markers = [
