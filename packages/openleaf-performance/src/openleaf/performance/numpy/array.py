@@ -121,6 +121,22 @@ def concatenate(arrays: Sequence, axis: int = 0):
     return xp.concat(arrays, axis=axis)
 
 
+def _stack_casadi(arrays: Sequence, axis: int, ca) -> Any:
+    """CasADi-specific stack: validate shapes and dispatch on axis."""
+    for arr in arrays:
+        if is_casadi_type(arr, recursive=False):
+            if arr.shape[1] != 1:
+                raise ValueError("Can only stack Nx1 CasADi arrays!")
+        elif len(arr.shape) != 1:
+            raise ValueError("Can only stack 1D NumPy ndarrays alongside CasADi arrays!")
+
+    if axis in {0, -2}:
+        return ca.transpose(ca.horzcat(*arrays))
+    if axis in {1, -1}:
+        return ca.horzcat(*arrays)
+    raise ValueError("CasADi-backend arrays can only be 1D or 2D, so `axis` must be 0 or 1.")
+
+
 def stack(arrays: Sequence, axis: int = 0):
     """
     Join a sequence of arrays along a new axis.
@@ -128,24 +144,7 @@ def stack(arrays: Sequence, axis: int = 0):
     See syntax here: https://numpy.org/doc/stable/reference/generated/numpy.stack.html
     """
     if is_casadi_type(arrays, recursive=True):
-        ca = _get_casadi()
-        # Validate stackability
-        for arr in arrays:
-            if is_casadi_type(arr, recursive=False):
-                if not arr.shape[1] == 1:
-                    raise ValueError("Can only stack Nx1 CasADi arrays!")
-            else:
-                if not len(arr.shape) == 1:
-                    raise ValueError("Can only stack 1D NumPy ndarrays alongside CasADi arrays!")
-
-        if axis == 0 or axis == -2:
-            return ca.transpose(ca.horzcat(*arrays))
-        elif axis == 1 or axis == -1:
-            return ca.horzcat(*arrays)
-        else:
-            raise ValueError(
-                "CasADi-backend arrays can only be 1D or 2D, so `axis` must be 0 or 1."
-            )
+        return _stack_casadi(arrays, axis, _get_casadi())
 
     # Use Array API for NumPy/PyTorch/CuPy/JAX
     xp = get_array_namespace(*arrays)
@@ -392,6 +391,27 @@ def min(a, axis=None):
     return xp.min(a, axis=axis)
 
 
+def _reshape_casadi(a, newshape, order: _OrderCF, ca) -> Any:
+    """CasADi-specific reshape: normalize shape and dispatch on order."""
+    match newshape:
+        case int():
+            newshape = (newshape, 1)
+        case (n,):
+            newshape = (n, 1)
+        case (_, _):
+            newshape = tuple(newshape)
+        case _:
+            raise ValueError("CasADi data types are limited to no more than 2 dimensions.")
+
+    match order:
+        case "C":
+            return ca.reshape(a.T, newshape[::-1]).T
+        case "F":
+            return ca.reshape(a, newshape)
+        case _:
+            raise NotImplementedError("Only C and F orders are supported.")
+
+
 def reshape(a, newshape, order: _OrderCF = "C"):
     """
     Gives a new shape to an array without changing its data.
@@ -399,22 +419,7 @@ def reshape(a, newshape, order: _OrderCF = "C"):
     See syntax here: https://numpy.org/doc/stable/reference/generated/numpy.reshape.html
     """
     if is_casadi_type(a, recursive=False):
-        ca = _get_casadi()
-        if isinstance(newshape, int):
-            newshape = (newshape, 1)
-        elif len(newshape) == 1:
-            newshape = (newshape[0], 1)
-        elif len(newshape) == 2:
-            newshape = tuple(newshape)
-        elif len(newshape) > 2:
-            raise ValueError("CasADi data types are limited to no more than 2 dimensions.")
-
-        if order == "C":
-            return ca.reshape(a.T, newshape[::-1]).T
-        elif order == "F":
-            return ca.reshape(a, newshape)
-        else:
-            raise NotImplementedError("Only C and F orders are supported.")
+        return _reshape_casadi(a, newshape, order, _get_casadi())
 
     # Array API reshape doesn't support order parameter
     if order != "C":
