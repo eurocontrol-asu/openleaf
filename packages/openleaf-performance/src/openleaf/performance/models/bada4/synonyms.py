@@ -31,6 +31,8 @@ from pathlib import Path
 from pydantic import BaseModel
 from pydantic import ConfigDict
 
+from openleaf.performance.models.common.synonyms import build_not_found_error
+
 
 class BADA4SynonymEntry(BaseModel):
     """Entry from BADA4 synonym file."""
@@ -138,6 +140,53 @@ def _get_synonyms(synonym_file: Path) -> dict[str, BADA4SynonymEntry]:
     return _synonym_cache[key]
 
 
+def _find_xml_in_folder(folder: Path) -> Path | None:
+    """Find an XML file inside a folder.
+
+    Tries the named XML first (folder/folder.xml), then falls back to any XML.
+    """
+    xml_file = folder / f"{folder.name}.xml"
+    if xml_file.exists():
+        return xml_file
+    xml_files = list(folder.glob("*.xml"))
+    if xml_files:
+        return xml_files[0]
+    return None
+
+
+def _resolve_via_synonyms_bada4(
+    icao: str,
+    synonyms: dict[str, BADA4SynonymEntry],
+    data_path: Path,
+) -> Path | None:
+    """Try to resolve ICAO via synonym entries."""
+    if icao not in synonyms:
+        return None
+    entry = synonyms[icao]
+    folder_path = data_path / entry.folder_name
+    if folder_path.is_dir():
+        result = _find_xml_in_folder(folder_path)
+        if result is not None:
+            return result
+    xml_file = data_path / f"{entry.folder_name}.xml"
+    if xml_file.exists():
+        return xml_file
+    return None
+
+
+def _resolve_fallback_bada4(icao: str, data_path: Path) -> Path | None:
+    """Try to resolve ICAO by scanning the filesystem."""
+    for folder in data_path.iterdir():
+        if folder.is_dir() and folder.name.upper().startswith(icao):
+            result = _find_xml_in_folder(folder)
+            if result is not None:
+                return result
+    for xml_file in data_path.glob("*.xml"):
+        if xml_file.stem.upper().startswith(icao):
+            return xml_file
+    return None
+
+
 def resolve_bada4_file(
     icao: str,
     data_path: Path,
@@ -156,73 +205,21 @@ def resolve_bada4_file(
     Raises:
         FileNotFoundError: If aircraft not found in synonyms or XML file doesn't exist.
     """
-    # Normalize ICAO code
     icao = icao.upper().strip()
 
-    # Find synonym file
     if synonym_file is None:
         synonym_file = data_path / "SYNONYM.BD4"
 
-    # Try to load synonyms
     if synonym_file.exists():
-        synonyms = _get_synonyms(synonym_file)
-        if icao in synonyms:
-            entry = synonyms[icao]
+        result = _resolve_via_synonyms_bada4(icao, _get_synonyms(synonym_file), data_path)
+        if result is not None:
+            return result
 
-            # BADA4 structure: data_path/folder_name/folder_name.xml
-            # or just: data_path/folder_name.xml
-            folder_path = data_path / entry.folder_name
-            if folder_path.is_dir():
-                xml_file = folder_path / f"{entry.folder_name}.xml"
-                if xml_file.exists():
-                    return xml_file
-                # Try any XML in folder
-                xml_files = list(folder_path.glob("*.xml"))
-                if xml_files:
-                    return xml_files[0]
+    result = _resolve_fallback_bada4(icao, data_path)
+    if result is not None:
+        return result
 
-            # Try direct XML file
-            xml_file = data_path / f"{entry.folder_name}.xml"
-            if xml_file.exists():
-                return xml_file
-
-    # Fallback: try direct file match
-    # Check for folder/file structure
-    for folder in data_path.iterdir():
-        if folder.is_dir() and folder.name.upper().startswith(icao):
-            xml_file = folder / f"{folder.name}.xml"
-            if xml_file.exists():
-                return xml_file
-            xml_files = list(folder.glob("*.xml"))
-            if xml_files:
-                return xml_files[0]
-
-    # Try direct XML files
-    for xml_file in data_path.glob("*.xml"):
-        if xml_file.stem.upper().startswith(icao):
-            return xml_file
-
-    # Not found
-    available = []
-    if synonym_file.exists():
-        synonyms = _get_synonyms(synonym_file)
-        available = sorted(synonyms.keys())[:20]
-        available_str = ", ".join(available)
-        if len(synonyms) > 20:
-            available_str += f", ... ({len(synonyms)} total)"
-    else:
-        # List folders/XML files in directory
-        xml_files = list(data_path.glob("*.xml"))
-        folders = [d for d in data_path.iterdir() if d.is_dir()]
-        names = {f.stem for f in xml_files} | {d.name for d in folders}
-        available = sorted(names)[:20]
-        available_str = ", ".join(available)
-
-    raise FileNotFoundError(
-        f"Aircraft '{icao}' not found in BADA4 data.\n"
-        f"Data path: {data_path}\n"
-        f"Available aircraft: {available_str}"
-    )
+    raise build_not_found_error(icao, "BADA4", data_path, synonym_file, _get_synonyms, "*.xml")
 
 
 def available_bada4_aircraft(
