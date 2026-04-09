@@ -31,6 +31,8 @@ from pathlib import Path
 from pydantic import BaseModel
 from pydantic import ConfigDict
 
+from openleaf.performance.models.common.synonyms import build_not_found_error
+
 
 class BADA3SynonymEntry(BaseModel):
     """Entry from BADA3 synonym file."""
@@ -128,6 +130,29 @@ def _get_synonyms(synonym_file: Path) -> dict[str, BADA3SynonymEntry]:
     return _synonym_cache[key]
 
 
+_UNDERSCORE_SUFFIXES = ("__", "___", "_")
+
+
+def _resolve_via_synonyms_bada3(
+    icao: str,
+    synonyms: dict[str, BADA3SynonymEntry],
+    data_path: Path,
+) -> Path | None:
+    """Try to resolve ICAO via synonym entries."""
+    if icao not in synonyms:
+        return None
+    entry = synonyms[icao]
+    opf_file = data_path / f"{entry.file_prefix}.OPF"
+    if opf_file.exists():
+        return opf_file
+    base = entry.file_prefix.rstrip("_")
+    for suffix in _UNDERSCORE_SUFFIXES:
+        opf_file = data_path / f"{base}{suffix}.OPF"
+        if opf_file.exists():
+            return opf_file
+    return None
+
+
 def resolve_bada3_file(
     icao: str,
     data_path: Path,
@@ -146,53 +171,22 @@ def resolve_bada3_file(
     Raises:
         FileNotFoundError: If aircraft not found in synonyms or OPF file doesn't exist.
     """
-    # Normalize ICAO code
     icao = icao.upper().strip()
 
-    # Find synonym file
     if synonym_file is None:
         synonym_file = data_path / "SYNONYM.NEW"
 
-    # Try to load synonyms
     if synonym_file.exists():
-        synonyms = _get_synonyms(synonym_file)
-        if icao in synonyms:
-            entry = synonyms[icao]
-            opf_file = data_path / f"{entry.file_prefix}.OPF"
-            if opf_file.exists():
-                return opf_file
-            # Try with different underscore patterns
-            for suffix in ["__", "___", "_"]:
-                base = entry.file_prefix.rstrip("_")
-                opf_file = data_path / f"{base}{suffix}.OPF"
-                if opf_file.exists():
-                    return opf_file
+        result = _resolve_via_synonyms_bada3(icao, _get_synonyms(synonym_file), data_path)
+        if result is not None:
+            return result
 
-    # Fallback: try direct file match
-    for suffix in ["__", "___", "_", ""]:
+    for suffix in (*_UNDERSCORE_SUFFIXES, ""):
         opf_file = data_path / f"{icao}{suffix}.OPF"
         if opf_file.exists():
             return opf_file
 
-    # Not found
-    available = []
-    if synonym_file.exists():
-        synonyms = _get_synonyms(synonym_file)
-        available = sorted(synonyms.keys())[:20]
-        available_str = ", ".join(available)
-        if len(synonyms) > 20:
-            available_str += f", ... ({len(synonyms)} total)"
-    else:
-        # List OPF files in directory
-        opf_files = list(data_path.glob("*.OPF"))
-        available = sorted([f.stem.rstrip("_") for f in opf_files])[:20]
-        available_str = ", ".join(available)
-
-    raise FileNotFoundError(
-        f"Aircraft '{icao}' not found in BADA3 data.\n"
-        f"Data path: {data_path}\n"
-        f"Available aircraft: {available_str}"
-    )
+    raise build_not_found_error(icao, "BADA3", data_path, synonym_file, _get_synonyms, "*.OPF")
 
 
 def available_bada3_aircraft(
