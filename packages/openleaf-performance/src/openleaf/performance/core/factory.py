@@ -109,6 +109,44 @@ class ModelFactory:
 
         return cls._model_classes
 
+    @staticmethod
+    def _resolve_model_type(
+        model_type: str | ModelType | None,
+    ) -> ModelType | None:
+        """Convert a string model type to ModelType enum with validation."""
+        if not isinstance(model_type, str):
+            return model_type
+        try:
+            return ModelType(model_type.lower())
+        except ValueError as e:
+            valid_types = [t.value for t in ModelType]
+            raise ValueError(
+                f"Invalid model_type '{model_type}'. Valid types are: {valid_types}"
+            ) from e
+
+    @classmethod
+    def _auto_detect(
+        cls,
+        icao: str,
+        model_classes: dict[ModelType, type[AircraftModel] | None],
+    ) -> AircraftModel:
+        """Try each model type in priority order, return first success."""
+        errors: list[str] = []
+        for mtype in _MODEL_PRIORITY:
+            model_class = model_classes[mtype]
+            if model_class is None:
+                errors.append(f"{mtype.value}: Model not available (not configured)")
+                continue
+            try:
+                return model_class(icao)
+            except (KeyError, FileNotFoundError, ValueError, OpenLeafError) as e:
+                errors.append(f"{mtype.value}: {e}")
+
+        raise ValueError(
+            f"Aircraft '{icao}' not found in any model. Tried:\n"
+            + "\n".join(f"  - {err}" for err in errors)
+        )
+
     @classmethod
     def load(
         cls,
@@ -137,45 +175,18 @@ class ModelFactory:
             >>> model = ModelFactory.load("A320", model_type=ModelType.BADA4)
         """
         model_classes = cls._get_model_classes()
+        resolved = cls._resolve_model_type(model_type)
 
-        # Convert string to ModelType if needed
-        if isinstance(model_type, str):
-            try:
-                model_type = ModelType(model_type.lower())
-            except ValueError as e:
-                valid_types = [t.value for t in ModelType]
-                raise ValueError(
-                    f"Invalid model_type '{model_type}'. Valid types are: {valid_types}"
-                ) from e
-
-        # If model_type specified, try only that type
-        if model_type is not None:
-            model_class = model_classes[model_type]
+        if resolved is not None:
+            model_class = model_classes[resolved]
             if model_class is None:
                 raise ValueError(
-                    f"Model type '{model_type.value}' is not available. "
+                    f"Model type '{resolved.value}' is not available. "
                     f"Check that the required data path is configured."
                 )
             return model_class(icao)
 
-        # Auto-detect: try each model type in priority order
-        errors = []
-        for mtype in _MODEL_PRIORITY:
-            model_class = model_classes[mtype]
-            if model_class is None:
-                errors.append(f"{mtype.value}: Model not available (not configured)")
-                continue
-            try:
-                return model_class(icao)
-            except (KeyError, FileNotFoundError, ValueError, OpenLeafError) as e:
-                # Expected errors when aircraft not found in model's database
-                errors.append(f"{mtype.value}: {e}")
-
-        # No model found
-        raise ValueError(
-            f"Aircraft '{icao}' not found in any model. Tried:\n"
-            + "\n".join(f"  - {err}" for err in errors)
-        )
+        return cls._auto_detect(icao, model_classes)
 
     @classmethod
     def load_from_file(
