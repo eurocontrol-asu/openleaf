@@ -1,17 +1,94 @@
-site_name: "openleaf"
-site_url: "https://ramondalmau.github.io/openleaf"
-repo_url: "https://github.com/ramondalmau/openleaf"
+site_name: openleaf
+site_description: "OpenLeaf — Open-source aviation sustainability suite: performance modeling, emissions, and trajectory optimization."
+site_url: https://ramondalmau.github.io/openleaf
+repo_url: https://github.com/ramondalmau/openleaf
+repo_name: ramondalmau/openleaf
+copyright: Copyright &copy; 2026 Ramon Dalmau
 
 theme:
   name: material
   palette:
-    - scheme: default
-      primary: indigo
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - navigation.path
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
 
-plugins:
-  - search
-  - monorepo
+extra_css:
+  - assets/custom.css
 
 nav:
-  - Home: index.md
-  - openleaf-performance: '!include ./packages/openleaf-performance/mkdocs.yml'
+  - Home:
+    - index.md
+  - Packages:
+    - packages/index.md
+    - openleaf-performance: '!include ./packages/openleaf-performance/mkdocs.yml'
+  - Contributing:
+    - contributing.md
+
+plugins:
+  - monorepo
+  - search
+  - gen-files:
+      scripts:
+        - docs/gen_ref_pages.py
+  - literate-nav:
+      nav_file: SUMMARY.md
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - packages/openleaf-performance/src
+          options:
+            docstring_style: numpy
+            show_root_heading: true
+            show_root_full_path: false
+            heading_level: 3
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+      auto_title: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - tables
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
