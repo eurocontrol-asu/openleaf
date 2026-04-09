@@ -43,6 +43,7 @@ from typing import Any
 
 import openleaf.performance.numpy as np
 from openleaf.performance.core.envelope import EnvelopeChecker
+from openleaf.performance.core.mixins import FlightStateMixin
 from openleaf.performance.core.mixins import PerformanceMixin
 from openleaf.performance.core.types import EnvelopeMode
 from openleaf.performance.logging import get_logger
@@ -328,7 +329,7 @@ class TrajectoryData:
         return AircraftTrajectoryData(self, model, envelope_mode=envelope_mode)
 
 
-class AircraftTrajectoryData(PerformanceMixin):
+class AircraftTrajectoryData(FlightStateMixin, PerformanceMixin):
     """Trajectory with aircraft model attached - adds performance properties.
 
     This class wraps a TrajectoryData and adds aircraft-specific computed
@@ -489,84 +490,6 @@ class AircraftTrajectoryData(PerformanceMixin):
     def acceleration(self) -> ArrayScalarLike:
         """Longitudinal acceleration [m/s²] from trajectory."""
         return self._traj.acceleration
-
-    # ---- Aircraft performance properties ----
-
-    @cached_property
-    def aircraft_mass(self) -> ArrayScalarLike:
-        """Aircraft mass [kg]."""
-        return self._traj["aircraft_mass"]
-
-    @cached_property
-    def delta_isa(self) -> ArrayScalarLike:
-        """Temperature deviation from ISA [K]."""
-        return self._traj.delta_isa
-
-    # ---- Flight phase and configuration ----
-
-    @cached_property
-    def flight_phase(self) -> ArrayScalarLike:
-        """Flight phase (CLIMB, CRUISE, DESCENT) from vertical speed.
-
-        Derived from vertical_speed using standard thresholds:
-        - vs > 0.5 m/s → CLIMB
-        - vs < -0.5 m/s → DESCENT
-        - otherwise → CRUISE
-        """
-        from openleaf.performance.models.common.config import determine_flight_phase
-
-        return determine_flight_phase(self._traj["vertical_speed"])
-
-    @cached_property
-    def aerodynamic_configuration(self) -> ArrayScalarLike:
-        """Aerodynamic configuration (TO, IC, CR, AP, LD) from model.
-
-        Configuration depends on flight phase, altitude, and speed.
-        Returns None for models without configuration (e.g., PS cruise-only).
-        """
-        return self._model.aerodynamic_configuration(self)
-
-    @cached_property
-    def high_lift(self) -> ArrayScalarLike:
-        """High-lift device state (hlid) from model.
-
-        Model-specific return type:
-        - BADA4: HLid string ("0", "1", etc.)
-        - OpenAP: Flap angle in degrees
-        - BADA3/PS: None
-        """
-        return self._model.high_lift(self)
-
-    @cached_property
-    def landing_gear(self) -> ArrayScalarLike:
-        """Landing gear state from model.
-
-        Returns True if gear extended, False if retracted.
-        May return None for models that don't track gear state.
-        """
-        return self._model.landing_gear(self)
-
-    @cached_property
-    def engine_setting(self) -> ArrayScalarLike:
-        """Engine setting derived from flight phase.
-
-        Maps flight phase to engine setting:
-        - CLIMB → MCMB (Maximum Continuous Climb)
-        - CRUISE → MCRZ (Maximum Continuous Cruise)
-        - DESCENT → LIDL (Idle)
-        """
-        from openleaf.performance.core.perfos import EngineSetting
-        from openleaf.performance.core.perfos import FlightPhase
-
-        return np.where(
-            np.equal(self.flight_phase, FlightPhase.CLIMB),
-            EngineSetting.MCMB,
-            np.where(
-                np.equal(self.flight_phase, FlightPhase.DESCENT),
-                EngineSetting.LIDL,
-                EngineSetting.MCRZ,  # CRUISE default
-            ),
-        )
 
     # ---- Flight envelope (delegated to EnvelopeChecker) ----
 
