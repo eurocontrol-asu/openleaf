@@ -13,8 +13,8 @@ authors = [{ name = "Ramon Dalmau" }]
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/ramondalmau/openleaf"
-Repository = "https://github.com/ramondalmau/openleaf.git"
+Homepage = "https://github.com/eurocontrol-asu/openleaf"
+Repository = "https://github.com/eurocontrol-asu/openleaf.git"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/openleaf"]

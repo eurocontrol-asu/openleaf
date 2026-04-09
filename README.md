@@ -2,12 +2,12 @@
 <p align="center"><strong>Open-source aviation sustainability suite — performance modeling, emissions, and trajectory optimization.</strong></p>
 
 <p align="center">
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml"><img src="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ramondalmau/openleaf/gh-pages/badges/axm-audit.json" alt="axm-audit"></a>
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ramondalmau/openleaf/gh-pages/badges/axm-init.json" alt="axm-init"></a>
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ramondalmau/openleaf/gh-pages/badges/coverage.json" alt="Coverage"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/axm-audit.json" alt="axm-audit"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/axm-init.json" alt="axm-init"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/coverage.json" alt="Coverage"></a>
   <img src="https://img.shields.io/badge/python-3.12%2B-blue" alt="Python 3.12+">
-  <a href="https://ramondalmau.github.io/openleaf/"><img src="https://img.shields.io/badge/docs-live-brightgreen" alt="Docs"></a>
+  <a href="https://eurocontrol-asu.github.io/openleaf/"><img src="https://img.shields.io/badge/docs-live-brightgreen" alt="Docs"></a>
 </p>
 
 ---
@@ -25,14 +25,14 @@ OpenLeaf provides **open-source tools for aviation sustainability research**. Th
 
 | Package | Description | Quality |
 |---|---|---|
-| [openleaf-performance](packages/openleaf-performance/) | Modular, differentiable aircraft performance modeling framework | [![audit](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ramondalmau/openleaf/gh-pages/badges/openleaf-performance/axm-audit.json)](https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml) [![cov](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ramondalmau/openleaf/gh-pages/badges/openleaf-performance/coverage.json)](https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml) |
+| [openleaf-performance](packages/openleaf-performance/) | Modular, differentiable aircraft performance modeling framework | [![audit](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/axm-audit.json)](https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml) [![cov](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/coverage.json)](https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml) |
 | [openleaf-core](packages/openleaf-core/) | Shared types and interfaces for the OpenLeaf suite | — |
 
 ## Quick Start
 
 ```bash
 # Clone and install
-git clone https://github.com/ramondalmau/openleaf.git
+git clone https://github.com/eurocontrol-asu/openleaf.git
 cd openleaf
 uv sync --all-groups
 
@@ -68,4 +68,4 @@ graph TD
 
 ## License
 
-[EUPL-1.2](LICENSE) — © 2026 Ramon Dalmau
+[EUPL-1.2](LICENSE) — © 2026 EUROCONTROL

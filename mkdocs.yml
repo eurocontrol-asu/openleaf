@@ -1,9 +1,9 @@
 site_name: openleaf
 site_description: "OpenLeaf — Open-source aviation sustainability suite: performance modeling, emissions, and trajectory optimization."
-site_url: https://ramondalmau.github.io/openleaf
-repo_url: https://github.com/ramondalmau/openleaf
-repo_name: ramondalmau/openleaf
-copyright: Copyright &copy; 2026 Ramon Dalmau
+site_url: https://eurocontrol-asu.github.io/openleaf
+repo_url: https://github.com/eurocontrol-asu/openleaf
+repo_name: eurocontrol-asu/openleaf
+copyright: Copyright &copy; 2026 EUROCONTROL
 
 theme:
   name: material

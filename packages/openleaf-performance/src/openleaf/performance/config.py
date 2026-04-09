@@ -95,7 +95,7 @@ def _ensure_config_file() -> Path:
         config_file.write_text(
             """\
 # OpenLeaf Configuration
-# https://github.com/ramondalmau/openleaf
+# https://github.com/eurocontrol-asu/openleaf
 #
 # Environment variables take precedence over this file:
 #   OPENLEAF_BADA3_PATH, OPENLEAF_BADA3_SYNONYMS
