@@ -1,8 +1,8 @@
 """
-AetherX exception hierarchy.
+OpenLeaf exception hierarchy.
 
 Provides domain-specific exceptions for clear error handling and debugging.
-All AetherX exceptions inherit from OpenLeafError for easy catching.
+All OpenLeaf exceptions inherit from OpenLeafError for easy catching.
 
 Exception hierarchy:
     OpenLeafError
@@ -39,9 +39,9 @@ __all__ = [
 
 
 class OpenLeafError(Exception):
-    """Base exception for all AetherX errors.
+    """Base exception for all OpenLeaf errors.
 
-    All AetherX-specific exceptions inherit from this class,
+    All OpenLeaf-specific exceptions inherit from this class,
     allowing users to catch any library error with:
 
         try:

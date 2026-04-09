@@ -1,4 +1,4 @@
-"""Utility functions and type definitions for AetherX.
+"""Utility functions and type definitions for OpenLeaf.
 
 This module provides:
 - Type definitions for array-like and keyed data structures

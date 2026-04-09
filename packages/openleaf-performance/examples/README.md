@@ -1,6 +1,6 @@
-# AetherX Examples
+# OpenLeaf Examples
 
-This directory contains examples that demonstrate the experiments described in the AetherX research paper.
+This directory contains examples that demonstrate the experiments described in the OpenLeaf research paper.
 
 ## Prerequisites
 
@@ -144,8 +144,8 @@ All examples support:
 
 Install BADA data from EUROCONTROL and set the path:
 ```bash
-export AETHERX_BADA3_PATH=/path/to/bada3/data
-export AETHERX_BADA4_PATH=/path/to/bada4/data
+export OPENLEAF_BADA3_PATH=/path/to/bada3/data
+export OPENLEAF_BADA4_PATH=/path/to/bada4/data
 ```
 
 ### "Optimization failed: Maximum_Iterations_Exceeded"
@@ -165,7 +165,7 @@ If you use these examples in your research, please cite:
 
 ```bibtex
 @article{aetherx2025,
-  title={AetherX: A Unified Differentiable Framework for Aircraft Performance Modelling},
+  title={OpenLeaf: A Unified Differentiable Framework for Aircraft Performance Modelling},
   author={Dalmau, Ramon and Jarry, Gabriel and Very, Philippe},
   year={2025}
 }

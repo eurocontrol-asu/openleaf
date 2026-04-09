@@ -1,6 +1,6 @@
 # Experiments
 
-This directory contains scripts to reproduce all experiments and figures from the AetherX paper.
+This directory contains scripts to reproduce all experiments and figures from the OpenLeaf paper.
 
 ## Reproduction workflow
 

@@ -1,5 +1,5 @@
 """
-Pytest configuration and shared fixtures for aetherx tests.
+Pytest configuration and shared fixtures for openleaf tests.
 
 Provides fixtures for aircraft models, test data paths, and common test utilities.
 Tests requiring proprietary BADA data are automatically skipped if data is unavailable.

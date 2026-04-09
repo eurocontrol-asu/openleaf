@@ -296,7 +296,7 @@ class TestPSModelValidation:
         T = isa.air_temperature(altitude_m)  # Absolute temperature [K]
         p = isa.air_pressure(altitude_m)  # Absolute pressure [Pa]
 
-        # Aetherx calculation
+        # OpenLeaf calculation
         c_lift_ae = ps_model_validation.lift_coefficient(mass, p, mach)
         c_drag_ae = ps_model_validation.aerodynamics.drag_coef_with_state(
             cl=c_lift_ae, mach=mach, air_temperature=T, air_pressure=p
@@ -361,7 +361,7 @@ class TestPSModelValidation:
 
         params = pycontrails_params
 
-        # Aetherx calculation
+        # OpenLeaf calculation
         c_lift = ps_model_validation.lift_coefficient(mass, p, mach)
         c_drag = ps_model_validation.aerodynamics.drag_coef_with_state(
             cl=c_lift, mach=mach, air_temperature=T, air_pressure=p
@@ -378,7 +378,7 @@ class TestPSModelValidation:
             "air_pressure": p,
             "thrust": thrust_req,
         }
-        ff_aetherx = ps_model_validation.engine.fuel_flow(state)
+        ff_openleaf = ps_model_validation.engine.fuel_flow(state)
 
         # Pycontrails calculation using their functions directly
         c_lift_pc = pc_ps.lift_coefficient(
@@ -414,14 +414,14 @@ class TestPSModelValidation:
         eta = pc_ps.overall_propulsion_efficiency(mach, c_t_pc, c_t_eta_b, params)
 
         # Fuel flow using pycontrails
-        # Use same Q_FUEL as aetherx for consistency (43.13 MJ/kg)
+        # Use same Q_FUEL as openleaf for consistency (43.13 MJ/kg)
         q_fuel = units.Q_FUEL
         ff_pycontrails = pc_ps.fuel_mass_flow_rate(
             p, T, mach, c_t_pc, eta, params.wing_surface_area, q_fuel
         )
 
-        assert ff_aetherx == pytest.approx(ff_pycontrails, rel=PS_FUEL_TOLERANCE), (
-            f"FL{altitude_ft} M{mach} {mass}kg: fuel {ff_aetherx:.4f} kg/s != "
+        assert ff_openleaf == pytest.approx(ff_pycontrails, rel=PS_FUEL_TOLERANCE), (
+            f"FL{altitude_ft} M{mach} {mass}kg: fuel {ff_openleaf:.4f} kg/s != "
             f"pycontrails {ff_pycontrails:.4f} kg/s"
         )
 
@@ -437,7 +437,7 @@ class TestPSModelValidation:
         delta = isa.air_pressure(altitude_m)
         p = delta * isa.P_SL
 
-        # Aetherx
+        # OpenLeaf
         c_lift_ae = ps_model_validation.lift_coefficient(mass, p, mach)
 
         # Pycontrails
@@ -468,7 +468,7 @@ class TestPSModelValidation:
 
         S = pycontrails_params.wing_surface_area
 
-        # Aetherx
+        # OpenLeaf
         rn_ae = ae_reynolds(S, mach, T, p)
 
         # Pycontrails
@@ -515,7 +515,7 @@ class TestPSPhysicsExhaustive:
     """Exhaustive function-by-function validation of PS physics against pycontrails.
 
     Note: Slight tolerance differences may exist due to minor constant variations
-    between aetherx (R_AIR=287.05287) and pycontrails (R_d=287.05).
+    between openleaf (R_AIR=287.05287) and pycontrails (R_d=287.05).
     """
 
     # Tolerance for Reynolds number (affected by R_AIR constant difference)
@@ -721,7 +721,7 @@ class TestPSPhysicsExhaustive:
 
         params = pycontrails_params
 
-        # aetherx function signature: (mach, c_t, c_t_eta_b, m_des, eta_1, eta_2)
+        # openleaf function signature: (mach, c_t, c_t_eta_b, m_des, eta_1, eta_2)
         eta_ae = ae_eta(mach, c_t, c_t_eta_b, params.m_des, params.eta_1, params.eta_2)
         eta_pc = pc_ps.overall_propulsion_efficiency(mach, c_t, c_t_eta_b, params)
 

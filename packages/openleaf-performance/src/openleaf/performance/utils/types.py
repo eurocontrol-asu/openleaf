@@ -1,5 +1,5 @@
 """
-Type definitions and protocols for the aetherx library.
+Type definitions and protocols for the openleaf library.
 
 Defines common type aliases and protocols used throughout the codebase for
 type hints and runtime type checking.

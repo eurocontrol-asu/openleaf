@@ -51,7 +51,7 @@ Objective:
 
 Requirements:
     - casadi: For symbolic computation and NLP solving
-    - aetherx: For aircraft performance models and ISA
+    - openleaf: For aircraft performance models and ISA
 
 Usage:
     python examples/04_vertical_profile_optimisation.py [--model ps|bada3|bada4]

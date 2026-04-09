@@ -1,4 +1,4 @@
-"""Tests for aetherx.logging module."""
+"""Tests for openleaf.performance.logging module."""
 
 from __future__ import annotations
 
@@ -37,17 +37,17 @@ class TestGetLogger:
     """Tests for get_logger()."""
 
     def test_get_logger_with_name(self):
-        """Logger with module name gets aetherx prefix."""
+        """Logger with module name gets openleaf prefix."""
         logger = get_logger("mymodule")
         assert logger is not None
 
     def test_get_logger_without_name(self):
-        """Logger without name returns root aetherx logger."""
+        """Logger without name returns root openleaf logger."""
         logger = get_logger(None)
         assert logger is not None
 
-    def test_get_logger_with_aetherx_prefix(self):
-        """Logger already prefixed with aetherx keeps name."""
+    def test_get_logger_with_openleaf_prefix(self):
+        """Logger already prefixed with openleaf keeps name."""
         logger = get_logger("openleaf.performance.models.ps")
         assert logger is not None
 

@@ -1,6 +1,6 @@
-"""OpenAP-compatible aero module using aetherx.numpy.
+"""OpenAP-compatible aero module using openleaf.performance.numpy.
 
-This module provides the same API as `openap.aero` but uses `aetherx.numpy`
+This module provides the same API as `openap.aero` but uses `openleaf.performance.numpy`
 for all mathematical operations. This enables seamless CasADi symbolic
 compatibility while returning numpy arrays for numerical inputs.
 
@@ -64,9 +64,10 @@ def pressure(h: float, dT: float = 0) -> ArrayScalarLike:
 
     Note:
         OpenAP's original implementation uses a smoothed tropopause
-        transition. We use the standard ISA model from openleaf.performance.physics.isa.
+        transition. We use the standard ISA model from
+        openleaf.performance.physics.isa.
     """
-    # Use aetherx ISA which supports CasADi
+    # Use OpenLeaf ISA which supports CasADi
     return isa.air_pressure(h)
 
 

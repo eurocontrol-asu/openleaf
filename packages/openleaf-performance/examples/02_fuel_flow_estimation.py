@@ -2,7 +2,7 @@
 """
 Fuel Flow Evaluation from Flight Trajectory.
 
-This example demonstrates how to compute fuel flow using AetherX's TrajectoryData
+This example demonstrates how to compute fuel flow using OpenLeaf's TrajectoryData
 workflow. Given a known aircraft mass (e.g., from Example 01), it computes:
     - Required thrust from TEM (Total Energy Model)
     - Fuel flow at that thrust level
@@ -21,7 +21,7 @@ The computation chain is:
     1. TrajectoryData holds: altitude, TAS, vertical_speed, mass, f
     2. Model computes: drag_coef -> drag -> thrust (via TEM) -> fuel_flow
 
-Supports all AetherX performance models:
+Supports all OpenLeaf performance models:
     - OpenAP (open source, always available)
     - PS (Poll-Schumann, requires pycontrails)
     - BADA3/BADA4 (requires EUROCONTROL license)
@@ -251,7 +251,7 @@ def compute_fuel_flow(
 ) -> dict:
     """Compute fuel flow using TrajectoryData workflow.
 
-    This demonstrates the standard AetherX workflow:
+    This demonstrates the standard OpenLeaf workflow:
     1. Create TrajectoryData from observations
     2. Attach a pre-built aircraft model
     3. Access computed properties (drag, thrust, fuel_flow)

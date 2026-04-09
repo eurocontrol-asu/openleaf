@@ -1,4 +1,4 @@
-"""Tests for aetherx.core.types module."""
+"""Tests for openleaf.performance.core.types module."""
 
 from __future__ import annotations
 

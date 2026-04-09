@@ -329,7 +329,7 @@ class TestOpenAPMultipleAircraft:
 # --- OpenAP Validation Tests (against reference openap library) ---
 
 # Tolerance for comparison against reference openap implementation.
-# Note: Small differences arise from ISA model variations between aetherx (standard ISA)
+# Note: Small differences arise from ISA model variations between openleaf (standard ISA)
 # and OpenAP (smoothed tropopause with slightly different density formula).
 # At high altitudes (FL400+), these differences can reach ~0.3%.
 OPENAP_TOLERANCE = 0.004  # 0.4% to account for ISA model differences
@@ -340,7 +340,7 @@ def openap_refs():
     """Load reference OpenAP models.
 
     Note: We use the standard OpenAP models (not openap.casadi) because
-    aetherx.models.openap now uses standard OpenAP with aetherx.numpy injection
+    openleaf.performance.models.openap now uses standard OpenAP with openleaf.performance.numpy injection
     for CasADi compatibility, rather than the separate openap.casadi module.
     """
     from openap import Drag
@@ -390,7 +390,7 @@ class TestOpenAPModelValidation:
         # Reference OpenAP
         drag_ref_N = float(openap_refs["drag"].clean(mass=mass, tas=tas_kt, alt=altitude_ft, vs=0))
 
-        # Aetherx - clean configuration specified in state dict
+        # OpenLeaf - clean configuration specified in state dict
         drag_coef = openap_model.aerodynamics.drag_coef(state)
         q = 0.5 * (delta / theta) * isa.RHO_SL * (tas_kt * units.KT) ** 2
         drag_ae_N = drag_coef * q * openap_model.aerodynamics.surface_area
@@ -432,7 +432,7 @@ class TestOpenAPModelValidation:
             openap_refs["drag"].clean(mass=mass, tas=tas_kt, alt=altitude_ft, vs=vs_fpm)
         )
 
-        # Aetherx
+        # OpenLeaf
         drag_coef = openap_model.aerodynamics.drag_coef(state)
         q = 0.5 * (delta / theta) * isa.RHO_SL * (tas_kt * units.KT) ** 2
         drag_ae_N = drag_coef * q * openap_model.aerodynamics.surface_area
@@ -479,7 +479,7 @@ class TestOpenAPModelValidation:
         S = openap_model.aerodynamics.surface_area
         thrust = cd * q * S
 
-        # Aetherx fuel flow from thrust
+        # OpenLeaf fuel flow from thrust
         ff_ae = float(openap_model.engine.fuel_flow({"thrust": thrust}))
 
         # Reference OpenAP - use at_thrust for fair comparison
@@ -496,7 +496,7 @@ class TestOpenAPModelValidation:
     )
     def test_fuel_flow_at_thrust_matches_openap(self, openap_model, openap_refs, thrust):
         """Test fuel_flow.at_thrust matches openap for various thrust levels."""
-        # Aetherx
+        # OpenLeaf
         ff_ae = float(openap_model.engine.fuel_flow({"thrust": thrust}))
 
         # Reference OpenAP
@@ -534,7 +534,7 @@ class TestOpenAPModelValidation:
         # Reference OpenAP
         thrust_ref = float(openap_refs["thrust"].takeoff(tas=tas_kt, alt=altitude_ft))
 
-        # Aetherx with MTKF setting
+        # OpenLeaf with MTKF setting
         thrust_ae = float(openap_model.engine.thrust_max(state))
 
         assert thrust_ae == pytest.approx(thrust_ref, rel=OPENAP_TOLERANCE), (
@@ -570,7 +570,7 @@ class TestOpenAPModelValidation:
         # Reference OpenAP
         thrust_ref = float(openap_refs["thrust"].climb(tas=tas_kt, alt=altitude_ft, roc=roc_fpm))
 
-        # Aetherx with MCMB setting
+        # OpenLeaf with MCMB setting
         thrust_ae = float(openap_model.engine.thrust_max(state))
 
         assert thrust_ae == pytest.approx(thrust_ref, rel=OPENAP_TOLERANCE), (
@@ -600,7 +600,7 @@ class TestOpenAPModelValidation:
         # Reference OpenAP - cruise = climb(roc=0)
         thrust_ref = float(openap_refs["thrust"].cruise(tas=tas_kt, alt=altitude_ft))
 
-        # Aetherx default (no engine_setting)
+        # OpenLeaf default (no engine_setting)
         thrust_ae = float(openap_model.engine.thrust_max(state))
 
         assert thrust_ae == pytest.approx(thrust_ref, rel=OPENAP_TOLERANCE), (
@@ -629,7 +629,7 @@ class TestOpenAPModelValidation:
         # Reference OpenAP
         thrust_ref = float(openap_refs["thrust"].descent_idle(tas=tas_kt, alt=altitude_ft))
 
-        # Aetherx
+        # OpenLeaf
         thrust_ae = float(openap_model.engine.thrust_min(state))
 
         assert thrust_ae == pytest.approx(thrust_ref, rel=OPENAP_TOLERANCE), (
