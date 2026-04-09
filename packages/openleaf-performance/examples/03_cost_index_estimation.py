@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Cost Index Estimation using AetherX PS Model.
+Cost Index Estimation using OpenLeaf PS Model.
 
 This example demonstrates how to estimate the cost index (CI) from observed
-flight data using AetherX - whose functions work with both numpy AND CasADi!
+flight data using OpenLeaf - whose functions work with both numpy AND CasADi!
 
 The cost index represents the ratio of time-related costs to fuel costs:
     CI = C_time / C_fuel [kg/min]
@@ -21,7 +21,7 @@ Method:
 Requirements:
     - pycontrails: For Flight class and phase detection
     - casadi: For symbolic differentiation
-    - aetherx: For PS model, ISA, and aero functions
+    - openleaf: For PS model, ISA, and aero functions
 
 Model support:
     - PS (Poll-Schumann): Primary model, designed for cruise optimization
@@ -217,7 +217,7 @@ def build_specific_cost_gradients(
     aircraft_mass = ca.SX.sym("m")
     ci = ca.SX.sym("CI")
 
-    # Atmospheric state using AetherX ISA (works with CasADi!)
+    # Atmospheric state using OpenLeaf ISA (works with CasADi!)
     air_pressure = isa.air_pressure(altitude)
     pressure_hpa = air_pressure / 100.0
 

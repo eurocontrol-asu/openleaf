@@ -72,7 +72,7 @@ def _get_config_dir() -> Path:
     Returns:
         Path to configuration directory:
         - Linux/Mac: ~/.config/openleaf
-        - Windows: %APPDATA%/aetherx
+        - Windows: %APPDATA%/openleaf
     """
     if sys.platform == "win32":
         base = Path(os.environ.get("APPDATA", Path.home()))
@@ -133,7 +133,7 @@ class Bada4Settings(BaseModel):
 
 
 class OpenLeafSettings(BaseSettings):
-    """AetherX configuration.
+    """OpenLeaf configuration.
 
     Settings are loaded from (highest to lowest priority):
     1. Environment variables (OPENLEAF_BADA3_PATH, OPENLEAF_BADA4_PATH, etc.)

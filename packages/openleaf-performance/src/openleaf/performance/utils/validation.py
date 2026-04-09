@@ -1,5 +1,5 @@
 """
-Input validation utilities for AetherX.
+Input validation utilities for OpenLeaf.
 
 Provides helper functions for validating KeyedData inputs with clear error
 messages and optional bounds checking.

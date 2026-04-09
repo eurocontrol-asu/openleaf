@@ -91,7 +91,7 @@ def f_from_gradient(true_airspeed: ArrayScalarLike, dv_dh: ArrayScalarLike) -> A
 
     This is the fundamental f formula from the TEM derivation.
     For speed-schedule specific f (constant Mach, constant CAS), use
-    the functions in aetherx.physics.esf module instead.
+    the functions in openleaf.performance.physics.esf module instead.
 
     f = 1 / (1 + V/g · dV/dh)
 
@@ -106,8 +106,8 @@ def f_from_gradient(true_airspeed: ArrayScalarLike, dv_dh: ArrayScalarLike) -> A
         - f > 1: Decelerating climb (dV/dh < 0)
 
     See Also:
-        aetherx.physics.esf.f_constant_mach: f for constant Mach schedule
-        aetherx.physics.esf.f_constant_cas: f for constant CAS schedule
+        openleaf.performance.physics.esf.f_constant_mach: f for constant Mach schedule
+        openleaf.performance.physics.esf.f_constant_cas: f for constant CAS schedule
     """
     return 1.0 / (1.0 + true_airspeed / isa.G * dv_dh)
 
@@ -125,7 +125,7 @@ def thrust_required(
     Does NOT include temperature correction for non-ISA conditions.
 
     For temperature-corrected computations using PRESSURE altitude rate
-    (dHp/dt), use aetherx.physics.tem.thrust_from_rocd instead.
+    (dHp/dt), use openleaf.performance.physics.tem.thrust_from_rocd instead.
 
     T = D + m · g · (dh/dt) / (V · f)
 
@@ -140,7 +140,7 @@ def thrust_required(
         Required thrust [N].
 
     See Also:
-        aetherx.physics.tem.thrust_from_rocd: Temperature-corrected version
+        openleaf.performance.physics.tem.thrust_from_rocd: Temperature-corrected version
             using pressure altitude rate.
     """
     return drag + mass * isa.G * vertical_speed / (true_airspeed * f)
@@ -185,7 +185,7 @@ class AircraftAirspeed:
     All conversions are lazily computed and cached.
 
     Example:
-        >>> from openleaf.performance.physics.aero import AircraftAirspeed
+        >>> from openleaf.performance.physics.aero import AircraftAirspeed  # noqa: E501
         >>> state = AircraftAirspeed(T=288.15, p=101325, cas=150.0)
         >>> state.mach_number  # Convert CAS to Mach
         >>> state.true_airspeed  # Convert CAS to TAS

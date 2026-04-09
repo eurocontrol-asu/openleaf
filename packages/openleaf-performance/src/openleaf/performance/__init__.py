@@ -1,5 +1,5 @@
 """
-AetherX - Aircraft performance models for trajectory optimization.
+OpenLeaf - Aircraft performance models for trajectory optimization.
 
 This package provides aircraft performance models including BADA3, BADA4, OpenAP,
 and Poll-Schumann models with CasADi-compatible operations for seamless trajectory

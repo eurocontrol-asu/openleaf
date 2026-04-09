@@ -1,4 +1,4 @@
-"""Tests for aetherx.numpy module.
+"""Tests for openleaf.performance.numpy module.
 
 Tests both NumPy and CasADi backends for mathematical operations.
 """

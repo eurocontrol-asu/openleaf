@@ -1,7 +1,7 @@
 """Poll-Schumann (PS) data structures.
 
 Provides typed data classes for PS aircraft parameters following
-the aetherx schema conventions.
+the openleaf schema conventions.
 
 Reference:
     Poll, D.I.A., and Schumann, U. (2021). "An estimation method for the fuel burn

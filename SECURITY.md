@@ -8,7 +8,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in AetherX, please report it responsibly.
+If you discover a security vulnerability in OpenLeaf, please report it responsibly.
 
 **Do NOT open a public GitHub issue for security vulnerabilities.**
 
@@ -26,16 +26,16 @@ understand the issue and coordinate a fix before any public disclosure.
 
 ## Scope
 
-AetherX is a scientific computing library for aircraft performance modeling. Security
+OpenLeaf is a scientific computing library for aircraft performance modeling. Security
 considerations include:
 
 - **File path handling**: BADA data paths are configured via environment variables and
-  settings files. AetherX validates paths but does not sandbox file access.
+  settings files. OpenLeaf validates paths but does not sandbox file access.
 - **Dependency supply chain**: We pin minimum versions for all dependencies and run
   `pip-audit` in CI to detect known vulnerabilities.
-- **Serialization**: AetherX does not use `pickle` or other unsafe deserialization.
+- **Serialization**: OpenLeaf does not use `pickle` or other unsafe deserialization.
   Model data is loaded from structured text/XML files with dedicated parsers.
-- **No network access**: AetherX does not make network requests at runtime. All data
+- **No network access**: OpenLeaf does not make network requests at runtime. All data
   is loaded from local files.
 
 ## Best Practices for Users
