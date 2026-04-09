@@ -1,5 +1,5 @@
 """
-Structured logging for AetherX using structlog.
+Structured logging for OpenLeaf using structlog.
 
 Provides structured, contextual logging for the library with configurable
 verbosity. Uses structlog for better debugging and log analysis.
@@ -57,7 +57,7 @@ def configure_logging(
     json_format: bool = False,
     colors: bool | None = None,
 ) -> None:
-    """Configure structured logging for AetherX.
+    """Configure structured logging for OpenLeaf.
 
     This function sets up structlog with sensible defaults. Call it once
     at application startup, or let it auto-configure on first logger use.
@@ -130,14 +130,14 @@ def configure_logging(
 
 
 def get_logger(name: str | None = None, **initial_context: Any) -> structlog.BoundLogger:
-    """Get a structured logger for AetherX modules.
+    """Get a structured logger for OpenLeaf modules.
 
     Returns a structlog bound logger with optional initial context.
     The logger supports structured key-value logging.
 
     Args:
         name: Logger name. Typically __name__ of the calling module.
-            If None, returns the root AetherX logger.
+            If None, returns the root OpenLeaf logger.
         **initial_context: Initial context to bind to the logger.
 
     Returns:
@@ -175,7 +175,7 @@ def get_logger(name: str | None = None, **initial_context: Any) -> structlog.Bou
 
 
 def disable_logging() -> None:
-    """Disable all AetherX logging output.
+    """Disable all OpenLeaf logging output.
 
     Useful for library users who don't want any output.
     Sets the log level to CRITICAL+1 to suppress all messages.
@@ -184,7 +184,7 @@ def disable_logging() -> None:
 
 
 def enable_logging(level: str = "WARNING") -> None:
-    """Re-enable AetherX logging after disable_logging().
+    """Re-enable OpenLeaf logging after disable_logging().
 
     Args:
         level: Log level to restore. Defaults to WARNING.

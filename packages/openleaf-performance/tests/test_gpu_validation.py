@@ -1,6 +1,6 @@
 """GPU/CUDA validation tests for PyTorch backend.
 
-These tests verify that AetherX functions produce correct results on GPU
+These tests verify that OpenLeaf functions produce correct results on GPU
 when CUDA is available. All tests are automatically skipped if no GPU is
 present, so they are safe to run in any environment.
 """
@@ -100,12 +100,12 @@ class TestAeroOnGPU:
 
 
 # ---------------------------------------------------------------------------
-# aetherx.numpy operations on GPU
+# openleaf.performance.numpy operations on GPU
 # ---------------------------------------------------------------------------
 
 
 class TestNumpyOpsOnGPU:
-    """Verify aetherx.numpy dispatches correctly on GPU tensors."""
+    """Verify openleaf.performance.numpy dispatches correctly on GPU tensors."""
 
     def test_sin_cos_gpu(self):
         x_np = np.linspace(0, 2 * np.pi, 100)
@@ -170,7 +170,7 @@ class TestNumpyOpsOnGPU:
 
 
 class TestGradientFlowOnGPU:
-    """Verify that autograd gradients flow through AetherX on GPU."""
+    """Verify that autograd gradients flow through OpenLeaf on GPU."""
 
     def test_isa_gradient_on_gpu(self):
         h = torch.tensor([10000.0], dtype=torch.float64, device="cuda", requires_grad=True)

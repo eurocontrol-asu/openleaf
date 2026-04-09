@@ -1,4 +1,4 @@
-"""Tests for aetherx.config module."""
+"""Tests for openleaf.performance.config module."""
 
 from __future__ import annotations
 

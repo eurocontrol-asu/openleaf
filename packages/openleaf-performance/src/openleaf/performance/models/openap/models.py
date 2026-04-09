@@ -1,7 +1,7 @@
 """OpenAP aircraft performance models.
 
 This module wraps the OpenAP library (https://github.com/junzis/openap) to provide
-aircraft performance calculations following the aetherx interface patterns.
+aircraft performance calculations following the openleaf interface patterns.
 
 OpenAP is an open-source library for aircraft performance and emission calculations
 developed by Junzi Sun at TU Delft.
@@ -97,7 +97,7 @@ def _unwrap_ndarrayconvert(obj: object) -> None:
 class OpenAPAeroModel(AerodynamicsModel[OpenAPAerodynamicsData]):
     """Aerodynamic model using OpenAP.
 
-    Wraps OpenAP's Drag class with aetherx.numpy injection for
+    Wraps OpenAP's Drag class with openleaf.performance.numpy injection for
     CasADi symbolic compatibility.
     """
 
@@ -197,7 +197,7 @@ class OpenAPAeroModel(AerodynamicsModel[OpenAPAerodynamicsData]):
 class OpenAPEngineModel(EngineModel[OpenAPEngineData]):
     """Engine model using OpenAP.
 
-    Wraps OpenAP's Thrust and FuelFlow classes with aetherx.numpy injection
+    Wraps OpenAP's Thrust and FuelFlow classes with openleaf.performance.numpy injection
     for CasADi symbolic compatibility.
     """
 
@@ -225,7 +225,7 @@ class OpenAPEngineModel(EngineModel[OpenAPEngineData]):
         _unwrap_ndarrayconvert(self._fuel_flow.thrust)
         _unwrap_ndarrayconvert(self._fuel_flow.drag)
 
-        # Inject aetherx.numpy and ISA
+        # Inject openleaf.performance.numpy and ISA
         self._thrust.sci = np
         self._thrust.aero = openap_aero
         self._fuel_flow.sci = np
@@ -369,7 +369,7 @@ class OpenAPModel(AircraftModel):
     """Complete OpenAP aircraft model.
 
     Wraps OpenAP library to provide aircraft performance calculations
-    following the aetherx interface patterns.
+    following the openleaf interface patterns.
     """
 
     def __init__(self, icao: str) -> None:

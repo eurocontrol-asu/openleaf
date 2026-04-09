@@ -1,4 +1,4 @@
-"""Tests for AetherX exceptions."""
+"""Tests for OpenLeaf exceptions."""
 
 from __future__ import annotations
 
@@ -21,14 +21,14 @@ from openleaf.performance.exceptions import ValueRangeError
 class TestOpenLeafError:
     """Test base OpenLeafError."""
 
-    def test_aetherx_error_is_exception(self):
+    def test_openleaf_error_is_exception(self):
         """Test OpenLeafError is an Exception."""
         err = OpenLeafError("test error")
         assert isinstance(err, Exception)
         assert str(err) == "test error"
 
-    def test_catch_all_aetherx_errors(self):
-        """Test catching all AetherX errors with base class."""
+    def test_catch_all_openleaf_errors(self):
+        """Test catching all OpenLeaf errors with base class."""
         with pytest.raises(OpenLeafError):
             raise ConfigurationError("config error")
 
@@ -227,7 +227,7 @@ class TestEnvelopeError:
 class TestExceptionHierarchy:
     """Test exception inheritance hierarchy."""
 
-    def test_all_errors_are_aetherx_errors(self):
+    def test_all_errors_are_openleaf_errors(self):
         """Test all exceptions inherit from OpenLeafError."""
         exceptions = [
             ConfigurationError("test"),

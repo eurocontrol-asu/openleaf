@@ -1,7 +1,7 @@
 """OpenAP aircraft performance model wrapper.
 
 This module wraps the OpenAP library to provide aircraft performance
-calculations following the aetherx interface patterns.
+calculations following the openleaf interface patterns.
 """
 
 from __future__ import annotations

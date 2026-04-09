@@ -42,10 +42,10 @@ pytest tests/test_aero.py tests/test_isa.py tests/test_typing.py
 
 ## Other Performance Models
 
-The aetherx framework is designed to support multiple performance models:
+The OpenLeaf framework is designed to support multiple performance models:
 
 - **OpenAP**: Open Aircraft Performance model (open source)
 - **Poll-Schumann**: Fuel flow and emissions model
-- **Custom models**: Implement the abstract interfaces in `aetherx.core.perfos`
+- **Custom models**: Implement the abstract interfaces in `openleaf.performance.core.perfos`
 
 Contributions for additional performance models are welcome!

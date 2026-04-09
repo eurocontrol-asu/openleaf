@@ -1,4 +1,4 @@
-"""Tests for CasADi-specific branches in aetherx.numpy.
+"""Tests for CasADi-specific branches in openleaf.performance.numpy.
 
 These tests cover the CasADi code paths in array.py and arithmetic_monadic.py
 that aren't reached by the default NumPy tests.

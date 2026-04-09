@@ -1,5 +1,5 @@
 """
-Core type definitions for AetherX aircraft performance models.
+Core type definitions for OpenLeaf aircraft performance models.
 
 This module provides unified type definitions used across all performance models
 (BADA3, BADA4, OpenAP, PS). These types ensure consistency and interoperability

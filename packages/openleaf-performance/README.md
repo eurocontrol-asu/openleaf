@@ -5,8 +5,8 @@
 <!-- Canonical Badge Row: Status → Stack → Tooling → Info -->
 <p align="center">
   <!-- Status -->
-  <a href="https://github.com/ramondalmau/aetherx/actions/workflows/ci.yml"><img src="https://github.com/ramondalmau/aetherx/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://coveralls.io/github/ramondalmau/aetherx?branch=main"><img src="https://coveralls.io/repos/github/ramondalmau/aetherx/badge.svg?branch=main" alt="Coverage"></a>
+  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/ci.yml"><img src="https://github.com/ramondalmau/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://coveralls.io/github/ramondalmau/openleaf?branch=main"><img src="https://coveralls.io/repos/github/ramondalmau/openleaf/badge.svg?branch=main" alt="Coverage"></a>
   <!-- Stack -->
   <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/casadi-symbolic-orange" alt="CasADi">
@@ -17,9 +17,9 @@
   <a href="https://github.com/astral-sh/ruff"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" alt="Ruff"></a>
   <a href="https://github.com/astral-sh/uv"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json" alt="uv"></a>
   <!-- Info -->
-  <a href="https://pypi.org/project/aetherx/"><img src="https://img.shields.io/pypi/v/aetherx" alt="PyPI"></a>
+  <a href="https://pypi.org/project/openleaf-performance/"><img src="https://img.shields.io/pypi/v/openleaf-performance" alt="PyPI"></a>
   <img src="https://img.shields.io/badge/license-EUPL--1.2-blue" alt="License">
-  <a href="https://ramondalmau.github.io/aetherx/"><img src="https://img.shields.io/badge/docs-live-brightgreen" alt="Docs"></a>
+  <a href="https://ramondalmau.github.io/openleaf/"><img src="https://img.shields.io/badge/docs-live-brightgreen" alt="Docs"></a>
 </p>
 
 ---
@@ -40,14 +40,14 @@ A modular, differentiable aircraft performance modeling framework supporting BAD
 ### From PyPI
 
 ```bash
-uv pip install aetherx
+uv pip install openleaf-performance
 ```
 
 ### From Source
 
 ```bash
-git clone https://github.com/ramondalmau/aetherx.git
-cd aetherx
+git clone https://github.com/ramondalmau/openleaf.git
+cd openleaf
 uv sync --all-groups
 ```
 
@@ -55,13 +55,13 @@ uv sync --all-groups
 
 ```bash
 # Install with OpenAP support
-uv pip install aetherx[openap]
+uv pip install openleaf-performance[openap]
 
 # Install with PS model support (requires pycontrails)
-uv pip install aetherx[ps]
+uv pip install openleaf-performance[ps]
 
 # Install everything
-uv pip install aetherx[all]
+uv pip install openleaf-performance[all]
 ```
 
 ## Quick Start
@@ -71,10 +71,10 @@ uv pip install aetherx[all]
 All models now support initialization with just an ICAO aircraft type code:
 
 ```python
-from aetherx.models.bada3 import BADA3Model
-from aetherx.models.bada4 import BADA4Model
-from aetherx.models.openap import OpenAPModel
-from aetherx.models.ps import PSModel
+from openleaf.performance.models.bada3 import BADA3Model
+from openleaf.performance.models.bada4 import BADA4Model
+from openleaf.performance.models.openap import OpenAPModel
+from openleaf.performance.models.ps import PSModel
 
 # Initialize any model with ICAO code
 model = OpenAPModel("A320")      # Works out of the box
@@ -132,13 +132,13 @@ model = BADA3Model("A320")
 
 ### Using with CasADi
 
-The power of AetherX: all functions work seamlessly with CasADi symbolic types!
+The power of OpenLeaf: all functions work seamlessly with CasADi symbolic types!
 
 ```python
 import casadi as ca
-import aetherx.numpy as anp
-from aetherx.models.ps import PSModel
-from aetherx.physics import isa
+import openleaf.performance.numpy as anp
+from openleaf.performance.models.ps import PSModel
+from openleaf.performance.physics import isa
 
 # Initialize model
 ps_model = PSModel("B738")
@@ -148,7 +148,7 @@ altitude = ca.SX.sym("h")  # meters
 mach = ca.SX.sym("M")
 aircraft_mass = ca.SX.sym("m")
 
-# AetherX ISA functions work with CasADi!
+# OpenLeaf ISA functions work with CasADi!
 air_temperature = isa.air_temperature(altitude)
 air_pressure = isa.air_pressure(altitude)
 
@@ -175,8 +175,8 @@ grad = ca.gradient(fuel_flow, altitude)
 ### Basic Performance Calculations
 
 ```python
-from aetherx.models.ps import PSModel
-from aetherx.physics import isa
+from openleaf.performance.models.ps import PSModel
+from openleaf.performance.physics import isa
 import numpy as np
 
 model = PSModel("A320")
@@ -186,7 +186,7 @@ h = 10668.0       # altitude [m]
 mach = 0.78       # Mach number
 m = 65000.0       # aircraft mass [kg]
 
-# Atmospheric state using AetherX ISA
+# Atmospheric state using OpenLeaf ISA
 T = isa.air_temperature(h)  # [K]
 p = isa.air_pressure(h)     # [Pa]
 
@@ -213,7 +213,7 @@ print(f"Fuel flow: {ff*3600:.0f} kg/h")
 ### Flight Envelope Limits
 
 ```python
-from aetherx.models.ps import PSModel
+from openleaf.performance.models.ps import PSModel
 
 model = PSModel("A320")
 
@@ -229,7 +229,7 @@ print(f"OEM: {model.oem} kg")
 ## Architecture
 
 ```
-aetherx/
+openleaf/
 ├── core/
 │   ├── perfos.py          # Abstract base classes and interfaces
 │   ├── factory.py         # Model factory (ModelType → AircraftModel)
@@ -295,8 +295,8 @@ uv run python examples/04_vertical_profile_optimisation.py --model ps
 ## Development
 
 ```bash
-git clone https://github.com/ramondalmau/aetherx.git
-cd aetherx
+git clone https://github.com/ramondalmau/openleaf.git
+cd openleaf
 uv sync --all-groups    # Install all dependencies
 uv run pytest           # Run tests
 uv run ruff check       # Lint
@@ -305,10 +305,10 @@ uv run mypy src/        # Type check
 
 ## Multi-Backend Support
 
-AetherX uses `aetherx.numpy` which provides NumPy-compatible operations that work with multiple array backends via the [Array API Standard](https://data-apis.org/array-api/latest/):
+OpenLeaf uses `openleaf.performance.numpy` which provides NumPy-compatible operations that work with multiple array backends via the [Array API Standard](https://data-apis.org/array-api/latest/):
 
 ```python
-import aetherx.numpy as anp
+import openleaf.performance.numpy as anp
 import numpy as np
 import torch  # Optional
 
@@ -353,7 +353,7 @@ European Union Public Licence v. 1.2 (EUPL-1.2) — see [LICENSE](LICENSE) for d
 ```bibtex
 @inproceedings{dalmau2026aetherx,
   author    = {Dalmau, Ramon and Jarry, Gabriel and Very, Philippe},
-  title     = {A Unified, Vectorized and Differentiable Framework for Aircraft Performance Modelling},
+  title     = {OpenLeaf: A Unified, Vectorized and Differentiable Framework for Aircraft Performance Modelling},
   booktitle = {Proceedings of the Air Traffic and Radar Studies (ATRDS) 2026},
   year      = {2026}
 }
