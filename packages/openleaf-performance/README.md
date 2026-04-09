@@ -90,20 +90,43 @@ print(f"MMO: {model.mmo}")
 
 ### Configuring BADA Paths
 
-For BADA3 and BADA4, configure the data paths once:
+BADA3 and BADA4 require proprietary data from [EUROCONTROL](https://www.eurocontrol.int/model/bada). Once obtained, configure the paths using one of the three methods below (in order of priority):
+
+**1. Environment variables** (highest priority)
+
+```bash
+export OPENLEAF_BADA3_PATH="/path/to/bada3/data"
+export OPENLEAF_BADA4_PATH="/path/to/bada4/data"
+```
+
+**2. Config file** `~/.config/openleaf/settings.toml`
+
+```toml
+[bada3]
+path = "/path/to/bada3/data"
+# synonyms = "/path/to/SYNONYM.NEW"  # Optional
+
+[bada4]
+path = "/path/to/bada4/data"
+# synonyms = "/path/to/SYNONYM.BD4"  # Optional
+```
+
+**3. Python API** (persists to settings.toml)
 
 ```python
-import aetherx
+import openleaf.performance
 
-# Set paths to your BADA data
-aetherx.set_bada3_path("/path/to/bada3/data")
-aetherx.set_bada4_path("/path/to/bada4/data")
+openleaf.performance.set_bada3_path("/path/to/bada3/data")
+openleaf.performance.set_bada4_path("/path/to/bada4/data")
 
 # View current configuration
-aetherx.show_config()
+openleaf.performance.show_config()
+```
 
-# Now you can use ICAO codes directly
-from aetherx.models.bada3 import BADA3Model
+Once configured, ICAO codes work directly:
+
+```python
+from openleaf.performance.models.bada3 import BADA3Model
 model = BADA3Model("A320")
 ```
 
@@ -237,13 +260,7 @@ aetherx/
 
 ### BADA3/BADA4
 
-BADA is proprietary and must be obtained from [EUROCONTROL](https://www.eurocontrol.int/model/bada). Configure paths using:
-
-```python
-import aetherx
-aetherx.set_bada3_path("/path/to/bada3")
-aetherx.set_bada4_path("/path/to/bada4")
-```
+BADA is proprietary and must be obtained from [EUROCONTROL](https://www.eurocontrol.int/model/bada). See [Configuring BADA Paths](#configuring-bada-paths) for setup instructions.
 
 ### OpenAP
 
