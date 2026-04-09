@@ -21,15 +21,6 @@ members = [
 ]
 
 [[package]]
-name = "aetherx"
-version = "0.4"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/2d/31/2ff67bb4f694b777cc71c8ce90e62cecf1d650bd7713933439905f746f1e/AetherX-0.4.tar.gz", hash = "sha256:ff48b218b328a6955d09e93f536ed92b02c63d41bedc181ecad3ec9e5b435eca", size = 13405, upload-time = "2023-10-20T13:35:16.332Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/f5/fe/c25497e4853058692be6f7a3e7ff165b404721e62a7b9559c3506e80ccb3/AetherX-0.4-py3-none-any.whl", hash = "sha256:5bfbe3dea9b509db09e5345939904a406b92054ec7b7cdf617bc57a525b3c50d", size = 13365, upload-time = "2023-10-20T13:35:15.021Z" },
-]
-
-[[package]]
 name = "annotated-types"
 version = "0.7.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1514,6 +1505,10 @@ dependencies = [
     { name = "nvidia-cuda-nvrtc-cu12", marker = "sys_platform != 'emscripten' and sys_platform != 'win32'" },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/04/1b/54f7595727516ba21b59dd8607ade5e6dda973462264be9af74b5ee0dee3/nvidia_cublas_cu12-12.9.2.10.tar.gz", hash = "sha256:7caf6512c921f956e5e609378e8332be502d7e5108deaade5c7ecf6b8042e842", size = 15431, upload-time = "2026-03-24T04:05:24.555Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f7/a2/c96163a0fff1839c0c9548bbdeae7b853b867009e33b9b9264adc238b1cf/nvidia_cublas_cu12-12.9.2.10-py3-none-manylinux_2_27_aarch64.whl", hash = "sha256:5572131a59c3eebeeb1c4c8144f772d49372c20124916e072a0e3fc30df421d5", size = 575012079, upload-time = "2026-04-08T18:51:47.303Z" },
+    { url = "https://files.pythonhosted.org/packages/cb/c0/0a517bfe63ccd3b92eb254d264e28fca3c7cab75d07daea315250fb1bf73/nvidia_cublas_cu12-12.9.2.10-py3-none-manylinux_2_27_x86_64.whl", hash = "sha256:e4f53a8ca8c5d6e8c492d0d0a3d565ecb59a751b19cfdaa4f6da0ab2104c1702", size = 581240110, upload-time = "2026-04-08T18:52:31.532Z" },
+]
 
 [[package]]
 name = "nvidia-cuda-cccl-cu12"
@@ -1836,7 +1831,6 @@ dependencies = [
     { name = "jax" },
     { name = "numpy" },
     { name = "openap" },
-    { name = "openleaf-core" },
     { name = "pandas" },
     { name = "pycontrails" },
     { name = "pydantic" },
@@ -1848,7 +1842,26 @@ dependencies = [
 
 [package.optional-dependencies]
 all = [
-    { name = "aetherx" },
+    { name = "casadi" },
+    { name = "cyclopts" },
+    { name = "hypothesis" },
+    { name = "mkdocs" },
+    { name = "mkdocs-gen-files" },
+    { name = "mkdocs-literate-nav" },
+    { name = "mkdocs-material" },
+    { name = "mkdocs-section-index" },
+    { name = "mkdocstrings", extra = ["python"] },
+    { name = "mypy" },
+    { name = "openap" },
+    { name = "pandas-stubs" },
+    { name = "pip-audit" },
+    { name = "pycontrails" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+    { name = "torch" },
+    { name = "xarray" },
 ]
 casadi = [
     { name = "casadi" },
@@ -1908,6 +1921,7 @@ dev = [
     { name = "mypy" },
     { name = "pandas-stubs" },
     { name = "pip-audit" },
+    { name = "pre-commit" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
@@ -1922,48 +1936,69 @@ docs = [
     { name = "mkdocs-section-index" },
     { name = "mkdocstrings", extra = ["python"] },
 ]
+examples = [
+    { name = "matplotlib" },
+]
 
 [package.metadata]
 requires-dist = [
-    { name = "aetherx", extras = ["casadi", "dev", "docs", "openap", "ps", "test", "torch"], marker = "extra == 'all'" },
     { name = "array-api-compat", specifier = ">=1.4.0" },
+    { name = "casadi", marker = "extra == 'all'", specifier = ">=3.6.0" },
     { name = "casadi", marker = "extra == 'casadi'", specifier = ">=3.6.0" },
     { name = "casadi", marker = "extra == 'dev'", specifier = ">=3.6.0" },
     { name = "casadi", marker = "extra == 'optimization'", specifier = ">=3.6.0" },
+    { name = "cyclopts", marker = "extra == 'all'", specifier = ">=3.0.0" },
     { name = "cyclopts", marker = "extra == 'dev'", specifier = ">=3.0.0" },
+    { name = "hypothesis", marker = "extra == 'all'", specifier = ">=6.100.0" },
     { name = "hypothesis", marker = "extra == 'test'", specifier = ">=6.100.0" },
     { name = "jax", specifier = ">=0.9.1" },
     { name = "jax", extras = ["cuda11-pip"], marker = "extra == 'cuda11'", specifier = ">=0.9.1" },
     { name = "jax", extras = ["cuda12"], marker = "extra == 'cuda12'", specifier = ">=0.9.1" },
+    { name = "mkdocs", marker = "extra == 'all'", specifier = ">=1.5.0" },
     { name = "mkdocs", marker = "extra == 'docs'", specifier = ">=1.5.0" },
+    { name = "mkdocs-gen-files", marker = "extra == 'all'", specifier = ">=0.5.0" },
     { name = "mkdocs-gen-files", marker = "extra == 'docs'", specifier = ">=0.5.0" },
+    { name = "mkdocs-literate-nav", marker = "extra == 'all'", specifier = ">=0.6.0" },
     { name = "mkdocs-literate-nav", marker = "extra == 'docs'", specifier = ">=0.6.0" },
+    { name = "mkdocs-material", marker = "extra == 'all'", specifier = ">=9.0.0" },
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = ">=9.0.0" },
+    { name = "mkdocs-section-index", marker = "extra == 'all'", specifier = ">=0.3.0" },
     { name = "mkdocs-section-index", marker = "extra == 'docs'", specifier = ">=0.3.0" },
+    { name = "mkdocstrings", extras = ["python"], marker = "extra == 'all'", specifier = ">=0.24.0" },
     { name = "mkdocstrings", extras = ["python"], marker = "extra == 'docs'", specifier = ">=0.24.0" },
+    { name = "mypy", marker = "extra == 'all'", specifier = ">=1.13.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.13.0" },
     { name = "numpy", specifier = ">=1.24.0" },
     { name = "openap", specifier = ">=2.4,<2.5" },
+    { name = "openap", marker = "extra == 'all'", specifier = ">=2.4,<2.5" },
     { name = "openap", marker = "extra == 'dev'", specifier = ">=2.4,<2.5" },
     { name = "openap", marker = "extra == 'openap'", specifier = ">=2.4,<2.5" },
-    { name = "openleaf-core", editable = "packages/openleaf-core" },
     { name = "pandas", specifier = ">=2.0.0" },
+    { name = "pandas-stubs", marker = "extra == 'all'", specifier = ">=2.0.0" },
     { name = "pandas-stubs", marker = "extra == 'dev'", specifier = ">=2.0.0" },
+    { name = "pip-audit", marker = "extra == 'all'", specifier = ">=2.7.0" },
     { name = "pip-audit", marker = "extra == 'dev'", specifier = ">=2.7.0" },
     { name = "pycontrails", specifier = ">=0.60.2,<0.60.5" },
+    { name = "pycontrails", marker = "extra == 'all'", specifier = ">=0.60.2,<0.60.5" },
     { name = "pycontrails", marker = "extra == 'dev'", specifier = ">=0.60.2,<0.60.5" },
     { name = "pycontrails", marker = "extra == 'ps'", specifier = ">=0.60.2,<0.60.5" },
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "pydantic-settings", specifier = ">=2.7.0" },
+    { name = "pytest", marker = "extra == 'all'", specifier = ">=8.0.0" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8.0.0" },
+    { name = "pytest-asyncio", marker = "extra == 'all'", specifier = ">=0.24.0" },
     { name = "pytest-asyncio", marker = "extra == 'test'", specifier = ">=0.24.0" },
+    { name = "pytest-cov", marker = "extra == 'all'", specifier = ">=6.0.0" },
     { name = "pytest-cov", marker = "extra == 'test'", specifier = ">=6.0.0" },
     { name = "rich", specifier = ">=13.9.0" },
+    { name = "ruff", marker = "extra == 'all'", specifier = ">=0.9.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9.0" },
     { name = "scipy", specifier = ">=1.10.0" },
     { name = "structlog", specifier = ">=24.4.0" },
+    { name = "torch", marker = "extra == 'all'", specifier = ">=2.0.0" },
     { name = "torch", marker = "extra == 'gpu'", specifier = ">=2.0.0" },
     { name = "torch", marker = "extra == 'torch'", specifier = ">=2.0.0" },
+    { name = "xarray", marker = "extra == 'all'", specifier = ">=2023.0.0" },
     { name = "xarray", marker = "extra == 'test'", specifier = ">=2023.0.0" },
 ]
 provides-extras = ["all", "casadi", "cuda11", "cuda12", "dev", "docs", "gpu", "openap", "optimization", "ps", "test", "torch"]
@@ -1976,6 +2011,7 @@ dev = [
     { name = "mypy", specifier = ">=1.13.0" },
     { name = "pandas-stubs", specifier = ">=2.0.0" },
     { name = "pip-audit", specifier = ">=2.7.0" },
+    { name = "pre-commit", specifier = ">=4.0" },
     { name = "pytest", specifier = ">=8.0.0" },
     { name = "pytest-asyncio", specifier = ">=0.24.0" },
     { name = "pytest-cov", specifier = ">=6.0.0" },
@@ -1990,6 +2026,7 @@ docs = [
     { name = "mkdocs-section-index", specifier = ">=0.3.0" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.24.0" },
 ]
+examples = [{ name = "matplotlib", specifier = ">=3.8.0" }]
 
 [[package]]
 name = "opt-einsum"
