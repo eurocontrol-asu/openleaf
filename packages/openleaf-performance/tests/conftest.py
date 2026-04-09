@@ -8,12 +8,12 @@ Tests requiring proprietary BADA data are automatically skipped if data is unava
 import sys
 from pathlib import Path
 
+import numpy as np
+import pytest
+
 
 # Add tests directory to path for local test modules (e.g., ptd_parser)
 sys.path.insert(0, str(Path(__file__).parent))
-
-import numpy as np
-import pytest
 
 # Patch CasADi's broken SWIG __hash__ binding (GenSharedObject___hash__)
 # so that CasADi types can be used in sets and as dict keys in tests.
