@@ -253,6 +253,31 @@ def length(array) -> int:
         return 1
 
 
+def _diag_construct_casadi(v, k, ca):
+    """Construct a diagonal matrix from a CasADi 1D vector with offset *k*."""
+    if v.shape[0] == 1:
+        v = v.T
+    if k == 0:
+        return ca.diag(v)
+    n = v.shape[0]
+    res = type(v).zeros(n + abs(k), n + abs(k))
+    for i in range(n):
+        if k >= 0:
+            res[i, i + k] = v[i]
+        else:
+            res[i - k, i] = v[i]
+    return res
+
+
+def _diag_extract_casadi(v, k):
+    """Extract a diagonal from a square CasADi matrix with offset *k*."""
+    ca = _get_casadi()
+    n = v.shape[0]
+    if k >= 0:
+        return ca.vertcat(*[v[i, i + k] for i in range(n - k)])
+    return ca.vertcat(*[v[i - k, i] for i in range(n + k)])
+
+
 def diag(v, k=0):
     """
     Extract a diagonal or construct a diagonal array.
@@ -261,30 +286,11 @@ def diag(v, k=0):
     """
     if is_casadi_type(v, recursive=False):
         ca = _get_casadi()
-        if 1 in v.shape:  # If v is a 1D array, construct a diagonal matrix
-            if v.shape[0] == 1:
-                v = v.T
-
-            if k == 0:
-                return ca.diag(v)
-            else:
-                n = v.shape[0]
-                res = type(v).zeros(n + abs(k), n + abs(k))
-                for i in range(n):
-                    if k >= 0:
-                        res[i, i + k] = v[i]
-                    else:
-                        res[i - k, i] = v[i]
-                return res
-
-        elif v.shape[0] == v.shape[1]:  # Square matrix - extract diagonal
-            n = v.shape[0]
-            if k >= 0:
-                return array([v[i, i + k] for i in range(n - k)])
-            else:
-                return array([v[i - k, i] for i in range(n + k)])
-        else:
-            raise NotImplementedError("Haven't yet added logic for non-square matrices.")
+        if 1 in v.shape:
+            return _diag_construct_casadi(v, k, ca)
+        if v.shape[0] == v.shape[1]:
+            return _diag_extract_casadi(v, k)
+        raise NotImplementedError("Haven't yet added logic for non-square matrices.")
 
     if is_torch_type(v, recursive=False):
         torch = _get_torch()
