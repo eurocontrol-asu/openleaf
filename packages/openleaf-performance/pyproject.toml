@@ -10,7 +10,9 @@ readme = "README.md"
 license = { text = "EUPL-1.2" }
 requires-python = ">=3.12"
 authors = [
-    { name = "Ramon Dalmau" },
+    { name = "Ramon DALMAU", email = "ramon.dalmau-codina@eurocontrol.int" },
+    { name = "Gabriel JARRY", email = "gabriel.jarry@eurocontrol.int" },
+    { name = "Philippe VERY", email = "philippe.very@eurocontrol.int" },
 ]
 keywords = [
     "aircraft",
@@ -107,11 +109,11 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/ramondalmau/openleaf"
-Documentation = "https://ramondalmau.github.io/openleaf/"
-Repository = "https://github.com/ramondalmau/openleaf.git"
-Issues = "https://github.com/ramondalmau/openleaf/issues"
-Changelog = "https://github.com/ramondalmau/openleaf/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/eurocontrol-asu/openleaf"
+Documentation = "https://eurocontrol-asu.github.io/openleaf/"
+Repository = "https://github.com/eurocontrol-asu/openleaf.git"
+Issues = "https://github.com/eurocontrol-asu/openleaf/issues"
+Changelog = "https://github.com/eurocontrol-asu/openleaf/blob/main/CHANGELOG.md"
 
 # ============================================
 # DEPENDENCY GROUPS (PEP 735 - for uv sync)
