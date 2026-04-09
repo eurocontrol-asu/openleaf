@@ -39,6 +39,29 @@ def _get_casadi():
     return Backend.CASADI.module
 
 
+def _coerce_torch(target, other):
+    """Coerce *other* to a torch tensor matching *target*'s dtype/device."""
+    torch = Backend.TORCH.module
+    if not isinstance(other, torch.Tensor):
+        other = torch.as_tensor(other, dtype=target.dtype, device=target.device)
+    return other
+
+
+def _coerce_jax(target, other):
+    """Coerce *other* to a JAX array matching *target*'s dtype.
+
+    Returns *other* unchanged if JAX is not installed.
+    """
+    try:
+        import jax
+        import jax.numpy as jnp
+    except ImportError:
+        return other
+    if not isinstance(other, jax.Array):
+        return jnp.asarray(other, dtype=target.dtype)
+    return other
+
+
 def _ensure_pair(x1, x2):
     """Convert scalars/numpy values to match the backend of the other argument.
 
@@ -48,27 +71,23 @@ def _ensure_pair(x1, x2):
     """
     from openleaf.performance.numpy.backends import get_backend
 
-    torch_backend = Backend.TORCH
-    if get_backend(x1) == torch_backend:
-        torch = torch_backend.module
-        if not isinstance(x2, torch.Tensor):
-            x2 = torch.as_tensor(x2, dtype=x1.dtype, device=x1.device)
-    elif get_backend(x2) == torch_backend:
-        torch = torch_backend.module
-        if not isinstance(x1, torch.Tensor):
-            x1 = torch.as_tensor(x1, dtype=x2.dtype, device=x2.device)
-    else:
-        # Handle JAX arrays
-        try:
-            import jax
-            import jax.numpy as jnp
+    b1, b2 = get_backend(x1), get_backend(x2)
 
-            if isinstance(x1, jax.Array) and not isinstance(x2, jax.Array):
-                x2 = jnp.asarray(x2, dtype=x1.dtype)
-            elif isinstance(x2, jax.Array) and not isinstance(x1, jax.Array):
-                x1 = jnp.asarray(x1, dtype=x2.dtype)
-        except ImportError:
-            pass
+    if b1 == Backend.TORCH:
+        return x1, _coerce_torch(x1, x2)
+    if b2 == Backend.TORCH:
+        return _coerce_torch(x2, x1), x2
+
+    # JAX path (no-op if JAX is not installed)
+    try:
+        import jax
+    except ImportError:
+        return x1, x2
+
+    if isinstance(x1, jax.Array):
+        return x1, _coerce_jax(x1, x2)
+    if isinstance(x2, jax.Array):
+        return _coerce_jax(x2, x1), x2
     return x1, x2
 
 
