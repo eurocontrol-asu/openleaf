@@ -5,47 +5,71 @@
 `openleaf-performance` is organized in four layers. Each layer depends only on
 the layers below it.
 
+### Layer overview
+
 ```mermaid
 graph TD
-    subgraph "Core"
-        Factory["ModelFactory"]
-        Models["AircraftModel ABC"]
-        Trajectory["TrajectoryData"]
-        Envelope["EnvelopeChecker"]
-    end
+    classDef core fill:#B3D4F0,stroke:#023961
+    classDef models fill:#C4DFF5,stroke:#15588F
+    classDef physics fill:#D6EAFA,stroke:#2983CD
+    classDef dispatch fill:#E8F4FD,stroke:#409DDF
 
-    subgraph "Models"
-        BADA3["BADA3Model"]
-        BADA4["BADA4Model"]
-        OpenAP["OpenAPModel"]
-        PS["PSModel"]
-    end
+    Core["Core<br/>Factory · Trajectory · Envelope"]:::core
+    Mod["Models<br/>BADA3 · BADA4 · OpenAP · PS"]:::models
+    Phys["Physics<br/>ISA · Aero · TEM · ESF"]:::physics
+    Disp["Numpy dispatch<br/>NumPy · CasADi · JAX · PyTorch"]:::dispatch
 
-    subgraph "Physics"
-        ISA["ISA atmosphere"]
-        Aero["Aerodynamics"]
-        TEM["Total Energy Model"]
-        ESF["Energy Share Factor"]
-    end
+    Core --> Mod
+    Core --> Phys
+    Mod --> Phys
+    Phys --> Disp
+```
 
-    subgraph "Numpy dispatch"
-        Dispatch["Backend detection"]
-        Wrappers["Array wrappers"]
-        NP["NumPy"]
-        CA["CasADi"]
-        JAX["JAX"]
-        PT["PyTorch"]
-    end
+### Core & Models
+
+```mermaid
+graph TD
+    classDef core fill:#B3D4F0,stroke:#023961
+    classDef models fill:#C4DFF5,stroke:#15588F
+
+    Factory["ModelFactory"]:::core
+    ABC["AircraftModel ABC"]:::core
+    Traj["TrajectoryData"]:::core
+    Env["EnvelopeChecker"]:::core
+
+    BADA3["BADA3Model"]:::models
+    BADA4["BADA4Model"]:::models
+    OpenAP["OpenAPModel"]:::models
+    PS["PSModel"]:::models
 
     Factory --> BADA3 & BADA4 & OpenAP & PS
-    BADA3 & BADA4 & OpenAP & PS --> Models
-    Trajectory --> Models
-    Trajectory --> Envelope
-    Trajectory --> ISA & Aero & ESF
+    BADA3 & BADA4 & OpenAP & PS --> ABC
+    Traj --> ABC
+    Traj --> Env
+```
 
-    ISA & Aero & TEM & ESF --> Dispatch
-    Dispatch --> Wrappers
-    Wrappers --> NP & CA & JAX & PT
+### Physics & Dispatch
+
+```mermaid
+graph TD
+    classDef physics fill:#D6EAFA,stroke:#2983CD
+    classDef dispatch fill:#E8F4FD,stroke:#409DDF
+
+    ISA["ISA atmosphere"]:::physics
+    Aero["Aerodynamics"]:::physics
+    TEM["Total Energy Model"]:::physics
+    ESF["Energy Share Factor"]:::physics
+
+    Det["Backend detection"]:::dispatch
+    Wrap["Array wrappers"]:::dispatch
+    NP["NumPy"]:::dispatch
+    CA["CasADi"]:::dispatch
+    JAX["JAX"]:::dispatch
+    PT["PyTorch"]:::dispatch
+
+    ISA & Aero & TEM & ESF --> Det
+    Det --> Wrap
+    Wrap --> NP & CA & JAX & PT
 ```
 
 ## Layers

@@ -8,7 +8,7 @@ but differ in data source, fidelity, and licensing.
 
 | | BADA3 | BADA4 | OpenAP | Poll-Schumann |
 |---|---|---|---|---|
-| **Source** | EUROCONTROL | EUROCONTROL | Open data (TU Delft) | pycontrails (Google) |
+| **Source** | EUROCONTROL | EUROCONTROL | Open data (TU Delft) | pycontrails (Contrails.org) |
 | **License** | Proprietary | Proprietary | Open | Open |
 | **Data format** | `.OPF` text files | XML files | Python library | Python library |
 | **Aircraft coverage** | ~400 types | ~150 types | ~100 types | ~80 types |

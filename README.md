@@ -1,11 +1,13 @@
-<h1 align="center">openleaf</h1>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/eurocontrol-asu/openleaf/main/docs/assets/logo.svg" alt="OpenLeaf Logo" width="180" />
+</p>
+
+<h1 align="center">OpenLeaf</h1>
 <p align="center"><strong>Open-source aviation sustainability suite — performance modeling, emissions, and trajectory optimization.</strong></p>
 
 <p align="center">
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/axm-audit.json" alt="axm-audit"></a>
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/axm-init.json" alt="axm-init"></a>
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/coverage.json" alt="Coverage"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/coverage.json" alt="Coverage"></a>
   <img src="https://img.shields.io/badge/python-3.12%2B-blue" alt="Python 3.12+">
   <a href="https://eurocontrol-asu.github.io/openleaf/"><img src="https://img.shields.io/badge/docs-live-brightgreen" alt="Docs"></a>
 </p>
@@ -25,7 +27,7 @@ OpenLeaf provides **open-source tools for aviation sustainability research**. Th
 
 | Package | Description | Quality |
 |---|---|---|
-| [openleaf-performance](packages/openleaf-performance/) | Modular, differentiable aircraft performance modeling framework | [![audit](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/axm-audit.json)](https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml) [![cov](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/coverage.json)](https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml) |
+| [openleaf-performance](packages/openleaf-performance/) | Modular, differentiable aircraft performance modeling framework | [![cov](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/coverage.json)](https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml) |
 | [openleaf-core](packages/openleaf-core/) | Shared types and interfaces for the OpenLeaf suite | — |
 
 ## Quick Start
@@ -47,8 +49,8 @@ make check
 
 ```mermaid
 graph TD
-    classDef perf fill:#42A5F5,stroke:#1E88E5
-    classDef core fill:#78909C,stroke:#546E7A
+    classDef perf fill:#B3D4F0,stroke:#023961
+    classDef core fill:#C4DFF5,stroke:#15588F
 
     PERF["openleaf-performance<br/>Aircraft performance"]:::perf --> CORE
     CORE["openleaf-core<br/>Shared types & interfaces"]:::core
