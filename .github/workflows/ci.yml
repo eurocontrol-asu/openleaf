@@ -67,7 +67,7 @@ jobs:
           path: bada_data
 
       - run: uv python install ${{ matrix.python-version }}
-      - run: uv sync --all-groups
+      - run: uv sync --all-groups --all-extras
 
       - name: Run tests
         env:
