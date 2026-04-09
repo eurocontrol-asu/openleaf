@@ -133,6 +133,25 @@ def _get_synonyms(synonym_file: Path) -> dict[str, BADA3SynonymEntry]:
 _UNDERSCORE_SUFFIXES = ("__", "___", "_")
 
 
+def _try_opf_suffixes(data_path: Path, base_name: str) -> Path | None:
+    """Probe for an OPF file with underscore suffix variants.
+
+    Tries suffixes ``__``, ``___``, ``_``, and bare name (no suffix).
+
+    Args:
+        data_path: Directory containing OPF files.
+        base_name: Base ICAO or file prefix (without trailing underscores).
+
+    Returns:
+        Path to the first matching OPF file, or None.
+    """
+    for suffix in (*_UNDERSCORE_SUFFIXES, ""):
+        opf_file = data_path / f"{base_name}{suffix}.OPF"
+        if opf_file.exists():
+            return opf_file
+    return None
+
+
 def _resolve_via_synonyms_bada3(
     icao: str,
     synonyms: dict[str, BADA3SynonymEntry],
@@ -145,12 +164,7 @@ def _resolve_via_synonyms_bada3(
     opf_file = data_path / f"{entry.file_prefix}.OPF"
     if opf_file.exists():
         return opf_file
-    base = entry.file_prefix.rstrip("_")
-    for suffix in _UNDERSCORE_SUFFIXES:
-        opf_file = data_path / f"{base}{suffix}.OPF"
-        if opf_file.exists():
-            return opf_file
-    return None
+    return _try_opf_suffixes(data_path, entry.file_prefix.rstrip("_"))
 
 
 def resolve_bada3_file(
@@ -181,10 +195,9 @@ def resolve_bada3_file(
         if result is not None:
             return result
 
-    for suffix in (*_UNDERSCORE_SUFFIXES, ""):
-        opf_file = data_path / f"{icao}{suffix}.OPF"
-        if opf_file.exists():
-            return opf_file
+    result = _try_opf_suffixes(data_path, icao)
+    if result is not None:
+        return result
 
     raise build_not_found_error(icao, "BADA3", data_path, synonym_file, _get_synonyms, "*.OPF")
 
