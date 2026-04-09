@@ -112,10 +112,14 @@ addopts = "-q --import-mode=importlib"
 
 [tool.coverage.run]
 source_pkgs = []
+relative_files = true
 
 [tool.coverage.report]
 show_missing = true
 fail_under = 80
+
+[tool.coverage.xml]
+output = "coverage.xml"
 
 [tool.mypy]
 python_version = "3.12"
