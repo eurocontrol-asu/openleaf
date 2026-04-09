@@ -8,6 +8,7 @@ Reference: EUROCONTROL BADA Family 4 User Manual
 
 from __future__ import annotations
 
+import contextlib
 import xml.etree.ElementTree as ET
 
 import numpy.typing as npt
@@ -586,6 +587,71 @@ def parse_limits(
     )
 
 
+_HMAX_KEYS: dict[str, str] = {"TO": "hmax_to", "IC": "hmax_ic", "AP": "hmax_ap", "LD": "hmax_ld"}
+
+
+def _parse_aero_conf_schedule(
+    aero_sched: ET.Element,
+) -> tuple[
+    dict[AerodynamicConfig, str], dict[AerodynamicConfig, LandingGearPosition], dict[str, float]
+]:
+    """Parse HLid/LG mappings and altitude thresholds from AeroConfSchedule."""
+    hlid_map: dict[AerodynamicConfig, str] = {}
+    lg_map: dict[AerodynamicConfig, LandingGearPosition] = {}
+    hmax_map: dict[str, float] = {}
+
+    for phase in aero_sched.findall("AeroPhase"):
+        name_elem = phase.find("name")
+        if name_elem is None:
+            continue
+        phase_name = name_elem.text
+
+        try:
+            conf = AerodynamicConfig.from_string(phase_name)
+        except ValueError:
+            conf = None
+
+        if conf is not None:
+            hlid_elem = phase.find("HLid")
+            if hlid_elem is not None:
+                hlid_map[conf] = hlid_elem.text
+
+            lg_elem = phase.find("LG")
+            if lg_elem is not None:
+                with contextlib.suppress(ValueError):
+                    lg_map[conf] = LandingGearPosition.from_string(lg_elem.text)
+
+        hmax_elem = phase.find("Hmax")
+        if hmax_elem is not None and phase_name in _HMAX_KEYS:
+            hmax_map[_HMAX_KEYS[phase_name]] = float(hmax_elem.text)
+
+    return hlid_map, lg_map, hmax_map
+
+
+def _parse_speed_schedule(speed_sched: ET.Element) -> tuple[float, float]:
+    """Parse minimum speed coefficients from SpeedSchedule."""
+    cvmin_to = CVMIN_TO_DEFAULT
+    cvmin = CVMIN_DEFAULT
+
+    for sched in speed_sched.findall("SpeedPhase"):
+        name_elem = sched.find("name")
+        if name_elem is None:
+            continue
+
+        cvmin_elem = sched.find("CVmin")
+        if cvmin_elem is None:
+            continue
+
+        phase_name = name_elem.text
+        cvmin_val = float(cvmin_elem.text)
+        if phase_name == "TO":
+            cvmin_to = cvmin_val
+        elif phase_name in {"IC", "CR", "AP", "LD"}:
+            cvmin = cvmin_val
+
+    return cvmin_to, cvmin
+
+
 def parse_arpm(arpm: ET.Element | None) -> BADA4ARPMConfig:
     """Parse Airline Procedure Model configuration from BADA4 XML.
 
@@ -602,80 +668,28 @@ def parse_arpm(arpm: ET.Element | None) -> BADA4ARPMConfig:
     if arpm is None:
         return BADA4ARPMConfig()
 
-    # Altitude thresholds
-    hmax_to = HMAX_TO_DEFAULT
-    hmax_ic = HMAX_IC_DEFAULT
-    hmax_ap = HMAX_AP_DEFAULT
-    hmax_ld = HMAX_LD_DEFAULT
-    cvmin_to = CVMIN_TO_DEFAULT
-    cvmin = CVMIN_DEFAULT
+    hmax_defaults = {
+        "hmax_to": HMAX_TO_DEFAULT,
+        "hmax_ic": HMAX_IC_DEFAULT,
+        "hmax_ap": HMAX_AP_DEFAULT,
+        "hmax_ld": HMAX_LD_DEFAULT,
+    }
 
-    # HLid and LG mappings per aerodynamic configuration
     hlid_map: dict[AerodynamicConfig, str] = {}
     lg_map: dict[AerodynamicConfig, LandingGearPosition] = {}
 
-    # Parse altitude thresholds and HLid/LG mappings from AeroConfSchedule
     aero_sched = arpm.find("AeroConfSchedule")
     if aero_sched is not None:
-        for phase in aero_sched.findall("AeroPhase"):
-            name = phase.find("name")
-            if name is None:
-                continue
-            phase_name = name.text
+        hlid_map, lg_map, hmax_overrides = _parse_aero_conf_schedule(aero_sched)
+        hmax_defaults.update(hmax_overrides)
 
-            # Parse HLid mapping
-            hlid_elem = phase.find("HLid")
-            if hlid_elem is not None:
-                try:
-                    conf = AerodynamicConfig.from_string(phase_name)
-                    hlid_map[conf] = hlid_elem.text
-                except ValueError:
-                    pass  # Skip unknown phase names
-
-            # Parse LG mapping
-            lg_elem = phase.find("LG")
-            if lg_elem is not None:
-                try:
-                    conf = AerodynamicConfig.from_string(phase_name)
-                    lg_map[conf] = LandingGearPosition.from_string(lg_elem.text)
-                except ValueError:
-                    pass  # Skip unknown phase names
-
-            # Parse altitude thresholds
-            hmax_elem = phase.find("Hmax")
-            if hmax_elem is not None:
-                hmax_val = float(hmax_elem.text)
-                if phase_name == "TO":
-                    hmax_to = hmax_val
-                elif phase_name == "IC":
-                    hmax_ic = hmax_val
-                elif phase_name == "AP":
-                    hmax_ap = hmax_val
-                elif phase_name == "LD":
-                    hmax_ld = hmax_val
-
-    # Parse minimum speed coefficients if available
+    cvmin_to, cvmin = CVMIN_TO_DEFAULT, CVMIN_DEFAULT
     speed_sched = arpm.find("SpeedSchedule")
     if speed_sched is not None:
-        for sched in speed_sched.findall("SpeedPhase"):
-            name = sched.find("name")
-            if name is None:
-                continue
-            phase_name = name.text
-
-            cvmin_elem = sched.find("CVmin")
-            if cvmin_elem is not None:
-                cvmin_val = float(cvmin_elem.text)
-                if phase_name == "TO":
-                    cvmin_to = cvmin_val
-                elif phase_name in ("IC", "CR", "AP", "LD"):
-                    cvmin = cvmin_val
+        cvmin_to, cvmin = _parse_speed_schedule(speed_sched)
 
     return BADA4ARPMConfig(
-        hmax_to=hmax_to,
-        hmax_ic=hmax_ic,
-        hmax_ap=hmax_ap,
-        hmax_ld=hmax_ld,
+        **hmax_defaults,
         cvmin_to=cvmin_to,
         cvmin=cvmin,
         hlid_map=hlid_map,
