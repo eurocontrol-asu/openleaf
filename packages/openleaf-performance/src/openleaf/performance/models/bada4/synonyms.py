@@ -222,6 +222,23 @@ def resolve_bada4_file(
     raise build_not_found_error(icao, "BADA4", data_path, synonym_file, _get_synonyms, "*.xml")
 
 
+def _available_from_synonyms(synonyms: dict, data_path: Path) -> list[str]:
+    """Return ICAO codes whose backing data (folder or XML) exists."""
+    return [
+        icao
+        for icao, entry in synonyms.items()
+        if (data_path / entry.folder_name).is_dir()
+        or (data_path / f"{entry.folder_name}.xml").exists()
+    ]
+
+
+def _available_from_filesystem(data_path: Path) -> list[str]:
+    """Return aircraft names from XML files and subdirectories."""
+    xml_files = list(data_path.glob("*.xml"))
+    folders = [d for d in data_path.iterdir() if d.is_dir()]
+    return list({f.stem for f in xml_files} | {d.name for d in folders})
+
+
 def available_bada4_aircraft(
     data_path: Path,
     synonym_file: Path | None = None,
@@ -235,24 +252,10 @@ def available_bada4_aircraft(
     Returns:
         Sorted list of available ICAO codes.
     """
-    if synonym_file is None:
-        synonym_file = data_path / "SYNONYM.BD4"
+    synonym_file = synonym_file or data_path / "SYNONYM.BD4"
 
     if synonym_file.exists():
         synonyms = _get_synonyms(synonym_file)
-        # Only return ICAO codes for which the backing XML/folder actually exists.
-        available = []
-        for icao, entry in synonyms.items():
-            folder_path = data_path / entry.folder_name
-            if folder_path.is_dir():
-                available.append(icao)
-                continue
-            if (data_path / f"{entry.folder_name}.xml").exists():
-                available.append(icao)
-        return sorted(available)
+        return sorted(_available_from_synonyms(synonyms, data_path))
 
-    # Fallback: list folders and XML files
-    xml_files = list(data_path.glob("*.xml"))
-    folders = [d for d in data_path.iterdir() if d.is_dir()]
-    names = {f.stem for f in xml_files} | {d.name for d in folders}
-    return sorted(names)
+    return sorted(_available_from_filesystem(data_path))
