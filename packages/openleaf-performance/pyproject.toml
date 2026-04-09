@@ -35,7 +35,6 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "openleaf-core",
     "numpy>=1.24.0",
     "pandas>=2.0.0",
     "scipy>=1.10.0",
@@ -104,7 +103,7 @@ docs = [
 ]
 # All optional dependencies
 all = [
-    "aetherx[casadi,torch,openap,ps,test,dev,docs]",
+    "openleaf-performance[casadi,torch,openap,ps,test,dev,docs]",
 ]
 
 [project.urls]
@@ -148,7 +147,6 @@ examples = [
 # UV - Workspace source for openleaf-core
 # ============================================
 [tool.uv.sources]
-openleaf-core = { workspace = true }
 
 # ============================================
 # HATCH - Build & Versioning
@@ -294,6 +292,37 @@ show_missing = true
 source = [
     "src/",
     "*/site-packages/",
+]
+
+# ============================================
+# DEPTRY - Dependency Hygiene
+# ============================================
+[tool.deptry]
+extend_exclude = ["examples"]
+
+[tool.deptry.per_rule_ignores]
+# Dev/test/docs tools — not imported in source code
+# openleaf-core: namespace sibling, resolved at runtime as openleaf.core.*
+# torch: optional backend, imported dynamically via Backend.TORCH.module
+# xarray: optional, used in tests only
+DEP002 = [
+    "hypothesis",
+    "mkdocs",
+    "mkdocs-gen-files",
+    "mkdocs-literate-nav",
+    "mkdocs-material",
+    "mkdocs-section-index",
+    "mkdocstrings",
+    "mypy",
+    "openleaf-performance",
+    "pandas-stubs",
+    "pip-audit",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "ruff",
+    "torch",
+    "xarray",
 ]
 
 # ============================================
