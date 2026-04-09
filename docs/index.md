@@ -26,7 +26,7 @@ hide:
 
     Modular, differentiable aircraft performance with BADA, Poll-Schumann, OpenAP and more.
 
-    [:octicons-arrow-right-24: openleaf-performance](packages/)
+    [:octicons-arrow-right-24: openleaf-performance](packages/index.md)
 
 -   :material-cog-outline:{ .lg .middle } **Multi-Backend**
 
@@ -62,4 +62,4 @@ uv add openleaf-performance
 from openleaf.performance import PerformanceMixin
 ```
 
-Head over to the [Packages](packages/) section to explore what's available.
+Head over to the [Packages](packages/index.md) section to explore what's available.

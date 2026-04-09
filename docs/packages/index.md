@@ -13,7 +13,7 @@ hide:
 
     A modular, differentiable aircraft performance modeling framework supporting BADA, Poll-Schumann, OpenAP and more.
 
-    [:octicons-arrow-right-24: Getting Started](../performance/)
+    [:octicons-arrow-right-24: Getting Started](../openleaf-performance/)
 
 </div>
 
