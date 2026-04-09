@@ -42,8 +42,8 @@ from typing import TYPE_CHECKING
 from typing import Any
 
 import openleaf.performance.numpy as np
+from openleaf.performance.core.envelope import EnvelopeChecker
 from openleaf.performance.core.types import EnvelopeMode
-from openleaf.performance.core.types import EnvelopeViolationError
 from openleaf.performance.logging import get_logger
 from openleaf.performance.physics import isa
 from openleaf.performance.physics import tem
@@ -636,153 +636,85 @@ class AircraftTrajectoryData:
         """Minimum fuel flow rate (idle) [kg/s]."""
         return self._model.fuel_flow_min(self)
 
-    # ---- Flight envelope limits ----
+    # ---- Flight envelope (delegated to EnvelopeChecker) ----
+
+    @cached_property
+    def _envelope_checker(self) -> EnvelopeChecker:
+        """Lazily create the EnvelopeChecker with converted flight state."""
+        return EnvelopeChecker(
+            model=self._model,
+            flight_state=self,
+            envelope_mode=self._envelope_mode,
+        )
+
+    @property
+    def cas_kt(self) -> ArrayScalarLike:
+        """Calibrated airspeed in knots (for EnvelopeChecker protocol)."""
+        from openleaf.performance.physics.units import MS_TO_KT
+
+        return self.calibrated_airspeed * MS_TO_KT
+
+    @property
+    def altitude_ft(self) -> ArrayScalarLike:
+        """Pressure altitude in feet (for EnvelopeChecker protocol)."""
+        from openleaf.performance.physics.units import M_TO_FT
+
+        return self._traj["altitude"] * M_TO_FT
+
+    @property
+    def mass(self) -> ArrayScalarLike:
+        """Aircraft mass in kg (for EnvelopeChecker protocol)."""
+        return self.aircraft_mass
+
+    @property
+    def mach(self) -> ArrayScalarLike:
+        """Mach number (for EnvelopeChecker protocol)."""
+        return self.mach_number
 
     @cached_property
     def max_cas(self) -> ArrayScalarLike:
-        """Maximum calibrated airspeed [kt].
-
-        Configuration-dependent:
-        - BADA4: Depends on hl_position and lg_extended (VMO, VFE, VLE)
-        - BADA3: Returns VMO from OPF data
-        - PS: Returns VMO from aircraft data
-        """
-        return self._model.max_cas(self)
+        """Maximum calibrated airspeed [kt]."""
+        return self._envelope_checker.max_cas
 
     @cached_property
     def min_cas(self) -> ArrayScalarLike:
-        """Minimum calibrated airspeed (stall speed) [kt].
-
-        Configuration and mass dependent:
-        - BADA4: Uses CL_max model with mass/mach/config
-        - BADA3: Uses reference stall speeds scaled by sqrt(m/mref)
-        - PS: Not typically available (cruise-only model)
-        """
-        return self._model.min_cas(self)
+        """Minimum calibrated airspeed (stall speed) [kt]."""
+        return self._envelope_checker.min_cas
 
     @cached_property
     def max_mach(self) -> ArrayScalarLike:
-        """Maximum Mach number [-].
-
-        Configuration-dependent:
-        - BADA4: Depends on lg_extended (MMO, MLE)
-        - BADA3: Returns MMO from OPF data
-        - PS: May include altitude-dependent impact pressure limits
-        """
-        return self._model.max_mach(self)
+        """Maximum Mach number [-]."""
+        return self._envelope_checker.max_mach
 
     @cached_property
     def max_altitude(self) -> ArrayScalarLike:
-        """Maximum operating altitude [ft].
-
-        Configuration and conditions dependent:
-        - BADA4: Depends on hl_position (HMO, MFA)
-        - BADA3: Mass and temperature dependent ceiling
-        - PS: Returns HMO from aircraft data
-        """
-        return self._model.max_altitude(self)
-
-    # ---- Envelope mode and violation detection ----
+        """Maximum operating altitude [ft]."""
+        return self._envelope_checker.max_altitude
 
     @property
     def envelope_mode(self) -> EnvelopeMode:
         """Current envelope violation handling mode."""
-        return self._envelope_mode
+        return self._envelope_checker.envelope_mode
 
     @cached_property
     def envelope_violations(self) -> dict[str, ArrayScalarLike]:
         """Detect flight envelope violations (pure computation, no side effects).
 
-        Compares current flight state against aircraft limits.
-        Returns boolean arrays (True = violation) for each constraint.
-
-        For mode-based handling (WARN/RAISE), use check_envelope() instead.
-
         Returns:
-            Dictionary with violation flags:
-            - overspeed_cas: CAS exceeds max_cas (VMO/VFE/VLE)
-            - overspeed_mach: Mach exceeds max_mach (MMO/MLE)
-            - underspeed: CAS below min_cas (stall warning)
-            - ceiling: Altitude exceeds max_altitude
-            - mass_overweight: Mass exceeds MTOM
-            - mass_underweight: Mass below OEM
-
-        Example:
-            >>> violations = traj.envelope_violations
-            >>> if np.any(violations["overspeed_mach"]):
-            ...     print("Mach overspeed detected!")
+            Dictionary with violation flags.
         """
-        from openleaf.performance.physics.units import M_TO_FT
-        from openleaf.performance.physics.units import MS_TO_KT
-
-        # Convert trajectory values to same units as limits
-        cas_kt = self.calibrated_airspeed * MS_TO_KT  # m/s → kt
-        altitude_ft = self._traj["altitude"] * M_TO_FT  # m → ft
-        mass = self.aircraft_mass
-
-        # Get mass limits from model
-        oem = self._model.oem
-        mtom = self._model.mtom
-
-        return {
-            "overspeed_cas": cas_kt > self.max_cas,
-            "overspeed_mach": self.mach_number > self.max_mach,
-            "underspeed": cas_kt < self.min_cas,
-            "ceiling": altitude_ft > self.max_altitude,
-            "mass_overweight": mass > mtom,
-            "mass_underweight": mass < oem,
-        }
+        return self._envelope_checker.envelope_violations
 
     def check_envelope(self) -> dict[str, ArrayScalarLike]:
         """Check envelope violations and handle according to envelope_mode.
 
-        Computes violations (or uses cached result) and then:
-            - IGNORE: Just return violations dict (default)
-            - WARN: Log warnings for each violation type detected
-            - RAISE: Raise EnvelopeViolationError if any violations exist
-
         Returns:
-            Dictionary with violation flags (same as envelope_violations).
+            Dictionary with violation flags.
 
         Raises:
             EnvelopeViolationError: If envelope_mode is RAISE and violations exist.
         """
-        violations = self.envelope_violations
-        self._handle_envelope_violations(violations)
-        return violations
-
-    def _handle_envelope_violations(self, violations: dict[str, ArrayScalarLike]) -> None:
-        """Handle violations based on envelope_mode setting.
-
-        Args:
-            violations: Dictionary of violation flags.
-
-        Raises:
-            EnvelopeViolationError: If mode is RAISE and violations exist.
-        """
-        if self._envelope_mode == EnvelopeMode.IGNORE:
-            return
-
-        # Find which violation types have any True values
-        active_violations = {
-            name: int(np.sum(mask)) for name, mask in violations.items() if np.any(mask)
-        }
-
-        if not active_violations:
-            return
-
-        total_points = len(self)
-        message = "Flight envelope violations detected"
-
-        if self._envelope_mode == EnvelopeMode.WARN:
-            logger.warning(
-                message,
-                violations=active_violations,
-                total_points=total_points,
-                aircraft=self._model.model,
-            )
-        elif self._envelope_mode == EnvelopeMode.RAISE:
-            raise EnvelopeViolationError(f"{message}: {active_violations}", violations)
+        return self._envelope_checker.check_envelope()
 
 
 def _create_model(model_type: str, icao: str) -> AircraftModel:
