@@ -1819,12 +1819,10 @@ dev = [
     { name = "ruff" },
 ]
 docs = [
-    { name = "mkdocs" },
     { name = "mkdocs-gen-files" },
     { name = "mkdocs-literate-nav" },
     { name = "mkdocs-material" },
     { name = "mkdocs-monorepo-plugin" },
-    { name = "mkdocs-section-index" },
     { name = "mkdocstrings", extra = ["python"] },
 ]
 
@@ -1840,13 +1838,11 @@ dev = [
     { name = "ruff", specifier = "==0.15.9" },
 ]
 docs = [
-    { name = "mkdocs", specifier = ">=1.5.0" },
-    { name = "mkdocs-gen-files", specifier = ">=0.5.0" },
-    { name = "mkdocs-literate-nav", specifier = ">=0.6.0" },
-    { name = "mkdocs-material", specifier = ">=9.0.0" },
-    { name = "mkdocs-monorepo-plugin", specifier = ">=1.1.0" },
-    { name = "mkdocs-section-index", specifier = ">=0.3.0" },
-    { name = "mkdocstrings", extras = ["python"], specifier = ">=0.24.0" },
+    { name = "mkdocs-gen-files", specifier = ">=0.5" },
+    { name = "mkdocs-literate-nav", specifier = ">=0.6" },
+    { name = "mkdocs-material", specifier = ">=9.0" },
+    { name = "mkdocs-monorepo-plugin", specifier = ">=1.1" },
+    { name = "mkdocstrings", extras = ["python"], specifier = ">=0.27" },
 ]
 
 [[package]]

@@ -64,6 +64,7 @@ plugins:
       handlers:
         python:
           paths:
+            - packages/openleaf-core/src
             - packages/openleaf-performance/src
           options:
             docstring_style: numpy
