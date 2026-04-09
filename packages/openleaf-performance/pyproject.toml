@@ -139,6 +139,9 @@ docs = [
     "mkdocs-literate-nav>=0.6.0",
     "mkdocs-section-index>=0.3.0",
 ]
+examples = [
+    "matplotlib>=3.8.0",
+]
 
 # ============================================
 # UV - Workspace source for openleaf-core
