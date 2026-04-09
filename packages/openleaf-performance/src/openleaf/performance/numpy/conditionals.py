@@ -25,6 +25,52 @@ def _get_casadi():
     return Backend.CASADI.module
 
 
+def _promote_to_torch(args: tuple) -> tuple:
+    """Promote all arguments to PyTorch tensors.
+
+    Finds the reference device (from the first tensor) and the widest
+    floating-point dtype, then converts each argument.  Bool tensors
+    keep their dtype but are moved to the reference device.
+    """
+    torch = Backend.TORCH.module
+
+    ref_device = None
+    ref_dtype = None
+    for a in args:
+        if isinstance(a, torch.Tensor):
+            if ref_device is None:
+                ref_device = a.device
+            if a.dtype.is_floating_point and (ref_dtype is None or a.dtype == torch.float64):
+                ref_dtype = a.dtype
+
+    def _to_tensor(x):
+        if isinstance(x, torch.Tensor):
+            return x
+        t = torch.as_tensor(x)
+        if t.dtype == torch.bool:
+            return t.to(device=ref_device) if ref_device is not None else t
+        return torch.as_tensor(x, dtype=ref_dtype, device=ref_device)
+
+    return tuple(_to_tensor(a) for a in args)
+
+
+def _promote_to_jax(args: tuple) -> tuple:
+    """Promote all arguments to JAX arrays.
+
+    Imports JAX lazily to avoid a hard dependency at module level.
+    Lets JAX infer dtype from the value itself.
+    """
+    import jax
+    import jax.numpy as jnp
+
+    def _to_jax(x):
+        if isinstance(x, jax.Array):
+            return x
+        return jnp.asarray(x)
+
+    return tuple(_to_jax(a) for a in args)
+
+
 def _promote_to_common_backend(*args):
     """Promote all arguments to a common non-numpy backend when one is present.
 
@@ -36,49 +82,18 @@ def _promote_to_common_backend(*args):
     """
     from openleaf.performance.numpy.backends import is_torch_type
 
-    has_torch = any(is_torch_type(a, recursive=False) for a in args)
-    if has_torch:
-        torch = Backend.TORCH.module
+    if any(is_torch_type(a, recursive=False) for a in args):
+        return _promote_to_torch(args)
 
-        # Find reference device and the widest floating-point dtype
-        ref_device = None
-        ref_dtype = None
-        for a in args:
-            if isinstance(a, torch.Tensor):
-                if ref_device is None:
-                    ref_device = a.device
-                if a.dtype.is_floating_point and (ref_dtype is None or a.dtype == torch.float64):
-                    ref_dtype = a.dtype
-
-        def _to_tensor(x):
-            if isinstance(x, torch.Tensor):
-                return x
-            t = torch.as_tensor(x)
-            if t.dtype == torch.bool:
-                return t.to(device=ref_device) if ref_device is not None else t
-            return torch.as_tensor(x, dtype=ref_dtype, device=ref_device)
-
-        return tuple(_to_tensor(a) for a in args)
-
-    # Check for JAX arrays — import lazily to avoid hard dependency at import time
     try:
         import jax
-        import jax.numpy as jnp
 
         has_jax = any(isinstance(a, jax.Array) for a in args)
     except ImportError:
         has_jax = False
 
     if has_jax:
-
-        def _to_jax(x):
-            if isinstance(x, jax.Array):
-                return x
-            # Let JAX infer the dtype from the value itself — do NOT force the
-            # condition's bool dtype onto value arrays.
-            return jnp.asarray(x)
-
-        return tuple(_to_jax(a) for a in args)
+        return _promote_to_jax(args)
 
     return args
 
