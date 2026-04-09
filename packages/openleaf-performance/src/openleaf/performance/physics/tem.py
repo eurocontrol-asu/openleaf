@@ -449,30 +449,28 @@ class TotalEnergyModel:
         if self._speed_schedule is None:
             return DEFAULT_ENERGY_SHARE_FACTOR
 
-        # Handle SpeedSchedule enum
         schedule = self._speed_schedule
 
-        if schedule == esf.SpeedSchedule.CONSTANT_MACH:
+        # Constant schedules — pure dict lookup
+        schedule_constants = {
+            esf.SpeedSchedule.ACCEL_CLIMB: esf.F_ACCEL_CLIMB,
+            esf.SpeedSchedule.DECEL_CLIMB: esf.F_DECEL_CLIMB,
+            esf.SpeedSchedule.ACCEL_DESCENT: esf.F_ACCEL_DESCENT,
+            esf.SpeedSchedule.DECEL_DESCENT: esf.F_DECEL_DESCENT,
+        }
+        if schedule in schedule_constants:
+            return schedule_constants[schedule]
+
+        # Computed schedules — require mach
+        computed_handlers = {
+            esf.SpeedSchedule.CONSTANT_MACH: esf.f_constant_mach,
+            esf.SpeedSchedule.CONSTANT_CAS: esf.f_constant_cas,
+        }
+        handler = computed_handlers.get(schedule)
+        if handler is not None:
             if self._mach is None:
                 return DEFAULT_ENERGY_SHARE_FACTOR
-            return esf.f_constant_mach(self._mach, self._altitude)
-
-        elif schedule == esf.SpeedSchedule.CONSTANT_CAS:
-            if self._mach is None:
-                return DEFAULT_ENERGY_SHARE_FACTOR
-            return esf.f_constant_cas(self._mach, self._altitude)
-
-        elif schedule == esf.SpeedSchedule.ACCEL_CLIMB:
-            return esf.F_ACCEL_CLIMB
-
-        elif schedule == esf.SpeedSchedule.DECEL_CLIMB:
-            return esf.F_DECEL_CLIMB
-
-        elif schedule == esf.SpeedSchedule.ACCEL_DESCENT:
-            return esf.F_ACCEL_DESCENT
-
-        elif schedule == esf.SpeedSchedule.DECEL_DESCENT:
-            return esf.F_DECEL_DESCENT
+            return handler(self._mach, self._altitude)
 
         return DEFAULT_ENERGY_SHARE_FACTOR
 
