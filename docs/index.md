@@ -1,20 +1,20 @@
----
-hide:
-  - navigation
-  - toc
----
-
-# openleaf
-
-**Open-source aviation sustainability suite** — performance modeling, emissions analysis, and trajectory optimization.
+<div class="hero" markdown>
 
 <p align="center">
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/axm-audit.json" alt="axm-audit"></a>
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/axm-init.json" alt="axm-init"></a>
+  <img src="assets/logo.svg" alt="OpenLeaf Logo" width="180" />
+</p>
+
+<h1 align="center">OpenLeaf</h1>
+<p align="center"><strong>Open-source aviation sustainability suite — performance modeling, emissions analysis, and trajectory optimization.</strong></p>
+
+<p align="center">
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/coverage.json" alt="Coverage"></a>
   <img src="https://img.shields.io/badge/python-3.12%2B-blue" alt="Python 3.12+">
   <img src="https://img.shields.io/badge/license-EUPL--1.2-blue" alt="EUPL-1.2">
 </p>
+
+</div>
 
 ---
 
@@ -34,17 +34,23 @@ hide:
 
     NumPy, JAX, CasADi, and PyTorch backends via the Array API standard.
 
+    [:octicons-arrow-right-24: Architecture](openleaf-performance/explanation/architecture/)
+
 -   :material-chart-line:{ .lg .middle } **Emissions & Contrails**
 
     ---
 
     Fuel burn, CO2, NOx, and contrail climate impact assessment.
 
+    [:octicons-arrow-right-24: Models overview](openleaf-performance/explanation/models/)
+
 -   :material-open-source-initiative:{ .lg .middle } **Open Source**
 
     ---
 
     EUPL-1.2 licensed. Built for researchers and aviation professionals.
+
+    [:octicons-arrow-right-24: Contributing](contributing.md)
 
 </div>
 
@@ -56,10 +62,29 @@ hide:
 uv add openleaf-performance
 ```
 
-## Getting Started
+## Quick Example
 
 ```python
-from openleaf.performance import PerformanceMixin
+import numpy as np
+from openleaf.performance.core import ModelFactory, TrajectoryData
+
+# Load an aircraft model (OpenAP requires no configuration)
+model = ModelFactory.load("A320", model_type="openap")
+
+# Build a trajectory
+traj = TrajectoryData({
+    "altitude": np.array([10000.0, 10500.0]),
+    "true_airspeed": np.array([230.0, 232.0]),
+    "vertical_speed": np.array([5.0, 5.0]),
+    "aircraft_mass": np.array([65000.0, 64900.0]),
+    "acceleration": np.array([0.1, 0.1]),
+})
+
+# Attach model and compute performance
+perf = traj.with_aircraft(model)
+print(perf.drag)       # Aerodynamic drag [N]
+print(perf.thrust)     # Required thrust [N]
+print(perf.fuel_flow)  # Fuel flow rate [kg/s]
 ```
 
 Head over to the [Packages](packages/index.md) section to explore what's available.

@@ -1,42 +1,15 @@
 # Getting Started
 
-This tutorial walks you through installing `openleaf-performance` and verifying your setup.
+`openleaf-core` is installed automatically as a dependency of other OpenLeaf packages.
 
-## Prerequisites
+## Direct installation
 
-- Python 3.12+
-- [uv](https://docs.astral.sh/uv/) (recommended) or pip
-
-## Installation
+If you need it standalone:
 
 ```bash
-uv add openleaf-performance
+uv add openleaf-core
 ```
-
-Or with pip:
-
-```bash
-pip install openleaf-performance
-```
-
-## Step 1: Verify Installation
-
-```python
-from openleaf_performance import __version__
-
-print(f"openleaf-performance v{__version__}")
-```
-
-## Step 2: Run the Tests
-
-```bash
-cd packages/openleaf-performance
-make check
-```
-
-This runs lint + type check + security audit + tests.
 
 ## Next Steps
 
-- [CLI Reference](../reference/cli.md) — Full command documentation
-- [Architecture](../explanation/architecture.md) — How the project is structured
+- See [openleaf-performance](../../../../openleaf-performance/) for the main performance modeling package.

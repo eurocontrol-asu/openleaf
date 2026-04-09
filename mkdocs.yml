@@ -1,4 +1,4 @@
-site_name: openleaf
+site_name: OpenLeaf
 site_description: "OpenLeaf — Open-source aviation sustainability suite: performance modeling, emissions, and trajectory optimization."
 site_url: https://eurocontrol-asu.github.io/openleaf
 repo_url: https://github.com/eurocontrol-asu/openleaf
@@ -7,6 +7,8 @@ copyright: Copyright &copy; 2026 EUROCONTROL
 
 theme:
   name: material
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"

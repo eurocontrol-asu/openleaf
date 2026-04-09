@@ -1,29 +1,13 @@
----
-hide:
-  - navigation
-  - toc
----
-
 # openleaf-performance
 
 <p align="center">
-  <strong>Aircraft performance models for trajectory optimization</strong>
+  <strong>Modular, differentiable aircraft performance models for trajectory optimization</strong>
 </p>
 
 <p align="center">
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml">
-    <img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI" />
-  </a>
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/axm-init.json" alt="axm-init" />
-  </a>
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/axm-audit.json" alt="axm-audit" />
-  </a>
-  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/coverage.json" alt="Coverage" />
-  </a>
-  <img src="https://img.shields.io/badge/python-3.12+-blue.svg" alt="Python 3.12+" />
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI" /></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/coverage.json" alt="Coverage" /></a>
+  <img src="https://img.shields.io/badge/python-3.12%2B-blue" alt="Python 3.12+" />
 </p>
 
 ---
@@ -72,9 +56,40 @@ print(perf.fuel_flow)  # Fuel flow rate [kg/s]
 - **Flight envelope checking** -- configurable violation modes (ignore, warn, raise)
 - **Unified factory** -- load any model by ICAO code with `ModelFactory.load()`
 
----
+## Learn More
 
-<div style="text-align: center; margin: 2rem 0;">
-  <a href="tutorials/getting-started/" class="md-button md-button--primary">Get Started</a>
-  <a href="explanation/architecture/" class="md-button">Architecture</a>
+<div class="grid cards" markdown>
+
+-   :material-school:{ .lg .middle } **Tutorials**
+
+    ---
+
+    Step-by-step guides to get started with performance modeling.
+
+    [:octicons-arrow-right-24: Getting Started](tutorials/getting-started.md)
+
+-   :material-wrench:{ .lg .middle } **How-To Guides**
+
+    ---
+
+    Practical recipes: add aircraft, switch backends, configure BADA.
+
+    [:octicons-arrow-right-24: How-To](howto/index.md)
+
+-   :material-book-open-variant:{ .lg .middle } **Explanation**
+
+    ---
+
+    Architecture, model comparison, and multi-backend design.
+
+    [:octicons-arrow-right-24: Architecture](explanation/architecture.md) · [:octicons-arrow-right-24: Models](explanation/models.md) · [:octicons-arrow-right-24: Backends](explanation/backends.md)
+
+-   :material-code-tags:{ .lg .middle } **Reference**
+
+    ---
+
+    API reference for interpolation, synonyms, and mixins.
+
+    [:octicons-arrow-right-24: Reference](reference/interpolation.md)
+
 </div>
