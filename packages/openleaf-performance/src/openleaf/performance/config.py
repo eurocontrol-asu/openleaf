@@ -256,20 +256,38 @@ def show_config() -> None:
     console.print(table)
 
 
+def _insert_key_in_section(lines: list[str], section: str, key: str, value: str) -> list[str]:
+    """Insert a key into the specified section of config lines."""
+    result: list[str] = []
+    section_found = False
+    inserted = False
+
+    for line in lines:
+        if not inserted and section_found and line.strip().startswith("["):
+            result.append(f'{key} = "{value}"')
+            inserted = True
+        result.append(line)
+        if not inserted and line.strip() == f"[{section}]":
+            section_found = True
+
+    if not inserted and section_found:
+        result.append(f'{key} = "{value}"')
+
+    return result
+
+
 def _update_config_file(section: str, key: str, value: str) -> None:
     """Update the config file with a new value."""
     config_file = _get_config_path()
     lines = config_file.read_text().splitlines()
-    new_lines = []
+    new_lines: list[str] = []
     in_section = False
     key_found = False
 
     for line in lines:
-        # Check for section header
         if line.strip().startswith("["):
             in_section = line.strip() == f"[{section}]"
 
-        # Update or uncomment the key if in the right section
         if in_section and not key_found:
             stripped = line.lstrip("# ").strip()
             if stripped.startswith(f"{key} =") or stripped.startswith(f"{key}="):
@@ -279,22 +297,8 @@ def _update_config_file(section: str, key: str, value: str) -> None:
 
         new_lines.append(line)
 
-    # If key wasn't found, add it to the section
     if not key_found:
-        final_lines = []
-        section_found = False
-        for line in new_lines:
-            final_lines.append(line)
-            if line.strip() == f"[{section}]":
-                section_found = True
-            elif section_found and (line.strip().startswith("[") or line == new_lines[-1]):
-                # Insert before next section or at end
-                if not line.strip().startswith("["):
-                    final_lines.append(f'{key} = "{value}"')
-                else:
-                    final_lines.insert(-1, f'{key} = "{value}"')
-                section_found = False
-        new_lines = final_lines
+        new_lines = _insert_key_in_section(new_lines, section, key, value)
 
     config_file.write_text("\n".join(new_lines) + "\n")
 
