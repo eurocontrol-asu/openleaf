@@ -5,10 +5,10 @@
 <!-- Canonical Badge Row: Status → Stack → Tooling → Info -->
 <p align="center">
   <!-- Status -->
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/ci.yml"><img src="https://github.com/ramondalmau/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://coveralls.io/github/ramondalmau/openleaf?branch=main"><img src="https://coveralls.io/repos/github/ramondalmau/openleaf/badge.svg?branch=main" alt="Coverage"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://coveralls.io/github/eurocontrol-asu/openleaf?branch=main"><img src="https://coveralls.io/repos/github/eurocontrol-asu/openleaf/badge.svg?branch=main" alt="Coverage"></a>
   <!-- Stack -->
-  <img src="https://img.shields.io/badge/python-3.11%2B-blue" alt="Python 3.11+">
+  <img src="https://img.shields.io/badge/python-3.12%2B-blue" alt="Python 3.11+">
   <img src="https://img.shields.io/badge/casadi-symbolic-orange" alt="CasADi">
   <img src="https://img.shields.io/badge/pytorch-supported-red" alt="PyTorch">
   <img src="https://img.shields.io/badge/jax-supported-green" alt="JAX">
@@ -19,7 +19,7 @@
   <!-- Info -->
   <a href="https://pypi.org/project/openleaf-performance/"><img src="https://img.shields.io/pypi/v/openleaf-performance" alt="PyPI"></a>
   <img src="https://img.shields.io/badge/license-EUPL--1.2-blue" alt="License">
-  <a href="https://ramondalmau.github.io/openleaf/"><img src="https://img.shields.io/badge/docs-live-brightgreen" alt="Docs"></a>
+  <a href="https://eurocontrol-asu.github.io/openleaf/"><img src="https://img.shields.io/badge/docs-live-brightgreen" alt="Docs"></a>
 </p>
 
 ---
@@ -46,7 +46,7 @@ uv pip install openleaf-performance
 ### From Source
 
 ```bash
-git clone https://github.com/ramondalmau/openleaf.git
+git clone https://github.com/eurocontrol-asu/openleaf.git
 cd openleaf
 uv sync --all-groups
 ```
@@ -296,7 +296,7 @@ uv run python examples/04_vertical_profile_optimisation.py --model ps
 ## Development
 
 ```bash
-git clone https://github.com/ramondalmau/openleaf.git
+git clone https://github.com/eurocontrol-asu/openleaf.git
 cd openleaf
 uv sync --all-groups    # Install all dependencies
 uv run pytest           # Run tests

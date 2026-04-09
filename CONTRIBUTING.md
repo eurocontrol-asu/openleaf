@@ -3,7 +3,7 @@
 ## Development Setup
 
 ```bash
-git clone https://github.com/ramondalmau/openleaf.git
+git clone https://github.com/eurocontrol-asu/openleaf.git
 cd openleaf
 uv sync
 uv run pre-commit install

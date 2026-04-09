@@ -11,17 +11,17 @@ hide:
 </p>
 
 <p align="center">
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/ci.yml">
-    <img src="https://github.com/ramondalmau/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI" />
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml">
+    <img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI" />
   </a>
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ramondalmau/openleaf/gh-pages/badges/openleaf-performance/axm-init.json" alt="axm-init" />
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/axm-init.json" alt="axm-init" />
   </a>
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ramondalmau/openleaf/gh-pages/badges/openleaf-performance/axm-audit.json" alt="axm-audit" />
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/axm-audit.json" alt="axm-audit" />
   </a>
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml">
-    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ramondalmau/openleaf/gh-pages/badges/openleaf-performance/coverage.json" alt="Coverage" />
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml">
+    <img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/coverage.json" alt="Coverage" />
   </a>
   <img src="https://img.shields.io/badge/python-3.12+-blue.svg" alt="Python 3.12+" />
 </p>

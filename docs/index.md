@@ -9,9 +9,9 @@ hide:
 **Open-source aviation sustainability suite** — performance modeling, emissions analysis, and trajectory optimization.
 
 <p align="center">
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml"><img src="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ramondalmau/openleaf/gh-pages/badges/axm-audit.json" alt="axm-audit"></a>
-  <a href="https://github.com/ramondalmau/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/ramondalmau/openleaf/gh-pages/badges/axm-init.json" alt="axm-init"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/axm-audit.json" alt="axm-audit"></a>
+  <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/axm-quality.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/axm-init.json" alt="axm-init"></a>
   <img src="https://img.shields.io/badge/python-3.12%2B-blue" alt="Python 3.12+">
   <img src="https://img.shields.io/badge/license-EUPL--1.2-blue" alt="EUPL-1.2">
 </p>
