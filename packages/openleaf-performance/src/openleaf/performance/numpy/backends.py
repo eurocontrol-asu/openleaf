@@ -21,10 +21,14 @@ Usage:
 from __future__ import annotations
 
 import importlib.util
-from collections.abc import Callable
+import typing
 from enum import Enum
 from enum import auto
 from typing import Any
+
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable
 
 import array_api_compat
 import numpy as np

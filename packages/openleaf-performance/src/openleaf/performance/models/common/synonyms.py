@@ -2,12 +2,17 @@
 
 from __future__ import annotations
 
+import typing
+
 
 __all__ = ["build_not_found_error"]
 
-from collections.abc import Callable
-from pathlib import Path
 from typing import Any
+
+
+if typing.TYPE_CHECKING:
+    from collections.abc import Callable
+    from pathlib import Path
 
 
 def build_not_found_error(
