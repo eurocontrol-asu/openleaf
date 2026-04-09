@@ -387,6 +387,156 @@ def parse_aero_data(
     )
 
 
+def _find_float(elem: ET.Element | None, tag: str, default: float | None = None) -> float | None:
+    """Extract a float from a child element, returning default if missing."""
+    if elem is None:
+        return default
+    child = elem.find(tag)
+    if child is None:
+        return default
+    return float(child.text)
+
+
+def _map_aero_conf_schedule(
+    arpm: ET.Element | None,
+    value_lookup: dict[str, float],
+    *,
+    exclude_cr: bool = False,
+) -> dict[AerodynamicConfig, float]:
+    """Map AerodynamicConfig to values using AeroConfSchedule.
+
+    Iterates AeroPhase elements and maps each config to a value
+    looked up by its HLid (for VFE) or (HLid, LGpos) key (for CL_max).
+
+    Args:
+        arpm: ARPM XML element containing AeroConfSchedule.
+        value_lookup: Dict mapping key to float value.
+        exclude_cr: If True, skip AerodynamicConfig.CR entries.
+    """
+    result: dict[AerodynamicConfig, float] = {}
+    if arpm is None:
+        return result
+    conf_schedule = arpm.find("AeroConfSchedule")
+    if conf_schedule is None:
+        return result
+    for phase in conf_schedule.findall("AeroPhase"):
+        name_elem = phase.find("name")
+        hl_elem = phase.find("HLid")
+        if name_elem is None or hl_elem is None:
+            continue
+        conf = AerodynamicConfig.from_string(name_elem.text)
+        if exclude_cr and conf == AerodynamicConfig.CR:
+            continue
+        hl = hl_elem.text
+        if hl in value_lookup:
+            result[conf] = value_lookup[hl]
+    return result
+
+
+def _map_aero_conf_schedule_lg(
+    arpm: ET.Element | None,
+    value_lookup: dict[tuple[str, LandingGearPosition], float],
+) -> dict[AerodynamicConfig, float]:
+    """Map AerodynamicConfig to CL_max using AeroConfSchedule with LG position."""
+    result: dict[AerodynamicConfig, float] = {}
+    if arpm is None:
+        return result
+    conf_schedule = arpm.find("AeroConfSchedule")
+    if conf_schedule is None:
+        return result
+    for phase in conf_schedule.findall("AeroPhase"):
+        hl = phase.find("HLid").text
+        lg_str = phase.find("LG").text
+        lg_pos = LandingGearPosition.from_string(lg_str)
+        conf = AerodynamicConfig.from_string(phase.find("name").text)
+        if (hl, lg_pos) in value_lookup:
+            result[conf] = value_lookup[(hl, lg_pos)]
+    return result
+
+
+def _parse_geometric_limits(alm: ET.Element) -> BADA4GeometricLimitsData:
+    """Parse Geometric Limits (GLM) - Section 6.1."""
+    glm = alm.find("GLM")
+    hmo = _find_float(glm, "hmo", default=0.0)
+    mfa = _find_float(glm, "mfa")
+    return BADA4GeometricLimitsData(hmo=hmo, mfa=mfa)
+
+
+def _parse_kinematic_limits(
+    alm: ET.Element,
+    afcm: ET.Element | None,
+    arpm: ET.Element | None,
+) -> BADA4KinematicLimitsData:
+    """Parse Kinematic Limits (KLM) - Section 6.2."""
+    klm = alm.find("KLM")
+    vmo = _find_float(klm, "vmo", default=0.0)
+    mmo = _find_float(klm, "mmo")
+    vle = _find_float(klm, "vle")
+    mle = _find_float(klm, "mle")
+
+    # Parse VFE speeds from AFCM configurations (tag is lowercase <vfe>)
+    vfe: dict[str, float] = {}
+    if afcm is not None:
+        for config in afcm.findall("Configuration"):
+            hl_id = config.get("HLid")
+            if hl_id and hl_id != "0":
+                vfe_val = _find_float(config, "vfe")
+                if vfe_val is not None:
+                    vfe[hl_id] = vfe_val
+
+    vfe_by_config = _map_aero_conf_schedule(arpm, vfe, exclude_cr=True)
+
+    return BADA4KinematicLimitsData(
+        vmo=vmo, mmo=mmo, vle=vle, mle=mle, vfe=vfe, vfe_by_config=vfe_by_config
+    )
+
+
+def _parse_buffet_limits(
+    alm: ET.Element,
+    afcm: ET.Element | None,
+    arpm: ET.Element | None,
+) -> BADA4BuffetLimitsData:
+    """Parse Buffet Limits (BLM) - Section 6.3."""
+    blm = alm.find("BLM")
+    bf = None
+    mach_min = None
+    mach_max = None
+    cl_mach0 = None
+
+    if blm is not None:
+        bf_elems = blm.findall("bf")
+        if bf_elems:
+            bf = np.array([float(b.text) for b in bf_elems])
+        mach_min = _find_float(blm, "Mmin")
+        mach_max = _find_float(blm, "Mmax")
+        cl_mach0 = _find_float(blm, "CL_Mach0")
+
+    # Parse CL_max from AFCM configurations for non-clean
+    lg_afcm_map = {
+        "LGUP": LandingGearPosition.UP,
+        "LGDN": LandingGearPosition.DOWN,
+    }
+    cl_max_nonclean: dict[tuple[str, LandingGearPosition], float] = {}
+    if afcm is not None:
+        for config in afcm.findall("Configuration"):
+            hl_id = config.get("HLid", "0")
+            for lg_tag, lg_enum in lg_afcm_map.items():
+                cl_max_val = _find_float(config.find(lg_tag), "BLM/CL_max")
+                if cl_max_val is not None:
+                    cl_max_nonclean[(hl_id, lg_enum)] = cl_max_val
+
+    cl_max_config = _map_aero_conf_schedule_lg(arpm, cl_max_nonclean)
+
+    return BADA4BuffetLimitsData(
+        bf=bf,
+        mach_min=mach_min,
+        mach_max=mach_max,
+        cl_mach0=cl_mach0,
+        cl_max_nonclean=cl_max_nonclean,
+        cl_max_config=cl_max_config,
+    )
+
+
 def parse_limits(
     root: ET.Element,
     afcm: ET.Element | None = None,
@@ -412,119 +562,9 @@ def parse_limits(
     if alm is None:
         return None
 
-    # Parse Geometric Limits (GLM) - Section 6.1
-    glm = alm.find("GLM")
-    hmo = float(glm.find("hmo").text) if glm is not None else 0.0
-
-    mfa_elem = glm.find("mfa") if glm is not None else None
-    mfa = float(mfa_elem.text) if mfa_elem is not None else None
-
-    geometric = BADA4GeometricLimitsData(hmo=hmo, mfa=mfa)
-
-    # Parse Kinematic Limits (KLM) - Section 6.2
-    klm = alm.find("KLM")
-    vmo = float(klm.find("vmo").text) if klm is not None else 0.0
-
-    mmo_elem = klm.find("mmo") if klm is not None else None
-    mmo = float(mmo_elem.text) if mmo_elem is not None else None
-
-    vle_elem = klm.find("vle") if klm is not None else None
-    vle = float(vle_elem.text) if vle_elem is not None else None
-
-    mle_elem = klm.find("mle") if klm is not None else None
-    mle = float(mle_elem.text) if mle_elem is not None else None
-
-    # Parse VFE speeds from AFCM configurations (tag is lowercase <vfe>)
-    vfe = {}
-    if afcm is not None:
-        for config in afcm.findall("Configuration"):
-            hl_id = config.get("HLid")
-            if hl_id and hl_id != "0":
-                vfe_elem = config.find("vfe")
-                if vfe_elem is not None:
-                    vfe[hl_id] = float(vfe_elem.text)
-
-    # Map AerodynamicConfig to VFE using AeroConfSchedule
-    vfe_by_config = {}
-    if arpm is not None:
-        conf_schedule = arpm.find("AeroConfSchedule")
-        if conf_schedule is not None:
-            for phase in conf_schedule.findall("AeroPhase"):
-                name_elem = phase.find("name")
-                hl_elem = phase.find("HLid")
-                if name_elem is None or hl_elem is None:
-                    continue
-                conf = AerodynamicConfig.from_string(name_elem.text)
-                hl = hl_elem.text
-                if hl in vfe and conf != AerodynamicConfig.CR:
-                    vfe_by_config[conf] = vfe[hl]
-
-    kinematic = BADA4KinematicLimitsData(
-        vmo=vmo, mmo=mmo, vle=vle, mle=mle, vfe=vfe, vfe_by_config=vfe_by_config
-    )
-
-    # Parse Buffet Limits (BLM) - Section 6.3
-    blm = alm.find("BLM")
-    bf = None
-    mach_min = None
-    mach_max = None
-    cl_mach0 = None
-    cl_max_nonclean = {}
-
-    if blm is not None:
-        # Clean configuration buffet model
-        bf_elems = blm.findall("bf")
-        if bf_elems:
-            bf = np.array([float(b.text) for b in bf_elems])
-
-        mmin_elem = blm.find("Mmin")
-        mach_min = float(mmin_elem.text) if mmin_elem is not None else None
-
-        mmax_elem = blm.find("Mmax")
-        mach_max = float(mmax_elem.text) if mmax_elem is not None else None
-
-        cl0_elem = blm.find("CL_Mach0")
-        cl_mach0 = float(cl0_elem.text) if cl0_elem is not None else None
-
-    # Parse CL_max from AFCM configurations for non-clean
-    # Map XML element names to LandingGearPosition enum
-    lg_afcm_map = {
-        "LGUP": LandingGearPosition.UP,
-        "LGDN": LandingGearPosition.DOWN,
-    }
-    if afcm is not None:
-        for config in afcm.findall("Configuration"):
-            hl_id = config.get("HLid", "0")
-            for lg_elem, lg_enum in lg_afcm_map.items():
-                lg = config.find(lg_elem)
-                if lg is not None:
-                    # CL_max is nested inside <BLM> within <LGUP>/<LGDN>
-                    cl_max_elem = lg.find("BLM/CL_max")
-                    if cl_max_elem is not None:
-                        cl_max_nonclean[(hl_id, lg_enum)] = float(cl_max_elem.text)
-
-    # Map AerodynamicConfig to CL_max using AeroConfSchedule
-    cl_max_config = {}
-    if arpm is not None:
-        conf_schedule = arpm.find("AeroConfSchedule")
-        if conf_schedule is not None:
-            for phase in conf_schedule.findall("AeroPhase"):
-                hl = phase.find("HLid").text
-                lg_str = phase.find("LG").text  # "UP" or "DN" in XML
-                lg_pos = LandingGearPosition.from_string(lg_str)
-                conf = AerodynamicConfig.from_string(phase.find("name").text)
-                # Map to CL_max if available
-                if (hl, lg_pos) in cl_max_nonclean:
-                    cl_max_config[conf] = cl_max_nonclean[(hl, lg_pos)]
-
-    buffet = BADA4BuffetLimitsData(
-        bf=bf,
-        mach_min=mach_min,
-        mach_max=mach_max,
-        cl_mach0=cl_mach0,
-        cl_max_nonclean=cl_max_nonclean,
-        cl_max_config=cl_max_config,
-    )
+    geometric = _parse_geometric_limits(alm)
+    kinematic = _parse_kinematic_limits(alm, afcm, arpm)
+    buffet = _parse_buffet_limits(alm, afcm, arpm)
 
     limits_data = BADA4LimitsData(
         geometric=geometric,
@@ -532,7 +572,6 @@ def parse_limits(
         buffet=buffet,
     )
 
-    # Get mass data from aircraft if available
     oem = aircraft.oem if aircraft is not None else 0.0
     mtom = aircraft.mtom if aircraft is not None else 0.0
     mpl = aircraft.mpl if aircraft is not None else 0.0
