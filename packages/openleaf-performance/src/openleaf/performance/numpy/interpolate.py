@@ -116,6 +116,168 @@ def is_data_structured(
     return True
 
 
+def _validate_interpn_inputs(
+    points: tuple[_onp.ndarray],
+    values: _onp.ndarray,
+) -> tuple[int, ...]:
+    """Validate inputs for interpn and return the implied values shape.
+
+    Checks that points/values are not CasADi types, that each axis in
+    points is 1D, and that values has the correct shape.
+
+    Returns:
+        The implied values shape derived from points.
+
+    Raises:
+        TypeError: If points or values contain CasADi types.
+        ValueError: If points axes are not 1D or values shape is wrong.
+    """
+    if is_casadi_type([points, values], recursive=True):
+        raise TypeError("The underlying dataset (points, values) must consist of NumPy arrays.")
+
+    for points_axis in points:
+        points_axis = array(points_axis)
+        if not len(points_axis.shape) == 1:
+            raise ValueError(
+                "`points` must consist of a tuple of 1D ndarrays defining the coordinates of each axis."
+            )
+
+    implied_values_shape = tuple(len(points_axis) for points_axis in points)
+    if not values.shape == implied_values_shape:
+        raise ValueError(
+            f"""
+        The shape of `values` should be {implied_values_shape}.
+        """
+        )
+
+    return implied_values_shape
+
+
+def _prepare_xi_casadi(
+    xi: _onp.ndarray,
+    n_dimensions: int,
+) -> _onp.ndarray:
+    """Prepare xi for CasADi interpolation.
+
+    Promotes scalars to arrays, reshapes 1D to 2D, and transposes
+    so that xi.shape is (n_points, n_dimensions).
+
+    Returns:
+        The prepared xi array with shape (n_points, n_dimensions).
+
+    Raises:
+        ValueError: If xi cannot be reshaped to (n_points, n_dimensions).
+    """
+    if isinstance(xi, (int, float)):
+        xi = array([xi])
+
+    if not is_casadi_type(xi, recursive=False) and len(xi.shape) != 2:
+        xi = _onp.reshape(xi, (-1, 1))
+
+    if not len(xi.shape) == 2:
+        raise ValueError("`xi` must have the shape (n_points, n_dimensions)!")
+
+    if n_dimensions not in xi.shape:
+        raise ValueError("`xi` must have the shape (n_points, n_dimensions)!")
+
+    if xi.shape[1] != n_dimensions:
+        xi = xi.T
+        if xi.shape[1] != n_dimensions:
+            msg = f"Expected {n_dimensions} dimensions, got {xi.shape[1]}"
+            raise ValueError(msg)
+
+    return xi
+
+
+def _clamp_bounds(
+    xi: _onp.ndarray,
+    axis_min: list[float],
+    axis_max: list[float],
+    n_dimensions: int,
+) -> _onp.ndarray:
+    """Clamp xi to the grid domain (fill_value=None behavior)."""
+    for axis in range(n_dimensions):
+        xi[:, axis] = where(
+            xi[:, axis] > axis_max[axis],
+            axis_max[axis],
+            xi[:, axis],
+        )
+        xi[:, axis] = where(
+            xi[:, axis] < axis_min[axis],
+            axis_min[axis],
+            xi[:, axis],
+        )
+    return xi
+
+
+def _check_bounds(
+    xi: _onp.ndarray,
+    axis_min: list[float],
+    axis_max: list[float],
+    n_dimensions: int,
+) -> None:
+    """Check that xi is within grid bounds.
+
+    Raises:
+        ValueError: If xi is MX type (can't check symbolically) or
+            if any point is out of bounds.
+    """
+    if isinstance(xi, _cas.MX):
+        raise ValueError("Can't have the `bounds_error` flag as True if `xi` is of cas.MX type.")
+
+    for axis in range(n_dimensions):
+        if any(
+            logical_or(
+                xi[:, axis] > axis_max[axis],
+                xi[:, axis] < axis_min[axis],
+            )
+        ):
+            raise ValueError(f"One of the requested xi is out of bounds in dimension {axis}")
+
+
+def _interpn_casadi(
+    points: tuple[_onp.ndarray],
+    values: _onp.ndarray,
+    xi: _onp.ndarray,
+    method: Literal["linear", "bspline"],
+    bounds_error: bool,
+    fill_value: float | None,
+) -> _onp.ndarray:
+    """CasADi code path for interpn (linear and bspline methods)."""
+    # Workaround for CasADi bug with all-zero values in bspline.
+    # See: https://github.com/casadi/casadi/issues/2837
+    if method == "bspline" and all(values == 0):
+        return zeros_like(xi)
+
+    n_dimensions = len(points)
+    xi = _prepare_xi_casadi(xi, n_dimensions)
+
+    axis_min = [_onp.min(axis_values) for axis_values in points]
+    axis_max = [_onp.max(axis_values) for axis_values in points]
+
+    if fill_value is None:
+        xi = _clamp_bounds(xi, axis_min, axis_max, n_dimensions)
+
+    if bounds_error:
+        _check_bounds(xi, axis_min, axis_max, n_dimensions)
+
+    values_flattened = _onp.ravel(values, order="F")
+    interpolator = _cas.interpolant("Interpolator", method, points, values_flattened)
+    fi = interpolator(xi.T).T
+
+    if fill_value is not None:
+        for axis in range(n_dimensions):
+            fi = where(xi[:, axis] > axis_max[axis], fill_value, fi)
+            fi = where(xi[:, axis] < axis_min[axis], fill_value, fi)
+
+    if isinstance(fi, _cas.DM):
+        if fi.shape == (1, 1):
+            return float(fi)
+        return _onp.array(fi, dtype=float).reshape(-1)
+
+    return fi
+
+
 def interpn(
     points: tuple[_onp.ndarray],
     values: _onp.ndarray,
@@ -157,30 +319,13 @@ def interpn(
     Returns: Interpolated values at input coordinates.
 
     """
-    ### Check input types for points and values
-    if is_casadi_type([points, values], recursive=True):
-        raise TypeError("The underlying dataset (points, values) must consist of NumPy arrays.")
+    implied_values_shape = _validate_interpn_inputs(points, values)
 
-    ### Check dimensions of points
-    for points_axis in points:
-        points_axis = array(points_axis)
-        if not len(points_axis.shape) == 1:
-            raise ValueError(
-                "`points` must consist of a tuple of 1D ndarrays defining the coordinates of each axis."
-            )
-
-    ### Check dimensions of values
-    implied_values_shape = tuple(len(points_axis) for points_axis in points)
-    if not values.shape == implied_values_shape:
-        raise ValueError(
-            f"""
-        The shape of `values` should be {implied_values_shape}.
-        """
-        )
-
-    if (  ### NumPy implementation
-        not is_casadi_type([points, values, xi], recursive=True)
-    ) and ((method == "linear") or (method == "nearest")):
+    ### NumPy fast path — direct delegation to scipy
+    if (not is_casadi_type([points, values, xi], recursive=True)) and method in (
+        "linear",
+        "nearest",
+    ):
         xi = _onp.array(xi).reshape((-1, len(implied_values_shape)))
         return _interpolate.interpn(
             points=points,
@@ -191,94 +336,9 @@ def interpn(
             fill_value=fill_value,
         )
 
-    elif (method == "linear") or (method == "bspline"):  ### CasADi implementation
-        ### Add handling to patch a specific bug in CasADi that occurs when `values` is all zeros.
-        ### For more information, see: https://github.com/casadi/casadi/issues/2837
-        if method == "bspline" and all(values == 0):
-            return zeros_like(xi)
+    if method in ("linear", "bspline"):
+        return _interpn_casadi(points, values, xi, method, bounds_error, fill_value)
 
-        ### If xi is an int or float, promote it to an array
-        if isinstance(xi, (int, float)):
-            xi = array([xi])
-
-        ### If xi is a NumPy array and 1D, convert it to 2D for this.
-        if not is_casadi_type(xi, recursive=False) and len(xi.shape) != 2:
-            xi = _onp.reshape(xi, (-1, 1))
-
-        ### Check that xi is now 2D
-        if not len(xi.shape) == 2:
-            raise ValueError("`xi` must have the shape (n_points, n_dimensions)!")
-
-        ### Transpose xi so that xi.shape is [n_points, n_dimensions].
-        n_dimensions = len(points)
-        if len(points) not in xi.shape:
-            raise ValueError("`xi` must have the shape (n_points, n_dimensions)!")
-
-        if xi.shape[1] != n_dimensions:
-            xi = xi.T
-            if xi.shape[1] != n_dimensions:
-                msg = f"Expected {n_dimensions} dimensions, got {xi.shape[1]}"
-                raise ValueError(msg)
-
-        ### Calculate the minimum and maximum values along each axis.
-        axis_values_min = [_onp.min(axis_values) for axis_values in points]
-        axis_values_max = [_onp.max(axis_values) for axis_values in points]
-
-        ### If fill_value is None, project the xi back onto the nearest point in the domain.
-        if fill_value is None:
-            for axis in range(n_dimensions):
-                xi[:, axis] = where(
-                    xi[:, axis] > axis_values_max[axis],
-                    axis_values_max[axis],
-                    xi[:, axis],
-                )
-                xi[:, axis] = where(
-                    xi[:, axis] < axis_values_min[axis],
-                    axis_values_min[axis],
-                    xi[:, axis],
-                )
-
-        ### Check bounds_error
-        if bounds_error:
-            if isinstance(xi, _cas.MX):
-                raise ValueError(
-                    "Can't have the `bounds_error` flag as True if `xi` is of cas.MX type."
-                )
-
-            for axis in range(n_dimensions):
-                if any(
-                    logical_or(
-                        xi[:, axis] > axis_values_max[axis],
-                        xi[:, axis] < axis_values_min[axis],
-                    )
-                ):
-                    raise ValueError(
-                        f"One of the requested xi is out of bounds in dimension {axis}"
-                    )
-
-        ### Do the interpolation
-        values_flattened = _onp.ravel(values, order="F")
-        interpolator = _cas.interpolant("Interpolator", method, points, values_flattened)
-
-        fi = interpolator(xi.T).T
-
-        ### If fill_value is a scalar, replace all out-of-bounds xi with that value.
-        if fill_value is not None:
-            for axis in range(n_dimensions):
-                fi = where(xi[:, axis] > axis_values_max[axis], fill_value, fi)
-                fi = where(xi[:, axis] < axis_values_min[axis], fill_value, fi)
-
-        ### If DM output (i.e. a numeric value), convert that back to an array
-        if isinstance(fi, _cas.DM):
-            if fi.shape == (1, 1):
-                return float(fi)
-            else:
-                return _onp.array(fi, dtype=float).reshape(-1)
-
-        return fi
-
-    else:
-        raise ValueError(
-            f"{method=!r} is not a valid option. "
-            f"Valid options are: 'linear', 'bspline', 'nearest'."
-        )
+    raise ValueError(
+        f"{method=!r} is not a valid option. Valid options are: 'linear', 'bspline', 'nearest'."
+    )
