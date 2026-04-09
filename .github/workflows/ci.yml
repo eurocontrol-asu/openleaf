@@ -16,12 +16,11 @@ permissions:
 jobs:
   lint:
     name: Lint & Type Check
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, mandrell]
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: astral-sh/setup-uv@v7
       - run: uv python install 3.12
       - run: uv sync --all-groups
       - name: Ruff check
@@ -36,12 +35,11 @@ jobs:
 
   security:
     name: Security Audit
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, mandrell]
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - uses: astral-sh/setup-uv@v7
       - run: uv python install 3.12
       - run: uv sync --all-groups
       - run: uv run pip-audit
@@ -49,7 +47,7 @@ jobs:
 
   test:
     name: Test ${{ matrix.package }} (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, mandrell]
     strategy:
       fail-fast: false
       matrix:
@@ -61,14 +59,13 @@ jobs:
           fetch-depth: 0
 
       - name: Checkout BADA data
-        if: matrix.package == 'openleaf-performance' && github.actor != 'dependabot[bot]'
+        if: matrix.package == 'openleaf-performance'
         uses: actions/checkout@v6
         with:
           repository: eurocontrol-asu/bada-data
           token: ${{ secrets.DATA_REPO_TOKEN }}
           path: bada_data
 
-      - uses: astral-sh/setup-uv@v7
       - run: uv python install ${{ matrix.python-version }}
       - run: uv sync --all-groups
 
@@ -91,7 +88,7 @@ jobs:
     name: Coverage Badges
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, mandrell]
     steps:
       - uses: actions/checkout@v6
 
