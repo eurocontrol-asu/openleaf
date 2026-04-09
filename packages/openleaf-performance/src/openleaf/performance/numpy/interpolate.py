@@ -235,6 +235,30 @@ def _check_bounds(
             raise ValueError(f"One of the requested xi is out of bounds in dimension {axis}")
 
 
+def _apply_fill_value(
+    fi: _onp.ndarray,
+    xi: _onp.ndarray,
+    axis_min: list[float],
+    axis_max: list[float],
+    n_dimensions: int,
+    fill_value: float,
+) -> _onp.ndarray:
+    """Replace interpolation results at out-of-bounds positions with *fill_value*."""
+    for axis in range(n_dimensions):
+        fi = where(xi[:, axis] > axis_max[axis], fill_value, fi)
+        fi = where(xi[:, axis] < axis_min[axis], fill_value, fi)
+    return fi
+
+
+def _convert_casadi_result(fi: _onp.ndarray) -> _onp.ndarray | float:
+    """Convert a CasADi DM result to a Python float or numpy array."""
+    if isinstance(fi, _cas.DM):
+        if fi.shape == (1, 1):
+            return float(fi)
+        return _onp.array(fi, dtype=float).reshape(-1)
+    return fi
+
+
 def _interpn_casadi(
     points: tuple[_onp.ndarray],
     values: _onp.ndarray,
@@ -266,16 +290,9 @@ def _interpn_casadi(
     fi = interpolator(xi.T).T
 
     if fill_value is not None:
-        for axis in range(n_dimensions):
-            fi = where(xi[:, axis] > axis_max[axis], fill_value, fi)
-            fi = where(xi[:, axis] < axis_min[axis], fill_value, fi)
+        fi = _apply_fill_value(fi, xi, axis_min, axis_max, n_dimensions, fill_value)
 
-    if isinstance(fi, _cas.DM):
-        if fi.shape == (1, 1):
-            return float(fi)
-        return _onp.array(fi, dtype=float).reshape(-1)
-
-    return fi
+    return _convert_casadi_result(fi)
 
 
 def interpn(
