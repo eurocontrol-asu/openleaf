@@ -29,9 +29,14 @@ from openleaf.performance.exceptions import OpenLeafError
 
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
     from pathlib import Path
 
     from openleaf.performance.core.perfos import AircraftModel
+
+    # All concrete model classes accept (icao: str) as constructor,
+    # unlike AircraftModel ABC which takes (data, engine, aero, limits).
+    type ModelConstructor = Callable[[str], AircraftModel]
 
 __all__ = ["ModelFactory", "ModelType"]
 
@@ -61,10 +66,10 @@ class ModelFactory:
         _model_classes: Mapping from ModelType to model class (lazy-loaded).
     """
 
-    _model_classes: dict[ModelType, type] | None = None
+    _model_classes: dict[ModelType, ModelConstructor] | None = None
 
     @classmethod
-    def _get_model_classes(cls) -> dict[ModelType, type | None]:
+    def _get_model_classes(cls) -> dict[ModelType, ModelConstructor | None]:
         """Lazy-load model classes to avoid circular imports.
 
         Returns:
@@ -128,7 +133,7 @@ class ModelFactory:
     def _auto_detect(
         cls,
         icao: str,
-        model_classes: dict[ModelType, type[AircraftModel] | None],
+        model_classes: dict[ModelType, ModelConstructor | None],
     ) -> AircraftModel:
         """Try each model type in priority order, return first success."""
         errors: list[str] = []

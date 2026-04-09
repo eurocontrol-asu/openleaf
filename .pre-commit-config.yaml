@@ -17,7 +17,7 @@ repos:
         types: [python]
         files: "^packages/openleaf-performance/"
         pass_filenames: false
-        args: [packages/openleaf-performance/src/]
+        args: [--namespace-packages, -p, openleaf.performance]
 
   # Conventional commits
   - repo: https://github.com/compilerla/conventional-pre-commit
