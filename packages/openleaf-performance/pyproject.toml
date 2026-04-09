@@ -130,6 +130,7 @@ dev = [
     "casadi>=3.6.0",
     "torch>=2.0.0",
     "cyclopts>=3.0.0",
+    "pre-commit>=4.0",
 ]
 docs = [
     "mkdocs>=1.5.0",

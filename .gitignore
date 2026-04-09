@@ -68,9 +68,6 @@ dmypy.json
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# pyenv
-.python-version
-
 # Environments
 .env
 .env.local
