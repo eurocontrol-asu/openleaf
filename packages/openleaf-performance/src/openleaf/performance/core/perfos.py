@@ -34,20 +34,24 @@ from abc import ABC
 from abc import abstractmethod
 from typing import Any
 from typing import Generic
-from typing import Protocol
 from typing import TypeVar
-from typing import runtime_checkable
 
 from pydantic import BaseModel
 from pydantic import ConfigDict
 
+# Protocols and shared types now live in openleaf-core; re-export here for
+# backward compatibility with any code that imported them from this module.
+from openleaf.core.protocols import AerodynamicsModelProtocol
+from openleaf.core.protocols import AircraftModelProtocol
+from openleaf.core.protocols import EngineModelProtocol
+from openleaf.core.protocols import LimitsModelProtocol
+from openleaf.core.types import ArrayScalarLike
+from openleaf.core.types import KeyedData
 from openleaf.performance.core.types import EngineSetting
 from openleaf.performance.core.types import EngineType
 from openleaf.performance.core.types import FlightPhase
 from openleaf.performance.physics import aero
 from openleaf.performance.physics import isa
-from openleaf.performance.utils.types import ArrayScalarLike
-from openleaf.performance.utils.types import KeyedData
 
 
 class EngineData(BaseModel):
@@ -97,148 +101,10 @@ class AircraftData(BaseModel):
 
 
 # --- Protocols for Structural Typing ---
-
-
-@runtime_checkable
-class EngineModelProtocol(Protocol):
-    """Protocol for engine models."""
-
-    def thrust_min(self, data: KeyedData) -> ArrayScalarLike:
-        """Calculate minimum available thrust [N]."""
-
-    def thrust_max(self, data: KeyedData) -> ArrayScalarLike:
-        """Calculate maximum available thrust [N]."""
-
-    def fuel_flow(self, data: KeyedData) -> ArrayScalarLike:
-        """Calculate fuel flow rate [kg/s]."""
-
-    def fuel_flow_min(self, data: KeyedData) -> ArrayScalarLike:
-        """Calculate minimum fuel flow rate [kg/s]."""
-
-
-@runtime_checkable
-class AerodynamicsModelProtocol(Protocol):
-    """Protocol for aerodynamic models."""
-
-    @property
-    def surface_area(self) -> float:
-        """Wing reference area [m²]."""
-
-    def drag_coef(self, data: KeyedData) -> ArrayScalarLike:
-        """Calculate drag coefficient [-]."""
-
-
-@runtime_checkable
-class LimitsModelProtocol(Protocol):
-    """Protocol for aircraft limits."""
-
-    @property
-    def mtom(self) -> float:
-        """Maximum takeoff mass [kg]."""
-
-    @property
-    def oem(self) -> float:
-        """Operating empty mass [kg]."""
-
-    @property
-    def mpl(self) -> float:
-        """Maximum payload [kg]."""
-
-    @property
-    def vmo(self) -> float:
-        """Maximum operating calibrated airspeed [kt]."""
-
-    @property
-    def mmo(self) -> float:
-        """Maximum operating Mach number."""
-
-    @property
-    def hmo(self) -> float:
-        """Maximum operating altitude [ft]."""
-
-    def min_cas(self, data: KeyedData) -> ArrayScalarLike:
-        """Get state-dependent minimum calibrated airspeed [kt]."""
-
-    def min_mach(self, data: KeyedData) -> ArrayScalarLike:
-        """Get state-dependent minimum Mach number."""
-
-    def max_cas(self, data: KeyedData) -> ArrayScalarLike:
-        """Get state-dependent maximum calibrated airspeed [kt]."""
-
-    def max_mach(self, data: KeyedData) -> ArrayScalarLike:
-        """Get state-dependent maximum Mach number."""
-
-    def max_altitude(self, data: KeyedData) -> ArrayScalarLike:
-        """Get state-dependent maximum operating altitude [ft]."""
-
-
-# Note: @runtime_checkable not supported on multi-Protocol inheritance.
-# Use isinstance() on individual sub-protocols if needed.
-class AircraftModelProtocol(
-    EngineModelProtocol,
-    AerodynamicsModelProtocol,
-    LimitsModelProtocol,
-):
-    """Protocol for aircraft performance models."""
-
-    @property
-    def model(self) -> str:
-        """Aircraft model."""
-
-    @property
-    def wtc(self) -> str:
-        """Wake turbulence category."""
-
-    @property
-    def engine_type(self) -> str:
-        """Engine type."""
-
-    def high_lift(self, data: KeyedData) -> ArrayScalarLike | None:
-        """Determine high-lift device setting from flight state.
-
-        Returns the current flap/slat configuration. The return type is
-        model-dependent:
-        - BADA4: HLid string ("0", "1", "2", etc.)
-        - BADA3: may return flap setting or derive from phase
-        - OpenAP: flap angle in degrees
-        - PS: 0 (clean configuration)
-
-        Args:
-            data: Flight state data dictionary.
-
-        Returns:
-            High-lift device setting (scalar or array), or None if unavailable.
-        """
-
-    def landing_gear(self, data: KeyedData) -> ArrayScalarLike:
-        """Determine landing gear state from flight state.
-
-        Returns boolean indicating gear state (True = extended, False = retracted).
-        Can be scalar or array for vectorized operation.
-
-        Args:
-            data: Flight state data dictionary.
-
-        Returns:
-            Landing gear state (boolean scalar or array).
-        """
-
-    def aerodynamic_configuration(self, data: KeyedData) -> ArrayScalarLike:
-        """Determine aerodynamic configuration from flight state.
-
-        Returns the current aerodynamic configuration (flaps/gear/phase).
-        This enables trajectory simulation with the flow:
-            altitude/speed → configuration → hlid/gear → drag_coef
-
-        Returns AerodynamicConfig enum values (CR, IC, TO, AP, LD).
-        Can be scalar or array for vectorized operation.
-
-        Args:
-            data: Flight state data dictionary.
-
-        Returns:
-            Model-specific aerodynamic configuration, or None if not modeled.
-        """
+# The canonical Protocol definitions now live in openleaf-core
+# (openleaf.core.protocols). They are re-imported above so downstream code
+# that does ``from openleaf.performance.core.perfos import EngineModelProtocol``
+# continues to work unchanged.
 
 
 class LimitsModel(Generic[LimitsDataT]):

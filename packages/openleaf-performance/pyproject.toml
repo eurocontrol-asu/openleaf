@@ -37,6 +37,7 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
+    "openleaf-core",  # workspace sibling: shared types, protocols, base exceptions
     "numpy>=1.24.0",
     "pandas>=2.0.0",
     "scipy>=1.10.0",
@@ -149,6 +150,7 @@ examples = [
 # UV - Workspace source for openleaf-core
 # ============================================
 [tool.uv.sources]
+openleaf-core = { workspace = true }
 
 # ============================================
 # HATCH - Build & Versioning

@@ -9,8 +9,14 @@ description = "Shared types and interfaces for the OpenLeaf aviation sustainabil
 readme = "README.md"
 license = { text = "EUPL-1.2" }
 requires-python = ">=3.12"
-authors = [{ name = "Ramon Dalmau" }]
-dependencies = []
+authors = [
+    { name = "Ramon DALMAU", email = "ramon.dalmau-codina@eurocontrol.int" },
+    { name = "Gabriel JARRY", email = "gabriel.jarry@eurocontrol.int" },
+    { name = "Philippe VERY", email = "philippe.very@eurocontrol.int" },
+]
+dependencies = [
+    "numpy>=1.24.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/eurocontrol-asu/openleaf"

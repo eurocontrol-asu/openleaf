@@ -1,21 +1,23 @@
-"""
-OpenLeaf exception hierarchy.
+"""OpenLeaf exception hierarchy.
 
-Provides domain-specific exceptions for clear error handling and debugging.
-All OpenLeaf exceptions inherit from OpenLeafError for easy catching.
+Base classes (``OpenLeafError`` and the high-level subclasses) live in
+``openleaf.core.exceptions`` so every OpenLeaf package shares a single
+``except OpenLeafError`` root. Provider-specific subclasses
+(``BADA3ParseError``, ``BADA4ParseError``) stay here because they carry
+provider-specific context attributes.
 
 Exception hierarchy:
-    OpenLeafError
+    OpenLeafError (openleaf.core)
     ├── ConfigurationError     - Configuration/setup issues
     ├── ModelError             - Model-related errors
-    │   ├── ModelNotFoundError - Aircraft model not available
-    │   └── ModelDataError     - Invalid model data
+    │   ├── ModelNotFoundError
+    │   └── ModelDataError
     ├── ParsingError           - Data file parsing errors
-    │   ├── BADA3ParseError    - BADA3-specific parsing
-    │   └── BADA4ParseError    - BADA4-specific parsing
+    │   ├── BADA3ParseError    - (this module) BADA3-specific
+    │   └── BADA4ParseError    - (this module) BADA4-specific
     ├── ValidationError        - Input/output validation errors
-    │   ├── MissingFieldError  - Required field missing from KeyedData
-    │   └── ValueRangeError    - Value outside valid range
+    │   ├── MissingFieldError
+    │   └── ValueRangeError
     └── EnvelopeError          - Flight envelope violations
 """
 
@@ -37,123 +39,22 @@ __all__ = [
     "ValueRangeError",
 ]
 
-
-class OpenLeafError(Exception):
-    """Base exception for all OpenLeaf errors.
-
-    All OpenLeaf-specific exceptions inherit from this class,
-    allowing users to catch any library error with:
-
-        try:
-            model.compute(...)
-        except OpenLeafError as e:
-            handle_openleaf_error(e)
-    """
-
-    pass
+# Re-export the shared base hierarchy from openleaf-core.
+from openleaf.core.exceptions import ConfigurationError
+from openleaf.core.exceptions import EnvelopeError
+from openleaf.core.exceptions import MissingFieldError
+from openleaf.core.exceptions import ModelDataError
+from openleaf.core.exceptions import ModelError
+from openleaf.core.exceptions import ModelNotFoundError
+from openleaf.core.exceptions import OpenLeafError
+from openleaf.core.exceptions import ParsingError
+from openleaf.core.exceptions import ValidationError
+from openleaf.core.exceptions import ValueRangeError
 
 
 # =============================================================================
-# Configuration Errors
+# Provider-specific parsing errors (stay in openleaf-performance)
 # =============================================================================
-
-
-class ConfigurationError(OpenLeafError):
-    """Raised when configuration is missing or invalid.
-
-    Examples:
-        - BADA3/BADA4 data path not configured
-        - Configuration file corrupt or unreadable
-        - Invalid configuration values
-    """
-
-    pass
-
-
-# =============================================================================
-# Model Errors
-# =============================================================================
-
-
-class ModelError(OpenLeafError):
-    """Base class for model-related errors.
-
-    Raised when there are issues with aircraft performance models
-    such as initialization failures or invalid model operations.
-    """
-
-    pass
-
-
-class ModelNotFoundError(ModelError):
-    """Raised when a requested aircraft model is not available.
-
-    Examples:
-        - ICAO code not in synonym file
-        - Model data files missing
-        - Unsupported aircraft type
-
-    Attributes:
-        icao: The ICAO code that was not found.
-        model_type: Type of model (e.g., "BADA3", "BADA4", "OpenAP").
-    """
-
-    def __init__(
-        self,
-        message: str,
-        icao: str | None = None,
-        model_type: str | None = None,
-    ):
-        super().__init__(message)
-        self.icao = icao
-        self.model_type = model_type
-
-
-class ModelDataError(ModelError):
-    """Raised when model data is invalid or inconsistent.
-
-    Examples:
-        - Missing required coefficients
-        - Invalid parameter values
-        - Data file format errors after parsing
-    """
-
-    pass
-
-
-# =============================================================================
-# Parsing Errors
-# =============================================================================
-
-
-class ParsingError(OpenLeafError):
-    """Base class for data file parsing errors.
-
-    Raised when there are issues parsing aircraft data files
-    such as OPF, XML, or configuration files.
-
-    Attributes:
-        filepath: Path to the file that failed to parse.
-        line_number: Line number where error occurred (if applicable).
-    """
-
-    def __init__(
-        self,
-        message: str,
-        filepath: str | None = None,
-        line_number: int | None = None,
-    ):
-        super().__init__(message)
-        self.filepath = filepath
-        self.line_number = line_number
-
-    def __str__(self) -> str:
-        base = super().__str__()
-        if self.filepath and self.line_number:
-            return f"{base} (file: {self.filepath}, line: {self.line_number})"
-        elif self.filepath:
-            return f"{base} (file: {self.filepath})"
-        return base
 
 
 class BADA3ParseError(ParsingError):
@@ -210,109 +111,3 @@ class BADA4ParseError(ParsingError):
         if len(parts) > 1:
             return f"{parts[0]} ({', '.join(parts[1:])})"
         return base
-
-
-# =============================================================================
-# Validation Errors
-# =============================================================================
-
-
-class ValidationError(OpenLeafError):
-    """Base class for input/output validation errors.
-
-    Raised when data fails validation checks such as missing fields,
-    invalid types, or values outside acceptable ranges.
-    """
-
-    pass
-
-
-class MissingFieldError(ValidationError):
-    """Raised when a required field is missing from KeyedData.
-
-    This error provides a helpful message indicating which field
-    is missing and which method requires it.
-
-    Attributes:
-        field: Name of the missing field.
-        method: Name of the method that requires the field.
-    """
-
-    def __init__(
-        self,
-        field: str,
-        method: str | None = None,
-        message: str | None = None,
-    ):
-        if message is None:
-            if method:
-                message = f"Required field '{field}' missing from data (needed by {method})"
-            else:
-                message = f"Required field '{field}' missing from data"
-        super().__init__(message)
-        self.field = field
-        self.method = method
-
-
-class ValueRangeError(ValidationError):
-    """Raised when a value is outside its valid range.
-
-    Attributes:
-        field: Name of the field with invalid value.
-        value: The invalid value.
-        min_value: Minimum allowed value (if applicable).
-        max_value: Maximum allowed value (if applicable).
-    """
-
-    def __init__(
-        self,
-        field: str,
-        value: float,
-        min_value: float | None = None,
-        max_value: float | None = None,
-        message: str | None = None,
-    ):
-        if message is None:
-            if min_value is not None and max_value is not None:
-                message = f"'{field}' value {value} outside range [{min_value}, {max_value}]"
-            elif min_value is not None:
-                message = f"'{field}' value {value} below minimum {min_value}"
-            elif max_value is not None:
-                message = f"'{field}' value {value} above maximum {max_value}"
-            else:
-                message = f"'{field}' value {value} is invalid"
-        super().__init__(message)
-        self.field = field
-        self.value = value
-        self.min_value = min_value
-        self.max_value = max_value
-
-
-# =============================================================================
-# Envelope Errors
-# =============================================================================
-
-
-class EnvelopeError(OpenLeafError):
-    """Raised when flight envelope limits are violated.
-
-    This error indicates that computed or input values exceed
-    the aircraft's operational limits (VMO, MMO, HMO, etc.).
-
-    Attributes:
-        limit_type: Type of limit violated (e.g., "VMO", "MMO", "HMO").
-        value: The violating value.
-        limit: The limit that was exceeded.
-    """
-
-    def __init__(
-        self,
-        message: str,
-        limit_type: str | None = None,
-        value: float | None = None,
-        limit: float | None = None,
-    ):
-        super().__init__(message)
-        self.limit_type = limit_type
-        self.value = value
-        self.limit = limit
