@@ -22,6 +22,7 @@ from functools import cached_property
 
 import openleaf.performance.numpy as np
 from openleaf.performance.physics import isa
+from openleaf.performance.physics._safe import safe_divide
 from openleaf.performance.utils.types import ArrayScalarLike
 
 
@@ -55,15 +56,19 @@ def aerodynamic_coefficient(
 
     C = F / (q * S)
 
+    Returns 0 at vanishingly small dynamic pressure (low-speed edge of
+    the envelope) rather than NaN — the latter silently poisons every
+    downstream value.
+
     Args:
         force: Aerodynamic force [N].
         q: Dynamic pressure [Pa].
         surface_area: Wing reference area [m²].
 
     Returns:
-        Lift coefficient (dimensionless).
+        Aerodynamic coefficient (dimensionless).
     """
-    return force / (q * surface_area)
+    return safe_divide(force, q * surface_area, default=0.0)
 
 
 def aerodynamic_force(
