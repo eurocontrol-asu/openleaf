@@ -16,11 +16,14 @@ permissions:
 jobs:
   lint:
     name: Lint & Type Check
-    runs-on: [self-hosted, mandrell]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
       - run: uv python install 3.12
       - run: uv sync --all-groups
       - name: Ruff check
@@ -35,15 +38,17 @@ jobs:
 
   security:
     name: Security Audit
-    runs-on: [self-hosted, mandrell]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
       - run: uv python install 3.12
       - run: uv sync --all-groups
       - run: uv run pip-audit
-        continue-on-error: true
 
   test:
     name: Test ${{ matrix.package }} (Python ${{ matrix.python-version }})
@@ -88,7 +93,7 @@ jobs:
     name: Coverage Badges
     needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: [self-hosted, mandrell]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
 
