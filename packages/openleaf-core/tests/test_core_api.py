@@ -73,7 +73,6 @@ def test_protocols_are_importable() -> None:
     deliberately NOT runtime-checkable (a Python typing limitation), but
     it must still be importable and structurally usable as a type hint.
     """
-    from typing import Protocol
 
     from openleaf.core.protocols import AerodynamicsModelProtocol
     from openleaf.core.protocols import AircraftModelProtocol
@@ -87,7 +86,10 @@ def test_protocols_are_importable() -> None:
         EngineModelProtocol,
         LimitsModelProtocol,
     ):
-        assert Protocol in proto.__mro__, f"{proto.__name__} does not inherit from Protocol"
+        mro_names = [c.__name__ for c in proto.__mro__]
+        assert "Protocol" in mro_names, (
+            f"{proto.__name__} does not inherit from Protocol (MRO: {mro_names})"
+        )
 
     # Sub-protocols are runtime-checkable.
     for proto in (

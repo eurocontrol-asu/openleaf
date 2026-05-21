@@ -17,10 +17,14 @@ from __future__ import annotations
 
 import ast
 import inspect
-from collections.abc import Iterable
+from typing import TYPE_CHECKING
 from typing import Any
 
 import pytest
+
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 from openleaf.performance.core.perfos import AerodynamicsModel
 from openleaf.performance.core.perfos import AircraftModel
@@ -46,7 +50,7 @@ for _module in (
 ):
     try:
         __import__(_module)
-    except Exception as exc:  # noqa: BLE001 - any failure is informational
+    except Exception as exc:
         _IMPORT_FAILURES[_module] = repr(exc)
 
 
@@ -194,7 +198,7 @@ def test_every_public_aircraftmodel_method_declares_required_fields() -> None:
         pytest.fail(
             f"{len(violations)} public method(s) read data[...] without @requires:\n"
             f"{listed}\n\n"
-            "Add @requires(\"field_a\", ...) listing the fields each method "
+            'Add @requires("field_a", ...) listing the fields each method '
             "actually reads. See openleaf.performance.core.validation for the "
             "decorator."
         )

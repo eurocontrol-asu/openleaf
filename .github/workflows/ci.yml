@@ -31,7 +31,10 @@ jobs:
       - name: Ruff format
         run: uv run ruff format --check .
       - name: MyPy (openleaf-core)
-        run: uv run --package openleaf-core mypy --config-file packages/openleaf-core/pyproject.toml packages/openleaf-core/src/ packages/openleaf-core/tests/
+        working-directory: packages/openleaf-core
+        run: |
+          uv run mypy -p openleaf.core
+          uv run mypy tests/
       - name: MyPy (openleaf-performance)
         working-directory: packages/openleaf-performance
         run: uv run mypy src/ tests/

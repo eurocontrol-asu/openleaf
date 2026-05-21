@@ -27,11 +27,14 @@ from typing import Protocol
 
 if TYPE_CHECKING:
     import casadi as ca
+    import numpy as _np
     import numpy.typing as npt
     import pandas as pd
 
     # Static type checkers see the full cross-backend union.
-    type ArrayScalarLike = float | int | npt.NDArray | pd.Series | ca.MX | ca.SX | ca.DM
+    type ArrayScalarLike = (
+        float | int | npt.NDArray[_np.float64] | pd.Series | ca.MX | ca.SX | ca.DM
+    )
 else:
     # At runtime, ArrayScalarLike is a structural alias — we don't import
     # CasADi (heavy SWIG dep) just to define an annotation.

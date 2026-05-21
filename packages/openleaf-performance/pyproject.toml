@@ -209,16 +209,26 @@ disable_error_code = ["arg-type", "return-value", "assignment", "union-attr"]
 
 [[tool.mypy.overrides]]
 module = [
-    "openleaf.performance.physics.*",
     "openleaf.performance.models.*",
 ]
-# Physics and models modules: allow flexible return types for CasADi compat
+# Models modules: allow flexible return types for CasADi compat
 # call-overload: np.equal/np.where with enum types
 # operator: bitwise ops with ArrayScalarLike unions
 # attr-defined: duck-typed generics access attributes via TypeVar
 # assignment: flexible type assignments in parsing/initialization
 warn_return_any = false
 disable_error_code = ["arg-type", "return-value", "call-overload", "operator", "attr-defined", "assignment", "override"]
+
+[[tool.mypy.overrides]]
+module = [
+    "openleaf.performance.physics.*",
+]
+# Physics is largely pure algebra over a Numeric protocol; we keep mypy
+# strict here and rely on inline ``# type: ignore`` at the few points where
+# the cross-backend numpy facade legitimately fights the type system
+# (e.g. np.where with enum conditions). No whole-module suppression of
+# error categories.
+warn_return_any = false
 
 [[tool.mypy.overrides]]
 module = [

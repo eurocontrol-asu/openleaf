@@ -49,9 +49,7 @@ def _cruise_trajectory() -> TrajectoryData:
             "vertical_speed": np.array([5.0, 5.0]),  # m/s
             "aircraft_mass": np.array([65_000.0, 64_900.0]),  # kg
             "acceleration": np.array([0.1, 0.1]),  # m/s²
-            "aerodynamic_configuration": np.array(
-                [AerodynamicConfig.CR, AerodynamicConfig.CR]
-            ),
+            "aerodynamic_configuration": np.array([AerodynamicConfig.CR, AerodynamicConfig.CR]),
         }
     )
 
@@ -123,8 +121,10 @@ def test_bada4_end_to_end() -> None:
     test against the private bada-data checkout.
     """
     # The factory must auto-detect that BADA4 is available before the user
-    # explicitly asks for it.
+    # explicitly asks for it. Passing a non-None model_type narrows the
+    # return type to list[str].
     available = ModelFactory.available_aircraft("bada4")
+    assert isinstance(available, list)
     assert "A320" in available or any(a.startswith("A320") for a in available)
 
     model = ModelFactory.load("A320", "bada4")

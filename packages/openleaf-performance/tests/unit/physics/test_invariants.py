@@ -34,6 +34,7 @@ tropospheric_altitudes = st.floats(min_value=0.0, max_value=isa.H_TROPO - 1.0)
 # Full operating envelope for civil aviation.
 flight_altitudes = st.floats(min_value=0.0, max_value=20_000.0)
 
+
 # Pairs of altitudes guaranteed to be strictly increasing.
 @st.composite
 def altitude_pair(draw, max_alt: float = 20_000.0) -> tuple[float, float]:
@@ -124,9 +125,7 @@ class TestAeroInvariants:
 
     @FAST_SETTINGS
     @given(positive_speed, positive_density)
-    def test_dynamic_pressure_non_negative(
-        self, v: float, rho: float
-    ) -> None:
+    def test_dynamic_pressure_non_negative(self, v: float, rho: float) -> None:
         """q = 0.5 * rho * v^2 is non-negative for non-negative inputs."""
         assert aero.dynamic_pressure(v, rho) >= 0.0
 
@@ -181,25 +180,19 @@ class TestESFInvariants:
 
     @FAST_SETTINGS
     @given(mach_numbers, flight_altitudes)
-    def test_constant_mach_is_non_negative(
-        self, mach: float, alt: float
-    ) -> None:
+    def test_constant_mach_is_non_negative(self, mach: float, alt: float) -> None:
         """f_constant_mach >= 0 across the operating envelope."""
         assert float(esf.f_constant_mach(mach, alt)) >= 0.0
 
     @FAST_SETTINGS
     @given(mach_numbers, flight_altitudes)
-    def test_constant_cas_is_non_negative(
-        self, mach: float, alt: float
-    ) -> None:
+    def test_constant_cas_is_non_negative(self, mach: float, alt: float) -> None:
         """f_constant_cas >= 0 across the operating envelope."""
         assert float(esf.f_constant_cas(mach, alt)) >= 0.0
 
     @FAST_SETTINGS
     @given(mach_numbers, st.floats(min_value=isa.H_TROPO + 100.0, max_value=20_000.0))
-    def test_constant_mach_above_tropopause_is_one(
-        self, mach: float, alt: float
-    ) -> None:
+    def test_constant_mach_above_tropopause_is_one(self, mach: float, alt: float) -> None:
         """Above the tropopause at constant Mach, f = 1 exactly (BADA 3.1-6)."""
         assert np.isclose(float(esf.f_constant_mach(mach, alt)), 1.0, rtol=1e-12)
 
@@ -208,9 +201,7 @@ class TestESFInvariants:
         mach_numbers,
         st.floats(min_value=0.0, max_value=isa.H_TROPO - 1.0),
     )
-    def test_constant_mach_below_tropopause_at_least_one(
-        self, mach: float, alt: float
-    ) -> None:
+    def test_constant_mach_below_tropopause_at_least_one(self, mach: float, alt: float) -> None:
         """Below the tropopause at constant Mach, f >= 1.
 
         TAS decreases as the air cools, so some climb thrust becomes

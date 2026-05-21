@@ -339,9 +339,9 @@ class TotalEnergyModel:
         self._speed_schedule = speed_schedule
 
         # Cached computed values
-        self._thrust_computed = None
-        self._vertical_speed_computed = None
-        self._f_computed = None
+        self._thrust_computed: ArrayScalarLike | None = None
+        self._vertical_speed_computed: ArrayScalarLike | None = None
+        self._f_computed: ArrayScalarLike | None = None
 
     def _has_valid(self, arr: ArrayScalarLike | None) -> ArrayScalarLike:
         """Check if array has valid (non-NaN) values per element.
@@ -505,9 +505,11 @@ class TotalEnergyModel:
                 air_temperature=self._air_temperature,
                 altitude=self._altitude,
             )
-            has_both = self._has_valid(self._thrust_input) & self._has_valid(
-                self._vertical_speed_input
-            )
+            # Bitwise & across the ArrayScalarLike union (NumPy bool arrays,
+            # pandas Series, CasADi MX) has no single mypy-resolvable overload.
+            a = self._has_valid(self._thrust_input)
+            b = self._has_valid(self._vertical_speed_input)
+            has_both = a & b  # type: ignore[operator]
             result = np.where(has_both, f_computed, result)
 
         # Where f is provided, use it (highest priority)
