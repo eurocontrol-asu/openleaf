@@ -1,0 +1,7 @@
+# Code owners for the OpenLeaf repository.
+# These owners are requested for review on any pull request that
+# touches matching paths. See:
+# https://docs.github.com/en/repositories/managing-your-repositories-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything in the repo.
+*       @ramondalmau @JarryGabriel

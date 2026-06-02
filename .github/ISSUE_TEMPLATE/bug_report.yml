@@ -1,0 +1,60 @@
+name: Bug report
+description: Report a problem with OpenLeaf
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug report. Please provide enough
+        detail for us to reproduce the problem.
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: A minimal code snippet or sequence of steps that reproduces the issue.
+      placeholder: |
+        ```python
+        from openleaf.performance.core.factory import ModelFactory
+        ...
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What did you expect to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: |
+        Please complete the following information.
+      value: |
+        - OpenLeaf version:
+        - Python version:
+        - Backend (NumPy / JAX / CasADi / PyTorch):
+        - Operating system:
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add any other context, logs, or screenshots about the problem here.
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: |
+        **Note:** Do not attach or paste any proprietary or license-restricted
+        data (e.g. BADA datasets) in this issue.
