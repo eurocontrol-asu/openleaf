@@ -1,8 +1,13 @@
 [changelog]
 header = "# Changelog\n\n"
 body = """
+{% if version %}\
+## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
+{% else %}\
+## [Unreleased]
+{% endif %}\
 {% for group, commits in commits | group_by(attribute="group") %}
-## {{ group }}
+### {{ group }}
 {% for commit in commits %}
 - {{ commit.message }}\
 {% endfor %}
@@ -14,6 +19,10 @@ trim = true
 conventional_commits = true
 filter_unconventional = true
 split_commits = false
+commit_preprocessors = [
+    # Strip internal issue-tracker references (e.g. "[AXM-1219]") from messages.
+    { pattern = ' *\[AXM-[0-9]+\]', replace = "" },
+]
 commit_parsers = [
     { message = "^feat", group = "Features" },
     { message = "^fix", group = "Bug Fixes" },
@@ -21,5 +30,9 @@ commit_parsers = [
     { message = "^perf", group = "Performance" },
     { message = "^refactor", group = "Refactor" },
     { message = "^test", group = "Testing" },
+    { message = "^ci", group = "Build & CI" },
+    { message = "^build", group = "Build & CI" },
     { message = "^chore", group = "Miscellaneous" },
+    { message = "^infra", group = "Miscellaneous" },
+    { message = "^style", group = "Miscellaneous" },
 ]
