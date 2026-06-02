@@ -7,6 +7,16 @@ import mkdocs_gen_files
 
 packages_dir = Path("packages")
 
+# Modules that already have a hand-curated page in the "Reference" nav section.
+# Skip them here so the same objects are not documented twice, which would make
+# mkdocstrings/autorefs emit "multiple primary URLs" warnings (and fail
+# `mkdocs build --strict`).
+CURATED_MODULES = {
+    "openleaf.performance.core.mixins",
+    "openleaf.performance.models.bada3.synonyms",
+    "openleaf.performance.models.bada4.synonyms",
+}
+
 for pkg_dir in sorted(packages_dir.iterdir()):
     src_dir = pkg_dir / "src"
     if not src_dir.is_dir():
@@ -24,8 +34,11 @@ for pkg_dir in sorted(packages_dir.iterdir()):
         elif parts[-1] == "__main__":
             continue
 
+        identifier = ".".join(parts)
+        if identifier in CURATED_MODULES:
+            continue
+
         with mkdocs_gen_files.open(full_doc_path, "w") as fd:
-            identifier = ".".join(parts)
             fd.write(f"::: {identifier}")
 
         mkdocs_gen_files.set_edit_path(full_doc_path, path)
