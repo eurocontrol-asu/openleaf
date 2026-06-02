@@ -21,9 +21,9 @@ hide:
 
     ---
 
-    Shared types and interfaces for the OpenLeaf suite.
-
-    *Documentation coming soon.*
+    Shared types, protocols, and interfaces that form the foundation of the
+    OpenLeaf suite. Installed automatically as a dependency of
+    `openleaf-performance`.
 
 </div>
 

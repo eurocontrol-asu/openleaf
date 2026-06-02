@@ -164,9 +164,10 @@ OpenAP's thrust model requires ROCD, which we're trying to predict. Use PS, BADA
 If you use these examples in your research, please cite:
 
 ```bibtex
-@article{aetherx2025,
-  title={OpenLeaf: A Unified Differentiable Framework for Aircraft Performance Modelling},
-  author={Dalmau, Ramon and Jarry, Gabriel and Very, Philippe},
-  year={2025}
+@inproceedings{dalmau2026openleaf,
+  author    = {Dalmau, Ramon and Jarry, Gabriel and Very, Philippe},
+  title     = {OpenLeaf: A Unified, Vectorized and Differentiable Framework for Aircraft Performance Modelling},
+  booktitle = {Proceedings of the Air Traffic and Radar Studies (ATRDS) 2026},
+  year      = {2026}
 }
 ```
