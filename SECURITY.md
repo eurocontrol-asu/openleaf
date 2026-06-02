@@ -12,7 +12,7 @@ If you discover a security vulnerability in OpenLeaf, please report it responsib
 
 **Do NOT open a public GitHub issue for security vulnerabilities.**
 
-Instead, please email: **ramon.dalmau@eurocontrol.int**
+Instead, please email: **ramon.dalmau-codina@eurocontrol.int**
 
 Include:
 
