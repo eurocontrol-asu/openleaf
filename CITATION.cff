@@ -28,5 +28,8 @@ preferred-citation:
       given-names: Gabriel
     - family-names: Very
       given-names: Philippe
-  collection-title: "Proceedings of the Air Traffic and Radar Studies (ATRDS) 2026"
+  collection-title: "US-Europe Air Transportation Research & Development Symposium"
+  conference:
+    name: "US-Europe Air Transportation Research & Development Symposium"
+    location: "Delft, Netherlands"
   year: 2026

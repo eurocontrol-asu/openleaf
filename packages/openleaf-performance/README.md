@@ -355,7 +355,8 @@ European Union Public Licence v. 1.2 (EUPL-1.2) — see [LICENSE](LICENSE) for d
 @inproceedings{dalmau2026openleaf,
   author    = {Dalmau, Ramon and Jarry, Gabriel and Very, Philippe},
   title     = {OpenLeaf: A Unified, Vectorized and Differentiable Framework for Aircraft Performance Modelling},
-  booktitle = {Proceedings of the Air Traffic and Radar Studies (ATRDS) 2026},
+  booktitle = {US-Europe Air Transportation Research \& Development Symposium},
+  address   = {Delft, Netherlands},
   year      = {2026}
 }
 ```
