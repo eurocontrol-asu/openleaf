@@ -32,7 +32,8 @@ format:  ## Auto-format code
 
 type-check:  ## Run mypy per package
 	@echo "Running mypy per package..."
-	uv run --package openleaf-performance mypy --config-file packages/openleaf-performance/pyproject.toml packages/openleaf-performance/src packages/openleaf-performance/tests
+	uv run --package openleaf-core mypy --config-file packages/openleaf-core/pyproject.toml packages/openleaf-core/src/ packages/openleaf-core/tests/
+	cd packages/openleaf-performance && uv run mypy src/ tests/
 
 check: lint type-check test-all  ## Lint + type-check + tests
 

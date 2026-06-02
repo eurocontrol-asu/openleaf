@@ -25,6 +25,9 @@ wheels/
 *.egg
 MANIFEST
 
+# hatch-vcs generated version files (regenerated at build time)
+_version.py
+
 # Virtual environments
 .venv/
 venv/
