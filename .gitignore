@@ -28,6 +28,9 @@ MANIFEST
 # hatch-vcs generated version files (regenerated at build time)
 _version.py
 
+# mkdocs build output
+site/
+
 # Virtual environments
 .venv/
 venv/

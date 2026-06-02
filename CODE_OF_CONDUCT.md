@@ -37,7 +37,7 @@ https://www.contributor-covenant.org/version/2/1/code_of_conduct/
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behaviour may be
-reported to the project maintainers at **ramon.dalmau@eurocontrol.int**. All
+reported to the project maintainers at **ramon.dalmau-codina@eurocontrol.int**. All
 complaints will be reviewed and investigated promptly and fairly. All community
 leaders are obligated to respect the privacy and security of the reporter of any
 incident.
