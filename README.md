@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/eurocontrol-asu/openleaf/main/docs/assets/logo.svg" alt="OpenLeaf Logo" width="180" />
+  <img src="docs/assets/logo.svg" alt="OpenLeaf Logo" width="180" />
 </p>
 
 <h1 align="center">OpenLeaf</h1>
