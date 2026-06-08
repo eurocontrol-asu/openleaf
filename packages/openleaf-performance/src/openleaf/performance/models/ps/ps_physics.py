@@ -7,6 +7,9 @@ Reference:
     Poll, D.I.A., and Schumann, U. (2021). "An estimation method for the fuel burn
     and other performance characteristics of civil transport aircraft in the cruise."
     The Aeronautical Journal, 125(1284), 550-577.
+
+Reference implementation:
+    pycontrails (Apache-2.0), https://github.com/contrailcirrus/pycontrails
 """
 
 from __future__ import annotations
