@@ -153,7 +153,9 @@ def thrust_from_rocd(
     # Solve TEM for thrust: T = D + (m · g · rocd_geo) / (V · f)
     # Clamp denominator to avoid division by zero (level flight with f→0)
     denom = true_airspeed * f
-    safe_denom = np.maximum(np.abs(denom), EPSILON_CLAMP) * np.sign(denom + EPSILON_CLAMP)
+    # Sign via where(): np.sign(denom + EPS) flips the sign for denom in
+    # (-EPS, 0), negating the clamped denominator near level flight.
+    safe_denom = np.maximum(np.abs(denom), EPSILON_CLAMP) * np.where(denom >= 0, 1.0, -1.0)
     return drag + (mass * isa.G * rocd_geo) / safe_denom
 
 
@@ -194,7 +196,9 @@ def f_from_state(
     # When T=D (level flight), f is undefined; return default (1.0)
     excess_thrust = thrust - drag
     denom = excess_thrust * true_airspeed
-    safe_denom = np.maximum(np.abs(denom), EPSILON_CLAMP) * np.sign(denom + EPSILON_CLAMP)
+    # Sign via where(): np.sign(denom + EPS) flips the sign for denom in
+    # (-EPS, 0), negating the clamped denominator near level flight.
+    safe_denom = np.maximum(np.abs(denom), EPSILON_CLAMP) * np.where(denom >= 0, 1.0, -1.0)
 
     # Compute f, but return default when excess_thrust ≈ 0
     f_computed = (mass * isa.G * rocd_geo) / safe_denom
@@ -350,6 +354,11 @@ class TotalEnergyModel:
         """
         if arr is None:
             return np.zeros_like(self._altitude, dtype=bool)
+        if np.is_casadi_type(arr, recursive=False):
+            # A symbolic input is by definition "provided"; NaN-validity is a
+            # numeric concept that cannot be evaluated on an expression graph
+            # (np.isnan is the numpy-only re-export and rejects MX/SX).
+            return np.ones_like(self._altitude, dtype=bool)
         return ~np.isnan(arr)
 
     @property

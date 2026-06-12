@@ -106,9 +106,13 @@ class EnvelopeChecker:
         min_cas = self.min_cas
         underspeed = np.asarray(False) if min_cas is None else fs.cas_kt < min_cas
 
+        # mmo is optional (e.g. piston aircraft); treat "no MMO" as no violation
+        max_mach = self.max_mach
+        overspeed_mach = np.asarray(False) if max_mach is None else fs.mach > max_mach
+
         return {
             "overspeed_cas": fs.cas_kt > self.max_cas,
-            "overspeed_mach": fs.mach > self.max_mach,
+            "overspeed_mach": overspeed_mach,
             "underspeed": underspeed,
             "ceiling": fs.altitude_ft > self.max_altitude,
             "mass_overweight": fs.mass > mtom,

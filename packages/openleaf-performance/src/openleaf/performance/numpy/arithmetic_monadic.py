@@ -100,7 +100,9 @@ def mean(x: ArrayScalarLike, axis: int | None = None) -> ArrayScalarLike:
         elif axis == 1:
             return sum(x, axis=1) / x.shape[1]
         elif axis is None:
-            return mean(mean(x, axis=0), axis=1)
+            # mean(x, axis=0) yields a column vector, and axis=1 on a column
+            # is the identity — reduce along axis=0 again (cf. sum(axis=None)).
+            return mean(mean(x, axis=0), axis=0)
         else:
             msg = "CasADi types can only be up to 2D, so axis must be None, 0, 1, -1, or -2."
             raise ValueError(msg)
@@ -140,6 +142,12 @@ def prod(x: ArrayScalarLike, axis: int | None = None) -> ArrayScalarLike:
 
     Returns:
         Product of elements.
+
+    Warning:
+        The CasADi path computes exp(sum(log(x))) to stay differentiable, so
+        it returns NaN if any element is negative and -inf/0-related values
+        for zeros, unlike numpy.prod. Restrict CasADi inputs to positive
+        values.
 
     See Also:
         https://numpy.org/doc/stable/reference/generated/numpy.prod.html

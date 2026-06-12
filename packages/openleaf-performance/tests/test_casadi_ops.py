@@ -444,3 +444,53 @@ class TestLogicalsCasADi:
         x = ca.DM([0, 1, 0])
         with pytest.raises(NotImplementedError, match="axis parameter not supported"):
             anp.any(x, axis=0)
+
+
+class TestMeanAxisNoneRegression:
+    """mean(axis=None) must reduce to a scalar, not column means."""
+
+    def test_mean_full_reduction_matches_numpy(self):
+        data = [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]
+        result = anp.mean(ca.DM(data))
+        assert float(result) == pytest.approx(3.5)
+
+    def test_mean_axis_none_row_and_column_vectors(self):
+        assert float(anp.mean(ca.DM([1.0, 2.0, 3.0]))) == pytest.approx(2.0)
+        assert float(anp.mean(ca.DM([[1.0, 2.0, 3.0]]))) == pytest.approx(2.0)
+
+
+class TestZerosOnesLikeShapeRegression:
+    """zeros_like/ones_like must preserve 2-D casadi shapes and honor dtype."""
+
+    def test_matrix_shape_preserved(self):
+        m = ca.DM([[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]])
+        assert anp.zeros_like(m).shape == (2, 3)
+        assert anp.ones_like(m).shape == (2, 3)
+
+    def test_vector_stays_one_dimensional(self):
+        v = ca.DM([1.0, 2.0, 3.0])  # casadi column vector
+        assert anp.zeros_like(v).shape == (3,)
+        assert anp.ones_like(v).shape == (3,)
+
+    def test_dtype_honored(self):
+        v = ca.DM([1.0, 2.0])
+        assert anp.zeros_like(v, dtype=bool).dtype == np.bool_
+
+
+class TestTileIntReps:
+    """tile must accept a bare int for reps like numpy does."""
+
+    def test_tile_with_int_reps(self):
+        v = ca.DM([1.0, 2.0])
+        tiled = anp.tile(v, 2)
+        assert tiled.shape[0] == 4
+
+
+class TestClipMixedBackends:
+    """clip must promote mixed numpy/torch arguments like where() does."""
+
+    def test_numpy_x_with_torch_bounds(self):
+        torch = pytest.importorskip("torch")
+        x = np.array([0.5, 2.5, -1.0])
+        result = anp.clip(x, torch.tensor(0.0), torch.tensor(2.0))
+        assert result.tolist() == pytest.approx([0.5, 2.0, 0.0])

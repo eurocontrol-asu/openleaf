@@ -230,3 +230,21 @@ class TestModelWithoutLimits:
 
         # When limit is None, the check should be skipped (no violation)
         assert not np.any(violations["underspeed"])
+
+
+class TestOptionalMmoNoCrash:
+    """Aircraft without an MMO (e.g. piston) must not crash the mach check."""
+
+    def test_none_max_mach_reports_no_violation(self, mock_model):
+        state = _make_flight_state(mach=0.40)
+        mock_model.max_cas.return_value = np.asarray(350.0)
+        mock_model.min_cas.return_value = np.asarray(60.0)
+        mock_model.max_mach.return_value = None  # no MMO defined
+        mock_model.max_altitude.return_value = np.asarray(25_000.0)
+        checker = EnvelopeChecker(
+            model=mock_model,
+            flight_state=state,
+            envelope_mode=EnvelopeMode.IGNORE,
+        )
+        violations = checker.envelope_violations
+        assert bool(violations["overspeed_mach"]) is False

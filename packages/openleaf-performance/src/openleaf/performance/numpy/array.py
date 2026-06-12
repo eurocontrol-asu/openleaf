@@ -459,6 +459,8 @@ def tile(A, reps):
     """
     if is_casadi_type(A, recursive=False):
         ca = _get_casadi()
+        if isinstance(reps, int):  # numpy accepts a bare int for reps
+            reps = (reps,)
         if len(reps) == 1:
             return ca.repmat(A, reps[0], 1)
         elif len(reps) == 2:
@@ -474,7 +476,13 @@ def tile(A, reps):
 def zeros_like(a, dtype=None, order: _OrderKACF = "K", subok: bool = True, shape=None):
     """Return an array of zeros with the same shape and type as a given array."""
     if is_casadi_type(a, recursive=False):
-        return _onp.zeros(shape=length(a))
+        # Vectors keep the package's 1-D convention; true 2-D matrices keep
+        # both dimensions (this used to collapse any casadi matrix to 1-D
+        # and silently ignore dtype).
+        rows, cols = a.shape
+        if rows == 1 or cols == 1:
+            return _onp.zeros(shape=length(a), dtype=dtype)
+        return _onp.zeros(shape=(rows, cols), dtype=dtype)
 
     # Use Array API for NumPy/PyTorch/CuPy/JAX
     xp = get_array_namespace(a)
@@ -484,7 +492,10 @@ def zeros_like(a, dtype=None, order: _OrderKACF = "K", subok: bool = True, shape
 def ones_like(a, dtype=None, order: _OrderKACF = "K", subok: bool = True, shape=None):
     """Return an array of ones with the same shape and type as a given array."""
     if is_casadi_type(a, recursive=False):
-        return _onp.ones(shape=length(a))
+        rows, cols = a.shape
+        if rows == 1 or cols == 1:
+            return _onp.ones(shape=length(a), dtype=dtype)
+        return _onp.ones(shape=(rows, cols), dtype=dtype)
 
     # Use Array API for NumPy/PyTorch/CuPy/JAX
     xp = get_array_namespace(a)

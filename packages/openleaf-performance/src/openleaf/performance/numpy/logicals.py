@@ -226,8 +226,18 @@ def clip(
             result = ca.fmin(result, max)
         return result
 
+    # Promote mixed backends (e.g. numpy x with torch bounds) the same way
+    # where() does, instead of deriving the namespace from x alone.
+    from openleaf.performance.numpy.conditionals import _promote_to_common_backend
+
+    promotable = [a for a in (x, min, max) if a is not None]
+    promoted = iter(_promote_to_common_backend(*promotable))
+    x = next(promoted)
+    min = next(promoted) if min is not None else None
+    max = next(promoted) if max is not None else None
+
     # Use Array API for NumPy/PyTorch/CuPy/JAX
-    xp = get_array_namespace(x)
+    xp = get_array_namespace(*(a for a in (x, min, max) if a is not None))
     return xp.clip(x, min, max)
 
 
