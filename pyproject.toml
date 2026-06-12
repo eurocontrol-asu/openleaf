@@ -122,7 +122,9 @@ testpaths = [
 addopts = "-q --import-mode=importlib"
 
 [tool.coverage.run]
-source_pkgs = []
+# Measure only the project packages; an empty list measured everything
+# imported, including the test files themselves, inflating the total.
+source_pkgs = ["openleaf"]
 relative_files = true
 
 [tool.coverage.report]

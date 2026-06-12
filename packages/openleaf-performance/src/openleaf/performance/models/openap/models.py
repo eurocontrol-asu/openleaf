@@ -495,8 +495,18 @@ class OpenAPModel(AircraftModel):
 
     @classmethod
     def available_aircraft(cls) -> list[str]:
-        """Return list of available aircraft types in OpenAP."""
-        from openap import prop
+        """Return list of available aircraft types in OpenAP.
+
+        Raises:
+            ImportError: If the optional openap library is not installed.
+        """
+        try:
+            from openap import prop
+        except ImportError as e:
+            raise ImportError(
+                "openap is required for the OpenAP backend. "
+                "Install with: pip install openleaf-performance[openap]"
+            ) from e
 
         return prop.available_aircraft()
 

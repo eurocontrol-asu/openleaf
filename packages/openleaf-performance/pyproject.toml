@@ -44,24 +44,21 @@ dependencies = [
     "structlog>=24.4.0",
     "pydantic-settings>=2.7.0",
     "rich>=13.9.0",
-    "pycontrails>=0.60.2,<0.60.5",
-    "openap>=2.4,<2.5",
     "array-api-compat>=1.4.0",  # Array API standard for multi-backend support
-    "jax>=0.9.1",
 ]
 
 [project.optional-dependencies]
-# Computational backends (optional)
+# Computational backends (optional; the NumPy backend works out of the box)
 casadi = [
     "casadi>=3.6.0",
 ]
 torch = [
     "torch>=2.0.0",
 ]
-# JAX GPU extras — user picks based on their CUDA version
-cuda11 = [
-    "jax[cuda11_pip]>=0.9.1",
+jax = [
+    "jax>=0.9.1",
 ]
+# JAX GPU extra — CUDA 12 wheels (CUDA 11 is no longer supported by jax>=0.9)
 cuda12 = [
     "jax[cuda12]>=0.9.1",
 ]
@@ -75,37 +72,9 @@ openap = [
 ps = [
     "pycontrails>=0.60.2,<0.60.5",
 ]
-# Testing dependencies
-test = [
-    "pytest>=8.0.0",
-    "pytest-cov>=6.0.0",
-    "pytest-asyncio>=0.24.0",
-    "hypothesis>=6.100.0",
-    "xarray>=2023.0.0",
-]
-# Development dependencies
-dev = [
-    "ruff>=0.9.0",
-    "mypy>=1.13.0",
-    "pandas-stubs>=2.0.0",
-    "pip-audit>=2.7.0",
-    "openap>=2.4,<2.5",
-    "pycontrails>=0.60.2,<0.60.5",
-    "casadi>=3.6.0",
-    "cyclopts>=3.0.0",
-]
-# Documentation dependencies
-docs = [
-    "mkdocs>=1.5.0",
-    "mkdocs-material>=9.0.0",
-    "mkdocstrings[python]>=0.24.0",
-    "mkdocs-gen-files>=0.5.0",
-    "mkdocs-literate-nav>=0.6.0",
-    "mkdocs-section-index>=0.3.0",
-]
-# All optional dependencies
+# All optional runtime features (dev tooling lives in [dependency-groups])
 all = [
-    "openleaf-performance[casadi,torch,openap,ps,test,dev,docs]",
+    "openleaf-performance[casadi,torch,jax,openap,ps]",
 ]
 
 [project.urls]
@@ -130,6 +99,10 @@ dev = [
     "pip-audit>=2.7.0",
     "casadi>=3.6.0",
     "torch>=2.0.0",
+    "jax>=0.9.1",
+    "openap>=2.4,<2.5",
+    "pycontrails>=0.60.2,<0.60.5",
+    "xarray>=2023.0.0",
     "cyclopts>=3.0.0",
     "pre-commit>=4.0",
 ]
@@ -156,6 +129,21 @@ examples = [
 [tool.hatch.version]
 source = "vcs"
 fallback-version = "0.0.0"
+
+# Monorepo tagging: releases are tagged "performance/vX.Y.Z" (see
+# .github/workflows/publish.yml). Without these options setuptools-scm
+# matches any tag (e.g. core/v*) or none, and publishes a wrong version.
+[tool.hatch.version.raw-options]
+git_describe_command = [
+    "git",
+    "describe",
+    "--dirty",
+    "--tags",
+    "--long",
+    "--match",
+    "performance/v*",
+]
+tag_regex = "^performance/v(?P<version>[0-9][^/]*)$"
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/openleaf/performance/_version.py"

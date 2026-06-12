@@ -286,7 +286,9 @@ class ModelFactory:
             if hasattr(model_class, "available_aircraft"):
                 try:
                     return model_class.available_aircraft()
-                except (OSError, OpenLeafError) as e:
+                except (ImportError, OSError, OpenLeafError) as e:
+                    # ImportError: optional backend library (openap/pycontrails)
+                    # not installed — same contract as unconfigured BADA paths.
                     _logger.debug("Failed to get aircraft list for %s: %s", mtype, e)
                     return []
             return []
