@@ -159,7 +159,9 @@ class TestBADA3Engine:
         thrust_max = model.engine.thrust_max(state)
         thrust_min = model.engine.thrust_min(state)
 
-        assert thrust_max > thrust_min > 0
+        # >= 0: idle thrust can be exactly zero per the OPF data — e.g. the
+        # AT72 has CTdes,high = 0.0, and its PTD lists 0 N above Hp,des.
+        assert thrust_max > thrust_min >= 0
 
     def test_thrust_decreases_with_altitude(self, bada3_model):
         """Test that thrust decreases with altitude (density effect)."""
@@ -813,3 +815,78 @@ class TestBADA3LimitsSymbolic:
         # d(max_alt)/d(delta_isa) should be <= 0 (hotter = lower ceiling)
         assert grad[1] <= 0, "d(max_alt)/d(delta_isa) should be non-positive"
         assert np.all(np.isfinite(grad)), "Gradients should be finite"
+
+
+class TestBADA3DescentPTDValidation:
+    """Validate descent (idle) thrust against the official PTD descent tables.
+
+    This is the reference check for the Desc(low)/Desc(high) OPF column
+    order: the PTD descent thrust column is computed by EUROCONTROL from
+    those coefficients, including
+
+    - the A320 step-UP in thrust crossing Hp,des (~FL298): CTdes,high
+      (0.13603) applies above, CTdes,low (0.10847) below — at FL290 the
+      table shows 7,512 N vs 8,803 N at FL310;
+    - the AT72 zero-thrust rows at/above FL120 (CTdes,high = 0.0).
+
+    Rows below FL30 are excluded: the reference tables switch to
+    approach/landing configurations there, while this check pins the
+    clean-configuration coefficients.
+    """
+
+    @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
+    def test_a320_descent_thrust_matches_ptd(self, bada3_model, bada3_ptd, mass_category):
+        section = bada3_ptd.get_section(mass_category, "descent")
+        if section is None:
+            pytest.skip(f"No {mass_category} mass descent section in PTD")
+
+        checked = 0
+        for row in section.rows:
+            if row.fl < 30:
+                continue
+            state = {
+                "true_airspeed": row.tas * KT,
+                "altitude": row.fl * 100 * FT,
+                "engine_setting": EngineSetting.MCMB,
+                "delta_isa": 0.0,
+                "aerodynamic_configuration": AerodynamicConfig.CR,
+            }
+            thrust_model = bada3_model.engine.thrust_min(state)
+            assert thrust_model == pytest.approx(row.thrust, rel=THRUST_TOLERANCE, abs=1.0), (
+                f"FL{row.fl} {mass_category}: descent thrust {thrust_model:.0f} N != "
+                f"PTD {row.thrust:.0f} N"
+            )
+            checked += 1
+        assert checked > 0, "No descent rows at/above FL30 found in PTD"
+
+    @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
+    def test_at72_descent_thrust_matches_ptd(
+        self, bada3_turboprop_model, bada3_at72_ptd, mass_category
+    ):
+        section = bada3_at72_ptd.get_section(mass_category, "descent")
+        if section is None:
+            pytest.skip(f"No {mass_category} mass descent section in PTD")
+
+        checked = zero_rows = 0
+        for row in section.rows:
+            if row.fl < 30:
+                continue
+            state = {
+                "true_airspeed": row.tas * KT,
+                "altitude": row.fl * 100 * FT,
+                "engine_setting": EngineSetting.MCMB,
+                "delta_isa": 0.0,
+                "aerodynamic_configuration": AerodynamicConfig.CR,
+            }
+            thrust_model = bada3_turboprop_model.engine.thrust_min(state)
+            assert thrust_model == pytest.approx(row.thrust, rel=THRUST_TOLERANCE, abs=1.0), (
+                f"FL{row.fl} {mass_category}: descent thrust {thrust_model:.0f} N != "
+                f"PTD {row.thrust:.0f} N"
+            )
+            checked += 1
+            if row.thrust == 0:
+                zero_rows += 1
+        assert checked > 0, "No descent rows at/above FL30 found in PTD"
+        # AT72 CTdes,high = 0.0: the reference table itself lists 0 N above
+        # Hp,des — guards against any future "fix" that reintroduces a floor.
+        assert zero_rows > 0, "Expected zero-thrust descent rows above Hp,des for AT72"
