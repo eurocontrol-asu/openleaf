@@ -962,3 +962,40 @@ class TestPSLimitsSymbolic:
             "PS max_altitude should return numeric HMO"
         )
         assert max_alt > 30000, "HMO should be > FL300"
+
+
+class TestPSMaxMachAltitudeUnits:
+    """Regression: max_mach must treat data["altitude"] as meters.
+
+    The package-wide convention is altitude in meters; this method used to
+    consume the value as feet, applying the 250 kt ATM limit up to 10,000 m
+    (FL328) and evaluating pressure at the wrong altitude.
+    """
+
+    def test_altitude_interpreted_as_meters(self, ps_model: PSModel):
+        from openleaf.performance.models.ps.ps_physics import max_mach_number_by_altitude
+        from openleaf.performance.physics import isa
+        from openleaf.performance.physics import units
+
+        lim = ps_model.limits
+        altitude_m = 3500.0  # 11,483 ft: above the 10,000 ft ATM threshold
+
+        expected = max_mach_number_by_altitude(
+            altitude_m * units.M_TO_FT,
+            isa.air_pressure(altitude_m),
+            lim.data.mmo,
+            lim.data.p_i_max,
+            lim.data.p_inf_co,
+            atm_speed_limit=True,
+            buffer=0.02,
+        )
+        result = lim.max_mach({"altitude": altitude_m})
+        assert result == pytest.approx(expected)
+
+    def test_atm_limit_releases_above_10000_ft(self, ps_model: PSModel):
+        lim = ps_model.limits
+        # 2,500 m (8,202 ft): ATM 250 kt cap applies -> reduced Mach limit.
+        # 3,500 m (11,483 ft): above the cap -> impact-pressure/MMO governs.
+        low = float(lim.max_mach({"altitude": 2500.0}))
+        high = float(lim.max_mach({"altitude": 3500.0}))
+        assert high > low

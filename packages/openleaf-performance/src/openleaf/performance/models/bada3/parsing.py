@@ -273,9 +273,11 @@ def _parse_engine(text: str) -> BADA3EngineData:
         pattern_5, max_thrust_section, _Sections.MAX_THRUST, 5
     )
 
-    # Idle thrust coefficients (5 values)
+    # Idle thrust coefficients (5 values).
+    # OPF column order (per the section header itself):
+    #   Desc(low)  Desc(high)  Desc level  Desc(app)  Desc(ld)
     idle_section = _extract_section(_Sections.IDLE_THRUST, text)
-    ct_des_high, ct_des_low, h_des, ct_des_app, ct_des_ld = _parse_floats(
+    ct_des_low, ct_des_high, h_des, ct_des_app, ct_des_ld = _parse_floats(
         pattern_5, idle_section, _Sections.IDLE_THRUST, 5
     )
 
@@ -357,10 +359,14 @@ def _parse_limits(
         vmo, mmo, hmo, hmax, gt = _parse_floats(pattern_5, envelope_section, _Sections.ENVELOPE, 5)
         gw = gw_mass
 
-    # Buffet coefficients (2 values)
-    pattern_2 = r"\s+".join([_FLOAT_PATTERN] * 2)
+    # Buffet coefficients. The "Buffet" title sits on the shared aero header
+    # ("Wing Area and Buffet coefficients"), whose data line reads:
+    #   ndrst  S  Clbo  k  CM16
+    # ndrst is a plain integer (not matched by the sci-float pattern), so the
+    # scientific floats on the line are S, Clbo, k, CM16 — skip S, take 2 & 3.
+    pattern_3 = r"\s+".join([_FLOAT_PATTERN] * 3)
     buffet_section = _extract_section(_Sections.BUFFET, text)
-    clbo, k = _parse_floats(pattern_2, buffet_section, _Sections.BUFFET, 2)
+    _surface_area, clbo, k = _parse_floats(pattern_3, buffet_section, _Sections.BUFFET, 3)
 
     return BADA3LimitsData(
         vmo=vmo,

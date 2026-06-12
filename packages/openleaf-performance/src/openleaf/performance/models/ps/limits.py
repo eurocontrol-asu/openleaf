@@ -48,7 +48,8 @@ class PSLimits(LimitsModel[PSLimitsData]):
 
         Args:
             data: Flight state dictionary with optional keys:
-                - altitude: Altitude in feet. If not provided, returns MMO.
+                - altitude: Altitude in meters (package-wide convention).
+                  If not provided, returns MMO.
                 - air_pressure: Ambient pressure [Pa]. If not provided,
                   computed from ISA.
                 - atm_speed_limit: Whether to apply ATM 250kt limit below
@@ -62,13 +63,17 @@ class PSLimits(LimitsModel[PSLimitsData]):
         if mmo is None:
             return np.inf
 
-        altitude_ft = data.get("altitude")
-        if altitude_ft is None:
+        altitude_m = data.get("altitude")
+        if altitude_m is None:
             return mmo
+
+        # "altitude" is meters everywhere in the package; the PS physics
+        # helper (and its 10,000 ft ATM-limit threshold) works in feet.
+        altitude_ft = altitude_m * units.M_TO_FT
 
         air_pressure = data.get("air_pressure")
         if air_pressure is None:
-            air_pressure = isa.air_pressure(altitude_ft * units.FT)
+            air_pressure = isa.air_pressure(altitude_m)
 
         atm_speed_limit = bool(data.get("atm_speed_limit", True))
 

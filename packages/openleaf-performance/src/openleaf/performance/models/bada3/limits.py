@@ -184,15 +184,21 @@ class BADA3LimitsModel(LimitsModel[BADA3LimitsData]):
         """
         return self.data.vstall.get(conf, 0.0)
 
-    def buffet_onset_cl(self, mach: ArrayScalarLike) -> ArrayScalarLike | None:
+    def buffet_onset_cl(self, mach: ArrayScalarLike) -> ArrayScalarLike:
         """Calculate buffet onset lift coefficient.
 
-        Uses BADA3 buffet model: CLbo = CLbo_base / (k * M^2)
+        BADA3 low-speed buffeting limit (jet aircraft): the buffet-onset lift
+        coefficient decreases linearly with Mach,
+
+            CL_bo(M) = Clbo - k * M
+
+        where ``Clbo`` is the buffet onset lift coefficient at M = 0 and ``k``
+        is the buffeting gradient [1/M] from the OPF aerodynamics section.
 
         Args:
             mach: Mach number.
 
         Returns:
-            Buffet onset lift coefficient, or None if buffet data not available.
+            Buffet onset lift coefficient.
         """
-        return self.data.clbo / (self.data.k * mach**2)
+        return self.data.clbo - self.data.k * mach

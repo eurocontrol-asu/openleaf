@@ -134,7 +134,11 @@ class BADA3EngineModel(EngineModel[BADA3EngineData]):
         # Non-ISA correction per formula 3.7-1
         # Per manual: if (ΔTISA - CT_c4) < 0, then set to 0
         delta_isa_eff = np.maximum(delta_isa - self.data.ct_4, 0.0)
-        isa_correction = 1.0 - self.data.ct_5 * delta_isa_eff
+        # Per manual (3.7-3): the correction term CT_c5 * ΔT_eff is bounded to
+        # [0, 0.4], so max thrust never drops below 0.6 * T_max_isa (and a
+        # negative CT_c5 cannot raise thrust above the ISA value).
+        correction_term = np.minimum(np.maximum(self.data.ct_5 * delta_isa_eff, 0.0), 0.4)
+        isa_correction = 1.0 - correction_term
 
         # thrust_max_isa on the left ensures torch/JAX type propagation
         return thrust_max_isa * (isa_correction * coef)
@@ -773,7 +777,7 @@ class BADA3Model(AircraftModel):
             data: Flight state dictionary with:
                 - altitude: Geometric altitude in meters (required)
                 - flight_phase: "climb", "cruise", or "descent" (required)
-                - true_airspeed: True airspeed [m/s] (required)
+                - calibrated_airspeed: Calibrated airspeed [m/s] (required)
                 - aircraft_mass: Aircraft mass [kg] (required)
                 - aerodynamic_configuration: Explicit override (optional)
 
@@ -795,8 +799,10 @@ class BADA3Model(AircraftModel):
         altitude = data["altitude"]
         h_ft = altitude / FT
         flight_phase = data["flight_phase"]
-        v = data["true_airspeed"]
-        v_kt = v / KT
+        # The Vmin thresholds below derive from OPF stall speeds, which are
+        # CAS quantities — compare against CAS, not TAS (BADA4 does the same).
+        v_cas = data["calibrated_airspeed"]
+        v_kt = v_cas / KT
         mass = data["aircraft_mass"]
 
         # Get reference stall speeds (in knots CAS)
