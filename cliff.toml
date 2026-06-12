@@ -19,10 +19,6 @@ trim = true
 conventional_commits = true
 filter_unconventional = true
 split_commits = false
-commit_preprocessors = [
-    # Strip internal issue-tracker references (e.g. "[AXM-1219]") from messages.
-    { pattern = ' *\[AXM-[0-9]+\]', replace = "" },
-]
 commit_parsers = [
     { message = "^feat", group = "Features" },
     { message = "^fix", group = "Bug Fixes" },

@@ -1,6 +1,11 @@
 # Experiments
 
-This directory contains scripts to reproduce all experiments and figures from the OpenLeaf paper.
+This directory documents the experiments from the OpenLeaf paper and carries
+their committed results (`results/*.json`).
+
+> **Note:** the reproduction scripts referenced below are not yet included in
+> the public release; they will be published separately. The committed
+> `results/*.json` files are the authoritative reference values.
 
 ## Reproduction workflow
 
@@ -26,7 +31,7 @@ uv run python experiments/scripts/run_vectorization_benchmark.py
 uv run python experiments/scripts/generate_paper_figures.py
 ```
 
-Figures are written to `software_paper/figures/`.
+Figures are generated from `results/*.json` by the figure script.
 
 ---
 

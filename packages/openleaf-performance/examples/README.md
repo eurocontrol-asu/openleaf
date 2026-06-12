@@ -7,7 +7,7 @@ This directory contains examples that demonstrate the experiments described in t
 ### Install Dependencies
 
 ```bash
-uv sync --all-extras
+uv sync --all-groups --all-packages
 ```
 
 ### Data Requirements
@@ -20,9 +20,11 @@ All examples use the sample flight data in `data/`:
 
 For BADA3 and BADA4 models, you need a license from EUROCONTROL:
 1. Request a license at https://www.eurocontrol.int/model/bada
-2. Place XML files in `data/` or set `BADA_PATH` environment variable
+2. Point the `OPENLEAF_BADA3_PATH` / `OPENLEAF_BADA4_PATH` environment
+   variables at your licensed data directories (see Troubleshooting below)
 
-Without BADA data, use `--model ps` (Poll-Schumann) or `--model openap`.
+Without BADA data, use `--model ps` (all examples) or `--model openap`
+(examples 01 and 02; examples 03 and 04 accept `ps|bada3|bada4` only).
 
 ## Examples Overview
 
@@ -37,16 +39,10 @@ Without BADA data, use `--model ps` (Poll-Schumann) or `--model openap`.
 
 ### Sensitivity Analysis (Paper Section IV-A)
 
-See `experiments/scripts/sensitivity_analysis.py` - demonstrates CasADi autodiff.
-
-**Expected Results (from paper Table I):**
-
-| Model | dFF/dh (kg/s per kft) | dFF/dV (kg/s per 10kt) | dFF/dm (kg/s per tonne) |
-|-------|----------------------|------------------------|-------------------------|
-| PS | +0.070 | -0.076 | +0.039 |
-| BADA3 | +0.065 | -0.081 | +0.042 |
-| BADA4 | +0.073 | -0.072 | +0.037 |
-| OpenAP | +0.068 | -0.079 | +0.040 |
+Demonstrates CasADi autodiff. The reproduction scripts are not yet part of
+the public release; the committed reference numbers live in
+[`../experiments/README.md`](../experiments/README.md) and
+`../experiments/results/sensitivity_results.json`.
 
 ### Mass Estimation (Paper Section IV-B)
 
@@ -63,18 +59,15 @@ uv run python examples/01_mass_estimation.py --model bada3
 uv run python examples/01_mass_estimation.py --model bada4
 ```
 
-**Expected Results (from paper Table II):**
-
-| Model | Initial Mass (m0) | % of MTOW | Mean ESF | Solve Time |
-|-------|-------------------|-----------|----------|------------|
-| PS | 72,658 kg | 91.9% | 0.956 | 1.2 s |
-| BADA3 | 73,504 kg | 93.0% | 0.968 | 1.1 s |
-| BADA4 | 77,615 kg | 98.2% | 0.966 | 1.4 s |
-| OpenAP | 74,892 kg | 94.8% | 0.961 | 1.3 s |
+**Reference results:** see [`../experiments/README.md`](../experiments/README.md)
+(Table II) and `../experiments/results/mass_estimation_results.json`.
 
 **Output:** `examples/mass_estimation.png`
 
-**Note:** OpenAP is not supported for mass estimation because its `thrust_max` function requires ROCD as input, creating a circular dependency.
+**Note:** `--model openap` runs via the implicit-NLP formulation, but OpenAP
+is excluded from the paper's comparison: its `thrust_max` requires ROCD as an
+input (circular with the TEM dynamics) and reflects a different thrust
+premise, making the comparison uninformative.
 
 ### Cost Index Estimation (Paper Section IV-C)
 
@@ -91,14 +84,8 @@ uv run python examples/03_cost_index_estimation.py --model bada3
 uv run python examples/03_cost_index_estimation.py --model bada4
 ```
 
-**Expected Results (from paper Table III):**
-
-| Model | Estimated CI | Final Residual | Solve Time |
-|-------|--------------|----------------|------------|
-| PS | 14.1 kg/min | 5.84e-9 | 0.2 s |
-| BADA3 | 13.3 kg/min | 5.36e-9 | 0.2 s |
-| BADA4 | 19.7 kg/min | 9.35e-9 | 0.3 s |
-| OpenAP | 15.8 kg/min | 7.12e-9 | 0.2 s |
+**Reference results:** see [`../experiments/README.md`](../experiments/README.md)
+(Table III) and `../experiments/results/cost_index_results.json`.
 
 ### Vertical Profile Optimisation (Paper Section IV-D)
 
@@ -122,7 +109,7 @@ All examples support:
 
 | Option | Description |
 |--------|-------------|
-| `--model ps\|bada3\|bada4\|openap` | Performance model to use |
+| `--model ps\|bada3\|bada4\|openap` | Performance model (03/04: `ps\|bada3\|bada4`) |
 | `--data PATH` | Path to flight_data.json |
 | `--met PATH` | Path to met.npz |
 | `--mass VALUE` | Aircraft mass in kg |
@@ -155,9 +142,11 @@ The NLP solver couldn't converge. Try:
 - Using a different initial mass value
 - Simplifying the trajectory (fewer waypoints)
 
-### "OpenAP not supported for mass estimation"
+### OpenAP mass estimates differ from other models
 
-OpenAP's thrust model requires ROCD, which we're trying to predict. Use PS, BADA3, or BADA4 instead.
+OpenAP's `thrust_max` requires ROCD (the quantity being predicted), so the
+example solves an implicit formulation with a different thrust premise.
+Prefer PS, BADA3, or BADA4 when comparing absolute mass estimates.
 
 ## Citation
 

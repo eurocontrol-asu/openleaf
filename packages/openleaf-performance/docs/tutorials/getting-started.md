@@ -59,7 +59,7 @@ You can also instantiate models directly:
 from openleaf.performance.models.openap import OpenAPModel
 
 model = OpenAPModel("A320")
-print(model.aircraft)  # AircraftData: model, WTC, engine type
+print(model.data)      # Aircraft data: model, WTC, engine type
 print(model.limits)    # LimitsData: MTOM, VMO, MMO, HMO
 ```
 
@@ -105,7 +105,7 @@ perf = traj.with_aircraft(model)
 print(perf.drag)            # Aerodynamic drag [N]
 print(perf.thrust)          # Required thrust [N]
 print(perf.fuel_flow)       # Fuel flow [kg/s]
-print(perf.drag_coefficient)  # CD [-]
+print(perf.drag_coef)       # CD [-]
 ```
 
 The `with_aircraft` method also accepts a string shorthand:

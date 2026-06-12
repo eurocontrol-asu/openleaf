@@ -8,7 +8,7 @@
   <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/coverage.json" alt="Coverage"></a>
   <!-- Stack -->
-  <img src="https://img.shields.io/badge/python-3.12%2B-blue" alt="Python 3.11+">
+  <img src="https://img.shields.io/badge/python-3.12%2B-blue" alt="Python 3.12+">
   <img src="https://img.shields.io/badge/casadi-symbolic-orange" alt="CasADi">
   <img src="https://img.shields.io/badge/pytorch-supported-red" alt="PyTorch">
   <img src="https://img.shields.io/badge/jax-supported-green" alt="JAX">
@@ -30,7 +30,7 @@ A modular, differentiable aircraft performance modeling framework supporting BAD
 
 - **Unified ICAO Interface**: Initialize any aircraft model with just an ICAO code (e.g., `PSModel("A320")`)
 - **Multi-Model Support**: BADA3, BADA4, Poll-Schumann, and OpenAP aircraft performance models
-- **Multi-Backend**: Write once, run anywhere with NumPy, PyTorch, JAX, CuPy, or CasADi arrays via the [Array API Standard](https://data-apis.org/array-api/latest/). All model functions (`drag_coef`, `thrust_max`, `thrust_min`, `fuel_flow`, `fuel_flow_min`) are tested across all backends and aircraft types (jet, turboprop, piston)
+- **Multi-Backend**: Write once, run anywhere with NumPy, PyTorch, JAX, or CasADi arrays via the [Array API Standard](https://data-apis.org/array-api/latest/). All model functions (`drag_coef`, `thrust_max`, `thrust_min`, `fuel_flow`, `fuel_flow_min`) are tested across all backends and aircraft types (jet, turboprop, piston)
 - **CasADi Integration**: Full symbolic differentiation support for trajectory optimization
 - **Flight Envelope Limits**: VMO, MMO, HMO, stall speeds, buffet onset, and more
 - **Modular Architecture**: Clean separation of aircraft data, engine models, and aerodynamic models
@@ -243,7 +243,7 @@ openleaf/
 │   ├── openap/            # OpenAP wrapper
 │   └── ps/                # Poll-Schumann model
 ├── numpy/                 # Multi-backend NumPy operations (Array API)
-│   ├── backends.py        # Backend detection (NumPy/PyTorch/JAX/CuPy/CasADi)
+│   ├── backends.py        # Backend detection (NumPy/PyTorch/JAX/CasADi)
 │   ├── determine_type.py  # Runtime type dispatch
 │   └── ...                # Arithmetic, trig, conditionals, etc.
 ├── physics/
@@ -289,7 +289,7 @@ See `examples/` for complete demonstrations reproducing the results in the paper
 ```bash
 uv run python examples/01_mass_estimation.py --model ps
 uv run python examples/02_fuel_flow_estimation.py --model bada4
-uv run python examples/03_cost_index_estimation.py --model openap
+uv run python examples/03_cost_index_estimation.py --model ps
 uv run python examples/04_vertical_profile_optimisation.py --model ps
 ```
 
@@ -336,7 +336,6 @@ Supported backends:
 - **NumPy** (default)
 - **PyTorch** (GPU acceleration, autodiff)
 - **JAX** (JIT compilation, autodiff)
-- **CuPy** (NVIDIA GPU)
 - **CasADi** (symbolic computation, optimization)
 
 All model functions (`drag_coef`, `thrust_max`, `thrust_min`, `fuel_flow`, `fuel_flow_min`) are tested across all backends for jet, turboprop, and piston aircraft types. This enables the same model code to work for simulation (NumPy/PyTorch/JAX) and optimization (CasADi).

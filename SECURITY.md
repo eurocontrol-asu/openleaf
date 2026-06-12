@@ -31,8 +31,9 @@ considerations include:
 
 - **File path handling**: BADA data paths are configured via environment variables and
   settings files. OpenLeaf validates paths but does not sandbox file access.
-- **Dependency supply chain**: We pin minimum versions for all dependencies and run
-  `pip-audit` in CI to detect known vulnerabilities.
+- **Dependency supply chain**: We pin minimum versions for all dependencies, lock
+  exact versions in `uv.lock`, and run a blocking `pip-audit` in CI to detect known
+  vulnerabilities.
 - **Serialization**: OpenLeaf does not use `pickle` or other unsafe deserialization.
   Model data is loaded from structured text/XML files with dedicated parsers.
 - **No network access**: OpenLeaf does not make network requests at runtime. All data
@@ -42,5 +43,6 @@ considerations include:
 
 - Keep dependencies up to date (`uv sync --upgrade`)
 - Do not expose BADA data files in public repositories (they are proprietary)
-- Use environment variables or `.secrets.toml` (excluded from version control) for
-  sensitive configuration
+- Use environment variables (e.g. `OPENLEAF_BADA3_PATH`) or the user-level settings
+  file (`~/.config/openleaf/settings.toml`, outside any repository) for paths to
+  licensed data; never commit such paths or data

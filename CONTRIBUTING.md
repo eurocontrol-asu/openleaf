@@ -14,7 +14,7 @@ uv run pre-commit install
 1. Create a branch: `git checkout -b feat/my-change`
 2. Make changes in the relevant package under `packages/`
 3. Run tests: `make test-all`
-4. Run lint: `make lint-all`
+4. Run lint: `make lint`
 5. Commit with conventional commits: `feat(pkg): description`
 6. Open a pull request
 

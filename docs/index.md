@@ -5,7 +5,7 @@
 </p>
 
 <h1 align="center">OpenLeaf</h1>
-<p align="center"><strong>Open-source aviation sustainability suite — performance modeling, emissions analysis, and trajectory optimization.</strong></p>
+<p align="center"><strong>Open-source aviation sustainability suite — aircraft performance modeling and trajectory optimization.</strong></p>
 
 <p align="center">
   <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -36,11 +36,12 @@
 
     [:octicons-arrow-right-24: Architecture](openleaf-performance/explanation/architecture/)
 
--   :material-chart-line:{ .lg .middle } **Emissions & Contrails**
+-   :material-chart-line:{ .lg .middle } **Fuel Burn & Beyond**
 
     ---
 
-    Fuel burn, CO2, NOx, and contrail climate impact assessment.
+    Accurate fuel-flow modeling today; CO2, NOx and contrail assessment
+    are on the project roadmap.
 
     [:octicons-arrow-right-24: Models overview](openleaf-performance/explanation/models/)
 

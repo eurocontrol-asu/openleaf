@@ -1,3 +1,7 @@
+# Install both hook types with a plain `pre-commit install`; without this the
+# conventional-commits (commit-msg) hook silently never runs.
+default_install_hook_types: [pre-commit, commit-msg]
+
 repos:
   # Ruff - linting and formatting
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -31,7 +35,9 @@ repos:
     rev: v6.0.0
     hooks:
       - id: trailing-whitespace
+        exclude: ^(LICENSES/|packages/[^/]+/LICENSES/)  # third-party texts stay byte-exact
       - id: end-of-file-fixer
+        exclude: ^(LICENSES/|packages/[^/]+/LICENSES/)
       - id: check-yaml
         args: [--unsafe]
       - id: check-added-large-files

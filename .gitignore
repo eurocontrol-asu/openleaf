@@ -93,6 +93,14 @@ packages/*/bada_data/
 bada_data/
 packages/*/data/*.xml
 packages/*/data/*/*.xml
+# BADA3 file formats (never commit licensed data, in any directory)
+*.OPF
+*.APF
+*.PTF
+*.PTD
+*.GPF
+SYNONYM.NEW
+SYNONYM.BD4
 
 # AI agent local files (personal preferences)
 .claude/

@@ -21,14 +21,14 @@
 - switch docs deployment from Cloudflare to GitHub Pages
 - rename docs workflow to GitHub Pages
 - checkout BADA data repo for performance tests
-- migrate all CI jobs to self-hosted Mandrell runner with GPU
-- install all extras (torch) for GPU tests on Mandrell
+- migrate CI jobs to a self-hosted GPU runner
+- install all extras (torch) for GPU tests
 
 ### Documentation
 
 - add initial documentation scaffolding
 - document all BADA configuration methods in README
-- add Material theme docs site aligned with axm-forge
+- add Material theme docs site
 - rewrite documentation following Diataxis framework
 - fix link paths and update docs dependencies
 - add logo, update branding, coverage badges, and docs content

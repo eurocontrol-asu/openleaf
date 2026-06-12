@@ -21,9 +21,9 @@ hide:
 
     ---
 
-    Shared types, protocols, and interfaces that form the foundation of the
-    OpenLeaf suite. Installed automatically as a dependency of
-    `openleaf-performance`.
+    Reserved for shared types, protocols, and interfaces for the OpenLeaf
+    suite. Currently a placeholder package: `openleaf-performance` does not
+    yet depend on it.
 
 </div>
 
@@ -34,6 +34,6 @@ graph TD
     classDef perf fill:#B3D4F0,stroke:#023961
     classDef core fill:#C4DFF5,stroke:#15588F
 
-    PERF["openleaf-performance<br/>Aircraft performance"]:::perf --> CORE
+    PERF["openleaf-performance<br/>Aircraft performance"]:::perf -. planned .-> CORE
     CORE["openleaf-core<br/>Shared types & interfaces"]:::core
 ```

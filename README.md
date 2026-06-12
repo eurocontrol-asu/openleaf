@@ -3,7 +3,7 @@
 </p>
 
 <h1 align="center">OpenLeaf</h1>
-<p align="center"><strong>Open-source aviation sustainability suite — performance modeling, emissions, and trajectory optimization.</strong></p>
+<p align="center"><strong>Open-source aviation sustainability suite — aircraft performance modeling and trajectory optimization.</strong></p>
 
 <p align="center">
   <a href="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml"><img src="https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
@@ -20,7 +20,7 @@ OpenLeaf provides **open-source tools for aviation sustainability research**. Th
 
 - **Modular Performance Models** — BADA 3/4, Poll-Schumann, OpenAP — all behind a unified interface with pluggable backends.
 - **Multi-Backend Computation** — NumPy, JAX, CasADi, and PyTorch via the Array API standard. From quick analysis to GPU-accelerated optimization.
-- **Emissions & Climate Impact** — Fuel burn, CO2, NOx, and contrail assessment integrated into the performance pipeline.
+- **Fuel Burn Today, Emissions Next** — accurate fuel-flow modeling now; CO2/NOx and contrail assessment are on the roadmap.
 - **Differentiable by Design** — End-to-end differentiable models for trajectory optimization with automatic differentiation.
 
 ## Packages
@@ -28,7 +28,7 @@ OpenLeaf provides **open-source tools for aviation sustainability research**. Th
 | Package | Description | Quality |
 |---|---|---|
 | [openleaf-performance](packages/openleaf-performance/) | Modular, differentiable aircraft performance modeling framework | [![cov](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/eurocontrol-asu/openleaf/gh-pages/badges/openleaf-performance/coverage.json)](https://github.com/eurocontrol-asu/openleaf/actions/workflows/ci.yml) |
-| [openleaf-core](packages/openleaf-core/) | Shared types and interfaces for the OpenLeaf suite | — |
+| [openleaf-core](packages/openleaf-core/) | Reserved for shared types and interfaces (placeholder package for now) | — |
 
 ## Quick Start
 
@@ -36,7 +36,7 @@ OpenLeaf provides **open-source tools for aviation sustainability research**. Th
 # Clone and install
 git clone https://github.com/eurocontrol-asu/openleaf.git
 cd openleaf
-uv sync --all-groups
+uv sync --all-groups --all-packages
 
 # Run all tests
 make test-all
@@ -52,7 +52,7 @@ graph TD
     classDef perf fill:#B3D4F0,stroke:#023961
     classDef core fill:#C4DFF5,stroke:#15588F
 
-    PERF["openleaf-performance<br/>Aircraft performance"]:::perf --> CORE
+    PERF["openleaf-performance<br/>Aircraft performance"]:::perf -. planned .-> CORE
     CORE["openleaf-core<br/>Shared types & interfaces"]:::core
 ```
 

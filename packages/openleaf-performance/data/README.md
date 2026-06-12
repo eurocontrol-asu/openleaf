@@ -37,8 +37,21 @@ You can still run other tests (ISA, aerodynamics, type utilities) without the BA
 pytest tests/
 
 # Run only non-BADA tests
-pytest tests/test_aero.py tests/test_isa.py tests/test_typing.py
+pytest tests/test_physics.py tests/test_numpy.py tests/test_types.py
 ```
+
+
+## Bundled Sample Data
+
+| File | Contents |
+|------|----------|
+| `flight_data.json` | One ADS-B-derived B738 trajectory (~1,100 km, callsign anonymized) used by the examples |
+| `met.npz` | Pressure-level air temperature and zonal wind sample (8 levels, 150-400 hPa) matching the trajectory |
+
+<!-- TODO(maintainers, before wider redistribution): record the exact source
+     and license/attribution of both files here (ADS-B network terms for the
+     trajectory; ERA5/Copernicus attribution if the met sample derives from
+     CDS data), or replace them with synthetic equivalents. -->
 
 ## Other Performance Models
 
