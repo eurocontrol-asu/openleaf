@@ -40,9 +40,9 @@ Without BADA data, use `--model ps` (all examples) or `--model openap`
 ### Sensitivity Analysis (Paper Section IV-A)
 
 Demonstrates CasADi autodiff. The reproduction scripts are not yet part of
-the public release; the committed reference numbers live in
-[`../experiments/README.md`](../experiments/README.md) and
-`../experiments/results/sensitivity_results.json`.
+the public release; see [`../experiments/README.md`](../experiments/README.md)
+for the experiment description. BADA-derived reference outputs are not
+redistributed in this repository.
 
 ### Mass Estimation (Paper Section IV-B)
 
@@ -60,7 +60,7 @@ uv run python examples/01_mass_estimation.py --model bada4
 ```
 
 **Reference results:** see [`../experiments/README.md`](../experiments/README.md)
-(Table II) and `../experiments/results/mass_estimation_results.json`.
+(Table II); BADA-derived outputs are not redistributed in this repository.
 
 **Output:** `examples/mass_estimation.png`
 
@@ -85,7 +85,7 @@ uv run python examples/03_cost_index_estimation.py --model bada4
 ```
 
 **Reference results:** see [`../experiments/README.md`](../experiments/README.md)
-(Table III) and `../experiments/results/cost_index_results.json`.
+(Table III); BADA-derived outputs are not redistributed in this repository.
 
 ### Vertical Profile Optimisation (Paper Section IV-D)
 

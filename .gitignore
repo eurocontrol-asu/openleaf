@@ -136,6 +136,7 @@ packages/*/examples/*.pdf
 packages/*/examples/*.ipynb
 packages/*/site/
 
-# Experiments results (large outputs)
-packages/*/experiments/results/data_quality_analysis.png
-packages/*/experiments/results/openap_thrust_comparison.png
+# Experiment results are generated locally and never committed: BADA-derived
+# outputs are subject to the BADA licence and must not be redistributed.
+packages/*/experiments/results/*.json
+packages/*/experiments/results/*.png

@@ -4,8 +4,11 @@ This directory documents the experiments from the OpenLeaf paper and carries
 their committed results (`results/*.json`).
 
 > **Note:** the reproduction scripts referenced below are not yet included in
-> the public release; they will be published separately. The committed
-> `results/*.json` files are the authoritative reference values.
+> the public release; they will be published separately. Result files are
+> generated locally into `results/` and are NOT committed: outputs derived
+> from BADA3/BADA4 are subject to the BADA licence and must not be
+> redistributed. The expected-output listings below were removed from the
+> public repository for the same reason.
 
 ## Reproduction workflow
 
@@ -45,17 +48,7 @@ uv run python experiments/scripts/run_sensitivity_analysis.py
 
 Reference condition: FL350 (10,668 m), 240 m/s TAS, 65 t, Mach ≈ 0.81.
 
-**Expected output (all 4 models):**
-
-```
-Table I summary (FL350, 240 m/s TAS, 65 t):
-Model         ∂FF/∂h       ∂FF/∂V       ∂FF/∂m
-          (kg/s/kft)  (kg/s/10kt)     (kg/s/t)
-PS            -0.000       +0.042       +0.009
-BADA3         -0.014       +0.021       +0.005
-BADA4         +0.001       +0.070       +0.008
-OpenAP        -0.010       +0.012       +0.008
-```
+_Reference output withheld from the public repository (BADA-derived)._
 
 **Results saved to:** `experiments/results/sensitivity_results.json`
 
@@ -74,14 +67,7 @@ uv run python experiments/scripts/run_mass_estimation.py
   dependency with TEM dynamics that produces a fundamentally different thrust
   premise (typical operational vs. certified maximum), making comparison uninformative.
 
-**Expected output (PS, BADA3, BADA4):**
-
-```
-Model    m0 (kg)    % MTOW    Mean ESF    Time (s)
-PS        77,366      97.9       0.896         3.6
-BADA3     77,561      99.1       0.912         0.1
-BADA4     79,016     100.0       0.879         0.2
-```
+_Reference output withheld from the public repository (BADA-derived)._
 
 **Results saved to:** `experiments/results/mass_estimation_results.json`
 
@@ -93,15 +79,7 @@ BADA4     79,016     100.0       0.879         0.2
 uv run python experiments/scripts/run_cost_index.py
 ```
 
-**Expected output (PS, BADA3, BADA4, OpenAP):**
-
-```
-Model    CI (kg/min)       Residual    Time (s)
-PS              14.1       5.84e-09         2.0
-BADA3           13.3       5.36e-09         1.6
-BADA4           19.7       9.35e-09         1.2
-OPENAP           6.1       2.80e-08         1.0
-```
+_Reference output withheld from the public repository (BADA-derived)._
 
 **Results saved to:** `experiments/results/cost_index_results.json`
 
@@ -117,15 +95,7 @@ Search range: FL250–FL410 (B738 operational envelope). Values marked ≥FL410
 indicate that the mathematical optimum lies above the aircraft's maximum
 certified altitude.
 
-**Expected output (all 4 models, masses 50/60/70 t):**
-
-```
-Table IV — Optimal altitude at Mach 0.78:
-Mass (t)        PS   BADA3   BADA4  OpenAP
-50          ≥FL410  ≥FL410  ≥FL410  ≥FL410
-60           FL388  ≥FL410   FL397  ≥FL410
-70           FL360  ≥FL410   FL364   FL395
-```
+_Reference output withheld from the public repository (BADA-derived)._
 
 BADA3 shows ≥FL410 at all masses because its parabolic drag polar has no
 wave-drag term, so ∂FF/∂h remains negative throughout the operational
@@ -141,14 +111,7 @@ envelope — the mathematical optimum is above FL450.
 uv run python experiments/scripts/run_vectorization_benchmark.py
 ```
 
-**Expected output (indicative; hardware-dependent):**
-
-```
-SUMMARY: Average speedup across batch sizes
-isa         :  274x faster with vectorization
-drag        :  160x faster with vectorization
-fuel_flow   :  211x faster with vectorization
-```
+_Reference output withheld from the public repository (BADA-derived)._
 
 **Results saved to:** `experiments/results/vectorization_benchmark.json`
 

@@ -45,13 +45,21 @@ pytest tests/test_physics.py tests/test_numpy.py tests/test_types.py
 
 | File | Contents |
 |------|----------|
-| `flight_data.json` | One ADS-B-derived B738 trajectory (~1,100 km, callsign anonymized) used by the examples |
+| `flight_data.json` | One anonymized B738 climb/cruise trajectory (~1,100 km, 140 points) used by the examples |
 | `met.npz` | Pressure-level air temperature and zonal wind sample (8 levels, 150-400 hPa) matching the trajectory |
 
-<!-- TODO(maintainers, before wider redistribution): record the exact source
-     and license/attribution of both files here (ADS-B network terms for the
-     trajectory; ERA5/Copernicus attribution if the met sample derives from
-     CDS data), or replace them with synthetic equivalents. -->
+### Provenance and licensing
+
+- **`flight_data.json`** is derived from publicly broadcast ADS-B
+  surveillance data. It has been anonymized for redistribution: it carries
+  no callsign, ICAO 24-bit address, or registration (`flight_id` is the
+  synthetic label `SAMPLE01`), and timestamps are rebased to elapsed
+  seconds from the first sample. Only the aircraft type (B738) and the
+  physical state arrays are retained, for demonstration purposes.
+- **`met.npz`** contains modified Copernicus Climate Change Service
+  information (ERA5 reanalysis) [2025]. Neither the European Commission
+  nor ECMWF is responsible for any use that may be made of the Copernicus
+  information or data it contains.
 
 ## Other Performance Models
 
