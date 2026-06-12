@@ -861,3 +861,31 @@ class TestOpenAPLimits:
         # A320 (MTOW ~78,000 kg) -> Medium
         a320 = OpenAPModel("A320")
         assert a320.wtc == "M", f"A320 should be Medium, got {a320.wtc}"
+
+
+class TestOpenAPDataHygiene:
+    """Regressions for OpenAP database field handling."""
+
+    def test_mpl_not_derived_from_fuel_volume(self):
+        """mfc is litres; mpl must be the mlw - oew payload bound instead."""
+        from openap import prop
+
+        model = OpenAPModel("A320")
+        ac = prop.aircraft("A320")
+        expected = max(float(ac["mlw"]) - float(ac["oew"]), 0.0)
+        assert model.mpl == pytest.approx(expected)
+        # The old kg-minus-litres arithmetic gave a very different number.
+        wrong = float(ac["mtow"]) - float(ac["oew"]) - float(ac["mfc"])
+        assert model.mpl != pytest.approx(wrong)
+
+    def test_null_database_field_raises_model_data_error(self):
+        """Entries with null fields (e.g. GLF6 vmo) must fail with guidance."""
+        from openap import prop
+
+        from openleaf.performance.exceptions import ModelDataError
+
+        ac = prop.aircraft("GLF6")
+        if ac.get("vmo") is not None:  # pragma: no cover - depends on openap db
+            pytest.skip("openap database now provides vmo for GLF6")
+        with pytest.raises(ModelDataError, match=r"GLF6.*vmo"):
+            OpenAPModel("GLF6")

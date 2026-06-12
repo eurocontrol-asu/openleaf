@@ -55,7 +55,7 @@ class OpenAPLimitsData(LimitsData):
 
     Attributes (OpenAP-specific):
         mlm: Maximum landing mass [kg].
-        mfc: Maximum fuel capacity [kg].
+        mfc: Maximum fuel capacity [litres] (volume, per the OpenAP database).
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -93,7 +93,7 @@ class OpenAPAircraftData(AircraftData):
         mtom: Maximum takeoff mass [kg].
         mpl: Maximum payload [kg].
         mlm: Maximum landing mass [kg].
-        mfc: Maximum fuel capacity [kg].
+        mfc: Maximum fuel capacity [litres] (volume, per the OpenAP database).
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")

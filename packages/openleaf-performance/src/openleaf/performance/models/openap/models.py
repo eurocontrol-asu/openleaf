@@ -25,6 +25,7 @@ from openleaf.performance.core.perfos import EngineModel
 from openleaf.performance.core.types import AerodynamicConfig
 from openleaf.performance.core.types import EngineType
 from openleaf.performance.core.validation import requires
+from openleaf.performance.exceptions import ModelDataError
 from openleaf.performance.logging import get_logger
 from openleaf.performance.models.openap.limits import OpenAPLimits
 from openleaf.performance.models.openap.schemas import OpenAPAerodynamicsData
@@ -380,6 +381,8 @@ class OpenAPModel(AircraftModel):
 
         Raises:
             ValueError: If aircraft not found in OpenAP database.
+            ModelDataError: If the OpenAP database entry is missing a value
+                required by openleaf (some types ship with null fields).
         """
         logger.info("Loading OpenAP model for %s", icao)
         self._model_name = icao
@@ -387,6 +390,16 @@ class OpenAPModel(AircraftModel):
         from openap import prop
 
         ac_data = prop.aircraft(icao)
+
+        def require_number(key: str) -> float:
+            """Fetch a numeric root-level field, with a clear error for nulls."""
+            value = ac_data.get(key)
+            if value is None:
+                raise ModelDataError(
+                    f"{icao}: OpenAP database entry has no value for '{key}'; "
+                    "this aircraft cannot be used with the OpenAP backend"
+                )
+            return float(value)
 
         # Determine engine type
         engine_type_map = {
@@ -397,22 +410,29 @@ class OpenAPModel(AircraftModel):
         }
         engine_type = engine_type_map.get(ac_data["engine"]["type"], EngineType.JET)
 
+        mtow = require_number("mtow")
+        oew = require_number("oew")
+        mlw = require_number("mlw")
+
         # Build data structures from OpenAP - NO DEFAULTS
         # Note: OpenAP has values at root level (lowercase) and in 'limits' (uppercase)
         aircraft_data = OpenAPAircraftData(
             model=icao,
-            wtc=self._get_wtc(ac_data["mtow"]),
+            wtc=self._get_wtc(mtow),
             engine_type=engine_type,
             n_engines=int(ac_data["engine"]["number"]),
             engine_name=ac_data["engine"]["default"],
-            vmo=float(ac_data["vmo"]),
-            mmo=float(ac_data["mmo"]),
-            hmo=float(ac_data["ceiling"]) * _FT,
-            oem=float(ac_data["oew"]),
-            mtom=float(ac_data["mtow"]),
-            mpl=float(ac_data["mtow"] - ac_data["oew"] - ac_data["mfc"]),
-            mlm=float(ac_data["mlw"]),
-            mfc=float(ac_data["mfc"]),
+            vmo=require_number("vmo"),
+            mmo=require_number("mmo"),
+            hmo=require_number("ceiling") * _FT,
+            oem=oew,
+            mtom=mtow,
+            # OpenAP provides no MZFW/max-payload; mlw - oew is the standard
+            # upper bound for payload. (Never mtow - oew - mfc: mfc is a fuel
+            # VOLUME in litres, not a mass.)
+            mpl=max(mlw - oew, 0.0),
+            mlm=mlw,
+            mfc=require_number("mfc"),
         )
 
         engine_data = OpenAPEngineData(
