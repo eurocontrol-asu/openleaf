@@ -2,7 +2,17 @@
 Structured logging for OpenLeaf using structlog.
 
 Provides structured, contextual logging for the library with configurable
-verbosity. Uses structlog for better debugging and log analysis.
+verbosity, without touching global logging state: importing openleaf never
+calls ``structlog.configure()`` nor ``logging.basicConfig()``, so host
+applications keep full control of their own logging.
+
+Behavior:
+    - If the host application has configured structlog
+      (``structlog.is_configured()``), OpenLeaf loggers flow through the
+      application's pipeline untouched.
+    - Otherwise, OpenLeaf loggers use a private, library-scoped pipeline
+      writing to stderr, filtered at WARNING by default (override with the
+      ``OPENLEAF_LOG_LEVEL`` environment variable or ``configure_logging()``).
 
 Usage:
     from openleaf.performance.logging import get_logger, configure_logging
@@ -13,7 +23,7 @@ Usage:
     logger.info("Computation complete", duration=0.5)
     logger.warning("Value exceeds limit", value=350, limit=340)
 
-    # Enable debug logging
+    # Enable debug logging (affects OpenLeaf's own loggers only)
     configure_logging(level="DEBUG")
 
     # Or use environment variable
@@ -42,8 +52,18 @@ _DEFAULT_LOG_LEVEL = "WARNING"
 _ENV_VAR = "OPENLEAF_LOG_LEVEL"
 _LOGGER_NAME = "openleaf"
 
-# Track if logging has been configured
-_logging_configured = False
+# Map structlog method names to stdlib numeric levels for filtering.
+_METHOD_LEVELS = {
+    "debug": logging.DEBUG,
+    "info": logging.INFO,
+    "msg": logging.INFO,
+    "warning": logging.WARNING,
+    "warn": logging.WARNING,
+    "error": logging.ERROR,
+    "exception": logging.ERROR,
+    "critical": logging.CRITICAL,
+    "fatal": logging.CRITICAL,
+}
 
 
 def _get_log_level() -> int:
@@ -52,15 +72,65 @@ def _get_log_level() -> int:
     return getattr(logging, level_name, logging.WARNING)
 
 
+# Library-scoped state. Mutated by configure_logging()/disable_logging();
+# consulted dynamically by the processors below, so level changes apply to
+# loggers that already exist.
+_state: dict[str, Any] = {
+    "level": _get_log_level(),
+    "json_format": False,
+    "colors": None,  # None = auto-detect at first render
+    "renderer": None,  # lazily built from json_format/colors
+}
+
+
+def _filter_by_level(
+    logger: Any, method_name: str, event_dict: structlog.types.EventDict
+) -> structlog.types.EventDict:
+    """Drop events below the library's current log level."""
+    if _METHOD_LEVELS.get(method_name, logging.INFO) < _state["level"]:
+        raise structlog.DropEvent
+    return event_dict
+
+
+def _render(logger: Any, method_name: str, event_dict: structlog.types.EventDict) -> str:
+    """Render with the renderer matching the current configuration."""
+    renderer = _state["renderer"]
+    if renderer is None:
+        if _state["json_format"]:
+            renderer = structlog.processors.JSONRenderer()
+        else:
+            colors = _state["colors"]
+            if colors is None:
+                colors = sys.stderr.isatty()
+            renderer = structlog.dev.ConsoleRenderer(colors=colors)
+        _state["renderer"] = renderer
+    return renderer(logger, method_name, event_dict)
+
+
+_PROCESSORS: list[structlog.types.Processor] = [
+    _filter_by_level,
+    structlog.contextvars.merge_contextvars,
+    structlog.processors.add_log_level,
+    structlog.processors.StackInfoRenderer(),
+    structlog.dev.set_exc_info,
+    structlog.processors.TimeStamper(fmt="iso"),
+    _render,
+]
+
+
 def configure_logging(
     level: str | int | None = None,
     json_format: bool = False,
     colors: bool | None = None,
 ) -> None:
-    """Configure structured logging for OpenLeaf.
+    """Configure OpenLeaf's library-scoped logging.
 
-    This function sets up structlog with sensible defaults. Call it once
-    at application startup, or let it auto-configure on first logger use.
+    This adjusts only OpenLeaf's own loggers. It deliberately does NOT call
+    ``structlog.configure()`` or ``logging.basicConfig()`` — a library must
+    not reconfigure the host application's logging. If your application has
+    configured structlog globally, OpenLeaf loggers use the application's
+    pipeline and this function only records the requested level for the
+    fallback pipeline.
 
     Args:
         level: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL) or None
@@ -74,66 +144,24 @@ def configure_logging(
         >>> configure_logging(level="DEBUG")
         >>> configure_logging(level="INFO", json_format=True)
     """
-    global _logging_configured
-
-    # Determine log level
     if level is None:
-        numeric_level = _get_log_level()
+        _state["level"] = _get_log_level()
     elif isinstance(level, str):
-        numeric_level = getattr(logging, level.upper(), logging.WARNING)
+        _state["level"] = getattr(logging, level.upper(), logging.WARNING)
     else:
-        numeric_level = level
+        _state["level"] = level
 
-    # Auto-detect colors
-    if colors is None:
-        colors = sys.stderr.isatty()
-
-    # Configure processors based on output format
-    shared_processors: list[structlog.types.Processor] = [
-        structlog.contextvars.merge_contextvars,
-        structlog.processors.add_log_level,
-        structlog.processors.StackInfoRenderer(),
-        structlog.dev.set_exc_info,
-        structlog.processors.TimeStamper(fmt="iso"),
-    ]
-
-    if json_format:
-        # JSON output for production/log aggregation
-        processors = [
-            *shared_processors,
-            structlog.processors.JSONRenderer(),
-        ]
-    else:
-        # Human-readable console output
-        processors = [
-            *shared_processors,
-            structlog.dev.ConsoleRenderer(colors=colors),
-        ]
-
-    # Configure structlog
-    structlog.configure(
-        processors=processors,  # type: ignore[arg-type]
-        wrapper_class=structlog.make_filtering_bound_logger(numeric_level),
-        context_class=dict,
-        logger_factory=structlog.PrintLoggerFactory(),
-        cache_logger_on_first_use=True,
-    )
-
-    # Also configure stdlib logging for any third-party libraries
-    logging.basicConfig(
-        format="%(message)s",
-        stream=sys.stderr,
-        level=numeric_level,
-    )
-
-    _logging_configured = True
+    _state["json_format"] = json_format
+    _state["colors"] = colors
+    _state["renderer"] = None  # rebuild lazily with the new settings
 
 
-def get_logger(name: str | None = None, **initial_context: Any) -> structlog.BoundLogger:
+def get_logger(name: str | None = None, **initial_context: Any) -> Any:
     """Get a structured logger for OpenLeaf modules.
 
-    Returns a structlog bound logger with optional initial context.
-    The logger supports structured key-value logging.
+    Returns a structlog bound logger with optional initial context. If the
+    host application has configured structlog, the application's pipeline is
+    used; otherwise a library-scoped stderr pipeline (WARNING by default).
 
     Args:
         name: Logger name. Typically __name__ of the calling module.
@@ -141,7 +169,7 @@ def get_logger(name: str | None = None, **initial_context: Any) -> structlog.Bou
         **initial_context: Initial context to bind to the logger.
 
     Returns:
-        Configured structlog BoundLogger instance.
+        Configured structlog bound logger instance.
 
     Example:
         >>> logger = get_logger(__name__)
@@ -153,21 +181,21 @@ def get_logger(name: str | None = None, **initial_context: Any) -> structlog.Bou
         >>> logger = get_logger(__name__, aircraft="A320")
         >>> logger.info("Computing drag")  # aircraft="A320" included automatically
     """
-    global _logging_configured
-
-    # Auto-configure on first use
-    if not _logging_configured:
-        configure_logging()
-
-    # Get or create logger
     if name is None:
         name = _LOGGER_NAME
     elif not name.startswith(_LOGGER_NAME):
         name = f"{_LOGGER_NAME}.{name}"
 
-    logger = structlog.get_logger(name)
+    if structlog.is_configured():
+        # Respect the application's structlog configuration.
+        logger = structlog.get_logger(name)
+    else:
+        # Library-scoped fallback: never touches global structlog/stdlib state.
+        logger = structlog.wrap_logger(
+            structlog.PrintLogger(file=sys.stderr),
+            processors=_PROCESSORS,
+        ).bind(logger=name)
 
-    # Bind initial context if provided
     if initial_context:
         logger = logger.bind(**initial_context)
 
@@ -180,7 +208,7 @@ def disable_logging() -> None:
     Useful for library users who don't want any output.
     Sets the log level to CRITICAL+1 to suppress all messages.
     """
-    configure_logging(level=logging.CRITICAL + 1)
+    _state["level"] = logging.CRITICAL + 1
 
 
 def enable_logging(level: str = "WARNING") -> None:

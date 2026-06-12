@@ -256,6 +256,17 @@ def show_config() -> None:
     console.print(table)
 
 
+def _toml_string(value: str) -> str:
+    """Serialize *value* as a TOML basic string.
+
+    Backslashes and double quotes must be escaped: interpolating a Windows
+    path like ``C:\\Users\\x`` verbatim produces invalid TOML escape
+    sequences and makes the settings file unreadable on the next load.
+    """
+    escaped = value.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
 def _insert_key_in_section(lines: list[str], section: str, key: str, value: str) -> list[str]:
     """Insert a key into the specified section of config lines."""
     result: list[str] = []
@@ -264,14 +275,14 @@ def _insert_key_in_section(lines: list[str], section: str, key: str, value: str)
 
     for line in lines:
         if not inserted and section_found and line.strip().startswith("["):
-            result.append(f'{key} = "{value}"')
+            result.append(f"{key} = {_toml_string(value)}")
             inserted = True
         result.append(line)
         if not inserted and line.strip() == f"[{section}]":
             section_found = True
 
     if not inserted and section_found:
-        result.append(f'{key} = "{value}"')
+        result.append(f"{key} = {_toml_string(value)}")
 
     return result
 
@@ -291,7 +302,7 @@ def _update_config_file(section: str, key: str, value: str) -> None:
         if in_section and not key_found:
             stripped = line.lstrip("# ").strip()
             if stripped.startswith(f"{key} =") or stripped.startswith(f"{key}="):
-                new_lines.append(f'{key} = "{value}"')
+                new_lines.append(f"{key} = {_toml_string(value)}")
                 key_found = True
                 continue
 
@@ -300,7 +311,11 @@ def _update_config_file(section: str, key: str, value: str) -> None:
     if not key_found:
         new_lines = _insert_key_in_section(new_lines, section, key, value)
 
-    config_file.write_text("\n".join(new_lines) + "\n")
+    # Write atomically (temp file + rename) so a crash or a concurrent
+    # reader never observes a truncated/partial settings file.
+    tmp_file = config_file.with_name(config_file.name + ".tmp")
+    tmp_file.write_text("\n".join(new_lines) + "\n")
+    tmp_file.replace(config_file)
 
     # Reload settings to pick up the change
     _reload_settings()

@@ -85,3 +85,29 @@ def test_multiple_sections_only_target_modified(config_file: Path) -> None:
     assert lines[a_idx + 1] == 'key = "a_val"'
     assert lines[b_idx + 1] == 'key = "updated"'
     assert lines[c_idx + 1] == 'key = "c_val"'
+
+
+def test_backslash_value_stays_valid_toml(config_file: Path) -> None:
+    """Windows-style paths must be escaped; the file must reload cleanly."""
+    import tomllib
+
+    config_file.write_text("[section]\n")
+    _update_config_file("section", "path", "C:\\Users\\test\\bada3")
+    loaded = tomllib.loads(config_file.read_text())
+    assert loaded["section"]["path"] == "C:\\Users\\test\\bada3"
+
+
+def test_quote_in_value_stays_valid_toml(config_file: Path) -> None:
+    import tomllib
+
+    config_file.write_text("[section]\n")
+    _update_config_file("section", "path", 'dir with "quotes"')
+    loaded = tomllib.loads(config_file.read_text())
+    assert loaded["section"]["path"] == 'dir with "quotes"'
+
+
+def test_write_is_atomic_no_temp_left_behind(config_file: Path) -> None:
+    config_file.write_text('[section]\nkey = "old"\n')
+    _update_config_file("section", "key", "new")
+    assert not config_file.with_name(config_file.name + ".tmp").exists()
+    assert 'key = "new"' in config_file.read_text()
