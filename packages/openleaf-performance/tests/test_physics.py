@@ -276,6 +276,42 @@ class TestAircraftAirspeed:
 
         assert np.isclose(cas, cas_back, rtol=1e-5)
 
+    def test_sea_level_cas_equals_tas_equals_mach_speed(self, sea_level_state):
+        """At sea-level ISA, CAS, TAS and Mach*a0 are the same speed by definition.
+
+        Absolute-value regression guard for the CAS<->Mach compressibility
+        coefficient. The round-trip tests stay green even when both conversion
+        directions share an offsetting error (a factor of sqrt(gamma) here), so
+        the sea-level identity is asserted explicitly: it is exact ground truth.
+        """
+        a0 = float(np.sqrt(isa.GAMMA * isa.R * isa.TAU_SL))
+
+        # CAS in -> TAS/Mach out: at sea level TAS must equal the input CAS.
+        from_cas = AircraftAirspeed(**sea_level_state, cas=150.0)
+        assert np.isclose(float(from_cas.true_airspeed), 150.0, rtol=1e-6)
+        assert np.isclose(float(from_cas.mach_number), 150.0 / a0, rtol=1e-6)
+
+        # Mach in -> CAS out: at sea level CAS must equal TAS = Mach * a0.
+        from_mach = AircraftAirspeed(**sea_level_state, mach=0.8)
+        assert np.isclose(float(from_mach.true_airspeed), 0.8 * a0, rtol=1e-6)
+        assert np.isclose(float(from_mach.calibrated_airspeed), 0.8 * a0, rtol=1e-6)
+
+    def test_calibrated_airspeed_matches_compressible_reference(self, cruise_state):
+        """CAS at altitude matches the standard subsonic compressible relation."""
+        airspeed = AircraftAirspeed(**cruise_state, v=250.0)
+        cas = float(airspeed.calibrated_airspeed)
+
+        # At altitude CAS is well below TAS (lower density).
+        assert cas < 250.0
+
+        # Independent textbook reference via the impact pressure qc.
+        gamma, mu = isa.GAMMA, isa.MU
+        p, p0, rho0 = cruise_state["p"], isa.P_SL, isa.RHO_SL
+        mach = 250.0 / float(np.sqrt(gamma * isa.R * cruise_state["T"]))
+        qc = p * ((1 + 0.5 * (gamma - 1.0) * mach**2) ** (gamma / (gamma - 1.0)) - 1)
+        cas_ref = float(np.sqrt((2 / mu) * (p0 / rho0) * ((qc / p0 + 1) ** mu - 1)))
+        assert np.isclose(cas, cas_ref, rtol=1e-9)
+
     def test_mach_increases_with_altitude(self):
         """Test that same TAS gives higher Mach at altitude (colder air)."""
         tas = 250.0

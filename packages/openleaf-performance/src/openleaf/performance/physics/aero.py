@@ -236,7 +236,9 @@ class AircraftAirspeed:
             return self._tas / self._a
         mu = isa.MU
         qc_p0 = (1 + 0.5 * mu * self._cas**2 * isa.RHO_SL / isa.P_SL) ** (1 / mu) - 1
-        return np.sqrt((2 / mu) * ((1 + qc_p0 * isa.P_SL / self.p) ** mu - 1))
+        # Mach from impact-pressure ratio: coefficient is 2/(gamma-1), NOT 2/mu.
+        # mu = (gamma-1)/gamma; using 2/mu here overestimates Mach by sqrt(gamma).
+        return np.sqrt((2.0 / (isa.GAMMA - 1.0)) * ((1 + qc_p0 * isa.P_SL / self.p) ** mu - 1))
 
     @cached_property
     def true_airspeed(self) -> ArrayScalarLike:
@@ -247,6 +249,8 @@ class AircraftAirspeed:
     def calibrated_airspeed(self) -> ArrayScalarLike:
         """Convert to calibrated airspeed."""
         mu = isa.MU
-        qc_p = (1 + 0.5 * mu * self.mach_number**2) ** (1 / mu) - 1
+        # Impact-pressure ratio from Mach: coefficient is 0.5*(gamma-1), NOT 0.5*mu.
+        # (The outer 2/mu * P_SL/RHO_SL term is correct: it carries a0^2 = gamma*P_SL/RHO_SL.)
+        qc_p = (1 + 0.5 * (isa.GAMMA - 1.0) * self.mach_number**2) ** (1 / mu) - 1
         qc_p0 = qc_p * self.p / isa.P_SL
         return np.sqrt((2 / mu) * (isa.P_SL / isa.RHO_SL) * ((1 + qc_p0) ** mu - 1))
