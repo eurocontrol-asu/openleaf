@@ -14,19 +14,37 @@ __all__ = [
     "is_data_structured",
 ]
 
+from typing import TYPE_CHECKING
 from typing import Literal
 
-import casadi as _cas
 import numpy as _onp
 from scipy import interpolate as _interpolate
 
+
+if TYPE_CHECKING:
+    import casadi as _cas
+else:
+    try:
+        import casadi as _cas
+    except ImportError:  # casadi is an optional backend: openleaf-performance[casadi]
+        _cas = None
+
 from openleaf.performance.numpy.array import array
-from openleaf.performance.numpy.array import zeros_like
 from openleaf.performance.numpy.conditionals import where
 from openleaf.performance.numpy.determine_type import is_casadi_type
 from openleaf.performance.numpy.logicals import all
 from openleaf.performance.numpy.logicals import any
 from openleaf.performance.numpy.logicals import logical_or
+
+
+def _require_casadi() -> None:
+    """Raise a helpful error when an operation needs the optional casadi backend."""
+    if _cas is None:
+        raise ImportError(
+            "This operation requires the optional dependency 'casadi' "
+            "(needed for CasADi symbolic inputs and for interpn(method='bspline')). "
+            "Install it with: pip install openleaf-performance[casadi]"
+        )
 
 
 def interp(x, xp, fp, left=None, right=None, period=None):
@@ -44,14 +62,22 @@ def interp(x, xp, fp, left=None, right=None, period=None):
         return _onp.interp(x=x, xp=xp, fp=fp, left=left, right=right, period=period)
 
     else:
+        _require_casadi()
+
         ### Handle period argument
         if period is not None:
-            if any(logical_or(xp < 0, xp > period)):
+            # xp's range can only be validated when it holds numeric values; a
+            # fully symbolic xp cannot be inspected at graph-construction time.
+            xp_is_symbolic = is_casadi_type(xp, recursive=False) and not isinstance(xp, _cas.DM)
+            if not xp_is_symbolic and any(logical_or(xp < 0, xp > period)):
                 raise NotImplementedError(
                     "Haven't yet implemented handling for if xp is outside the period."
                 )  # Not easy to implement because casadi doesn't have a sort feature.
 
-            x = _cas.fmod(x, period)
+            # Wrap x into [0, period) like numpy.interp. A single fmod keeps the
+            # dividend's sign, which would send negative x below xp[0] instead
+            # of wrapping it to the top of the period.
+            x = _cas.fmod(_cas.fmod(x, period) + period, period)
 
         ### Make sure x isn't an int
         if isinstance(x, int):
@@ -195,7 +221,15 @@ def _clamp_bounds(
     axis_max: list[float],
     n_dimensions: int,
 ) -> _onp.ndarray:
-    """Clamp xi to the grid domain (fill_value=None behavior)."""
+    """Clamp xi to the grid domain (fill_value=None behavior).
+
+    Operates on a copy: xi may be (a view of) the caller's own array, and the
+    per-axis assignments below would otherwise write through into it.
+    """
+    if is_casadi_type(xi, recursive=False):
+        xi = type(xi)(xi)
+    else:
+        xi = _onp.array(xi, dtype=float)
     for axis in range(n_dimensions):
         xi[:, axis] = where(
             xi[:, axis] > axis_max[axis],
@@ -268,10 +302,7 @@ def _interpn_casadi(
     fill_value: float | None,
 ) -> _onp.ndarray:
     """CasADi code path for interpn (linear and bspline methods)."""
-    # Workaround for CasADi bug with all-zero values in bspline.
-    # See: https://github.com/casadi/casadi/issues/2837
-    if method == "bspline" and all(values == 0):
-        return zeros_like(xi)
+    _require_casadi()
 
     n_dimensions = len(points)
     xi = _prepare_xi_casadi(xi, n_dimensions)
@@ -279,11 +310,22 @@ def _interpn_casadi(
     axis_min = [_onp.min(axis_values) for axis_values in points]
     axis_max = [_onp.max(axis_values) for axis_values in points]
 
-    if fill_value is None:
-        xi = _clamp_bounds(xi, axis_min, axis_max, n_dimensions)
-
+    # Bounds are checked against the points as requested, BEFORE any clamping:
+    # clamping first would make bounds_error=True unable to ever raise.
     if bounds_error:
         _check_bounds(xi, axis_min, axis_max, n_dimensions)
+
+    # Workaround for CasADi bug with all-zero values in bspline.
+    # See: https://github.com/casadi/casadi/issues/2837
+    # The result has one value per query point, matching the interpolator output.
+    if method == "bspline" and all(values == 0):
+        if is_casadi_type(xi, recursive=False):
+            # xi is a casadi MX/SX/DM here; all three expose .zeros()
+            return _convert_casadi_result(type(xi).zeros(xi.shape[0], 1))  # type: ignore[attr-defined]
+        return _onp.zeros(xi.shape[0])
+
+    if fill_value is None:
+        xi = _clamp_bounds(xi, axis_min, axis_max, n_dimensions)
 
     values_flattened = _onp.ravel(values, order="F")
     interpolator = _cas.interpolant("Interpolator", method, points, values_flattened)
@@ -331,7 +373,9 @@ def interpn(
         a ValueError is raised. If False, then fill_value is used.
 
         fill_value: If provided, the value to use for points outside of the interpolation domain. If None,
-        values outside the domain are extrapolated.
+        behavior depends on the code path: the NumPy/SciPy fast path ("linear"/"nearest" with NumPy inputs)
+        extrapolates like scipy.interpolate.interpn, while the CasADi path ("bspline", or CasADi inputs)
+        clamps out-of-domain points to the nearest grid edge (flat extrapolation).
 
     Returns: Interpolated values at input coordinates.
 

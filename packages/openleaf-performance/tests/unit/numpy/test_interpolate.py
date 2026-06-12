@@ -84,3 +84,67 @@ def test_convert_casadi_result_passthrough():
     result = _convert_casadi_result(mx)
 
     assert result is mx
+
+
+# ---------------------------------------------------------------------------
+# Regression tests — interpn input mutation, bounds ordering, zero workaround
+# ---------------------------------------------------------------------------
+
+
+class TestInterpnDoesNotMutateInputs:
+    """interpn must never write into the caller's xi array."""
+
+    def test_bspline_clamping_leaves_caller_xi_untouched(self):
+        points = (np.linspace(0.0, 5.0, 6), np.linspace(0.0, 4.0, 5))
+        values = np.arange(30.0).reshape(6, 5)
+        xi = np.array([[2.0, 2.0], [9.0, -3.0]])  # second point out of bounds
+        xi_before = xi.copy()
+
+        from openleaf.performance.numpy.interpolate import interpn
+
+        interpn(points, values, xi, method="bspline", bounds_error=False, fill_value=None)
+        np.testing.assert_array_equal(xi, xi_before)
+
+
+class TestInterpnBoundsErrorOrdering:
+    """bounds_error=True must raise for OOB points even when fill_value=None."""
+
+    def test_bounds_error_raises_with_fill_value_none(self):
+        points = (np.linspace(0.0, 5.0, 6), np.linspace(0.0, 4.0, 5))
+        values = np.arange(30.0).reshape(6, 5)
+        xi = np.array([[9.0, 2.0]])  # out of bounds
+
+        from openleaf.performance.numpy.interpolate import interpn
+
+        with pytest.raises(ValueError, match="out of bounds"):
+            interpn(points, values, xi, method="bspline", bounds_error=True, fill_value=None)
+
+
+class TestInterpnAllZeroBsplineShape:
+    """The all-zero bspline workaround must return one value per query point."""
+
+    def test_zero_values_result_shape(self):
+        points = (np.linspace(0.0, 5.0, 6), np.linspace(0.0, 4.0, 5))
+        values = np.zeros((6, 5))
+        xi = np.array([[2.0, 2.0], [1.0, 1.0], [3.0, 0.5]])
+
+        from openleaf.performance.numpy.interpolate import interpn
+
+        result = interpn(points, values, xi, method="bspline", bounds_error=False)
+        assert np.asarray(result).shape == (3,)
+        np.testing.assert_allclose(np.asarray(result), 0.0)
+
+
+class TestInterpPeriodNegativeX:
+    """interp(period=...) must wrap negative x like numpy.interp."""
+
+    def test_negative_x_wraps_into_period(self):
+        xp = np.array([0.0, 90.0, 180.0, 270.0])
+        fp = np.array([0.0, 1.0, 0.0, -1.0])
+        x = ca.DM([-90.0])  # casadi input forces the casadi code path
+
+        from openleaf.performance.numpy.interpolate import interp
+
+        result = float(interp(x, xp, fp, period=360.0))
+        expected = float(np.interp(-90.0, xp, fp, period=360.0))
+        assert result == pytest.approx(expected)

@@ -14,17 +14,30 @@ __all__ = [
     "is_keyed_data",
 ]
 
+from typing import TYPE_CHECKING
 from typing import Any
 from typing import Protocol
 
-import casadi as ca
 import numpy.typing as npt
 import pandas as pd
 
 
-# Extended ArrayScalarLike to include object arrays (like string arrays)
-type ArrayScalarLike = float | int | npt.NDArray | pd.Series | ca.MX | ca.SX | ca.DM
-"""Type alias for array or scalar-like objects supporting NumPy/CasADi operations."""
+if TYPE_CHECKING:
+    import casadi as ca
+else:
+    try:
+        import casadi as ca
+    except ImportError:  # casadi is an optional backend: openleaf-performance[casadi]
+        ca = None
+
+
+if TYPE_CHECKING or ca is not None:
+    # Extended ArrayScalarLike to include object arrays (like string arrays)
+    type ArrayScalarLike = float | int | npt.NDArray | pd.Series | ca.MX | ca.SX | ca.DM
+    """Type alias for array or scalar-like objects supporting NumPy/CasADi operations."""
+else:
+    type ArrayScalarLike = float | int | npt.NDArray | pd.Series
+    """Type alias for array or scalar-like objects (CasADi backend not installed)."""
 
 
 class KeyedData(Protocol):
