@@ -1106,3 +1106,111 @@ class TestBADA4LimitsSymbolic:
         grad = np.array(f(65000.0, 0)).flatten()
 
         assert np.all(np.isfinite(grad)), "Gradients should be finite"
+
+
+class TestBADA4DescentPTDValidation:
+    """Validate idle (LIDL) thrust against the official PTD descent tables.
+
+    Counterpart of the BADA3 descent validation: the climb-only PTD checks
+    never exercised the idle rating. BADA4 parses coefficients from named
+    XML elements (no positional-column risk like the BADA3 OPF format);
+    this pins the LIDL polynomial end-to-end against EUROCONTROL's own
+    reference values — including the regime where idle thrust is NEGATIVE
+    (ram drag exceeding gross thrust, e.g. A320-212: -4,259 N at FL30).
+
+    Rows below FL30 are excluded: the tables switch to approach/landing
+    configurations there (explicit Conf column), while thrust_min models
+    the clean-configuration idle rating.
+
+    Tolerance note: idle thrust is O(1-8 kN), so the PTD's own rounding
+    (Mach printed to 3 decimals contributes up to ~±19 N; thrust itself is
+    rounded to 1 N) sets a noise floor around 0.4% — hence the looser
+    bounds than the climb validations, which compare O(100 kN) values.
+    """
+
+    @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
+    def test_a320_descent_thrust_matches_ptd(self, bada4_model, bada4_ptd, mass_category):
+        section = bada4_ptd.get_section(mass_category, "descent")
+        if section is None:
+            pytest.skip(f"No {mass_category} mass descent section in PTD")
+
+        checked = 0
+        for row in section.rows:
+            if row.fl < 30:
+                continue
+            altitude = row.fl * 100 * FT
+            state = {
+                **get_atm_state(altitude),
+                "true_airspeed": row.tas * KT,
+                "mach_number": row.mach,
+                "engine_setting": EngineSetting.LIDL,
+                "delta_isa": 0.0,
+            }
+            thrust_model = bada4_model.engine.thrust_min(state)
+            # rel/abs per the rounding-noise floor documented in the class docstring
+            assert thrust_model == pytest.approx(row.thrust, rel=0.005, abs=25.0), (
+                f"FL{row.fl} {mass_category}: idle thrust {thrust_model:.0f} N != "
+                f"PTD {row.thrust:.0f} N"
+            )
+            checked += 1
+        assert checked > 0, "No descent rows at/above FL30 found in PTD"
+
+    @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
+    def test_at72_descent_thrust_matches_ptd(
+        self, bada4_turboprop_model, bada4_at72_ptd, mass_category
+    ):
+        section = bada4_at72_ptd.get_section(mass_category, "descent")
+        if section is None:
+            pytest.skip(f"No {mass_category} mass descent section in PTD")
+
+        checked = 0
+        for row in section.rows:
+            if row.fl < 30:
+                continue
+            altitude = row.fl * 100 * FT
+            state = {
+                **get_atm_state(altitude),
+                "true_airspeed": row.tas * KT,
+                "mach_number": row.mach,
+                "engine_setting": EngineSetting.LIDL,
+                "delta_isa": 0.0,
+            }
+            thrust_model = bada4_turboprop_model.engine.thrust_min(state)
+            assert thrust_model == pytest.approx(
+                row.thrust, rel=PROPELLER_THRUST_TOLERANCE, abs=25.0
+            ), (
+                f"FL{row.fl} {mass_category}: idle thrust {thrust_model:.0f} N != "
+                f"PTD {row.thrust:.0f} N"
+            )
+            checked += 1
+        assert checked > 0, "No descent rows at/above FL30 found in PTD"
+
+    @pytest.mark.parametrize("mass_category", ["low", "medium", "high"])
+    def test_sr20_descent_thrust_matches_ptd(
+        self, bada4_piston_model, bada4_sr20_ptd, mass_category
+    ):
+        section = bada4_sr20_ptd.get_section(mass_category, "descent")
+        if section is None:
+            pytest.skip(f"No {mass_category} mass descent section in PTD")
+
+        checked = 0
+        for row in section.rows:
+            if row.fl < 30:
+                continue
+            altitude = row.fl * 100 * FT
+            state = {
+                **get_atm_state(altitude),
+                "true_airspeed": row.tas * KT,
+                "mach_number": row.mach,
+                "engine_setting": EngineSetting.LIDL,
+                "delta_isa": 0.0,
+            }
+            thrust_model = bada4_piston_model.engine.thrust_min(state)
+            assert thrust_model == pytest.approx(
+                row.thrust, rel=PROPELLER_THRUST_TOLERANCE, abs=25.0
+            ), (
+                f"FL{row.fl} {mass_category}: idle thrust {thrust_model:.0f} N != "
+                f"PTD {row.thrust:.0f} N"
+            )
+            checked += 1
+        assert checked > 0, "No descent rows at/above FL30 found in PTD"
