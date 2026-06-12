@@ -14,7 +14,7 @@ jobs:
     name: Generate Changelog & Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           fetch-depth: 0
 
@@ -36,7 +36,7 @@ jobs:
           echo "tag-prefix=${PREFIX}" >> "$GITHUB_OUTPUT"
 
       - name: Generate changelog
-        uses: orhun/git-cliff-action@v4
+        uses: orhun/git-cliff-action@f50e11560dce63f7c33227798f90b924471a88b5 # v4
         id: git-cliff
         with:
           config: ${{ steps.detect.outputs.package-dir }}/pyproject.toml
@@ -49,7 +49,7 @@ jobs:
           OUTPUT: CHANGELOG.md
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
         with:
           body: ${{ steps.git-cliff.outputs.content }}
           token: ${{ secrets.GITHUB_TOKEN }}
