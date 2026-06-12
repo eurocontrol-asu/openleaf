@@ -1,3 +1,9 @@
+# SPDX-License-Identifier: EUPL-1.2 AND MIT
+# Copyright (c) 2026 EUROCONTROL
+#
+# Portions derived from AeroSandbox (https://github.com/peterdsharpe/AeroSandbox)
+# Copyright (c) 2019-2023 Peter Sharpe - MIT License (see LICENSES/MIT-aerosandbox.txt)
+
 """
 Type detection utilities for handling different array backends.
 

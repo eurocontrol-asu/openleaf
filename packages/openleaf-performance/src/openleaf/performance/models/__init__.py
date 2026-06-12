@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Aircraft performance models implementation.
 
 Available models:

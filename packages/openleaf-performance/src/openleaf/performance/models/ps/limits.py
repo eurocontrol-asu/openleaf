@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Poll-Schumann aircraft limitations model.
 
 Provides the PSLimits class implementing altitude-dependent Mach limits

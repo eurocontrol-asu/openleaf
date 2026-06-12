@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Shared helpers for BADA synonym resolution."""
 
 from __future__ import annotations

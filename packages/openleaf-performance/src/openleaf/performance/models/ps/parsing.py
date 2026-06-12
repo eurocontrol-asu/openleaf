@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Poll-Schumann (PS) data loading from pycontrails.
 
 This module handles loading aircraft parameters from the pycontrails

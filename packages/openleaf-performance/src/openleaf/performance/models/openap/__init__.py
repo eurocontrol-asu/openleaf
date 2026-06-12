@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """OpenAP aircraft performance model wrapper.
 
 This module wraps the OpenAP library to provide aircraft performance

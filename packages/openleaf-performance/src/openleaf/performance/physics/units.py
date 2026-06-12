@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Unit conversion constants and functions.
 
 Provides a centralized location for all unit conversions and physical constants

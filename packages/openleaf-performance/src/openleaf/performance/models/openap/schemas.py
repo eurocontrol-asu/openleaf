@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """OpenAP data structures and schemas.
 
 Provides typed Pydantic data classes for OpenAP aircraft performance data.

@@ -7,7 +7,8 @@ name = "openleaf-core"
 version = "0.1.0"
 description = "Shared types and interfaces for the OpenLeaf aviation sustainability suite"
 readme = "README.md"
-license = { text = "EUPL-1.2" }
+license = "EUPL-1.2"
+license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.12"
 authors = [{ name = "Ramon DALMAU", email = "ramon.dalmau-codina@eurocontrol.int" }]
 dependencies = []

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Common utilities shared across aircraft performance models.
 
 This module provides shared utilities and helpers used by multiple models

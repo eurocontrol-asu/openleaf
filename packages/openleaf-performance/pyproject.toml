@@ -7,7 +7,8 @@ name = "openleaf-performance"
 dynamic = ["version"]
 description = "A modular, differentiable aircraft performance modeling framework supporting BADA, Poll-Schumann, OpenAP and more"
 readme = "README.md"
-license = { text = "EUPL-1.2" }
+license = "EUPL-1.2"
+license-files = ["LICENSE", "NOTICE", "LICENSES/*"]
 requires-python = ">=3.12"
 authors = [
     { name = "Ramon DALMAU", email = "ramon.dalmau-codina@eurocontrol.int" },
@@ -27,7 +28,6 @@ keywords = [
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: European Union Public Licence 1.2 (EUPL 1.2)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",

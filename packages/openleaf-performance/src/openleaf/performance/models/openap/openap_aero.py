@@ -1,3 +1,10 @@
+# SPDX-License-Identifier: LGPL-3.0-only
+#
+# Derived from OpenAP's aero module (https://github.com/junzis/openap)
+# Copyright (c) Junzi Sun / TU Delft - GNU LGPL v3 (see LICENSES/LGPL-3.0.txt).
+# Modified by EUROCONTROL (2026) for multi-backend (NumPy/CasADi) dispatch; this
+# file remains available under the LGPL-3.0.
+
 """OpenAP-compatible aero module using openleaf.performance.numpy.
 
 This module provides the same API as `openap.aero` but uses `openleaf.performance.numpy`

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """OpenAP aircraft limitations model.
 
 Provides the OpenAPLimits class implementing constant operational limits

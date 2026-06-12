@@ -1,0 +1,32 @@
+OpenLeaf
+Copyright (c) 2026 EUROCONTROL
+
+Licensed under the European Union Public Licence v1.2 (EUPL-1.2);
+see the LICENSE file.
+
+This product includes software developed by third parties:
+
+* packages/openleaf-performance/src/openleaf/performance/numpy/
+  (arithmetic_monadic.py, array.py, conditionals.py, determine_type.py,
+  interpolate.py, logicals.py, trig.py) — portions derived from
+  AeroSandbox (https://github.com/peterdsharpe/AeroSandbox),
+  Copyright (c) 2019-2023 Peter Sharpe, MIT License.
+  See LICENSES/MIT-aerosandbox.txt.
+
+* packages/openleaf-performance/src/openleaf/performance/models/ps/ps_physics.py
+  — derived from pycontrails (https://github.com/contrailcirrus/pycontrails),
+  Copyright (c) 2021-present Contrails.org and the Breakthrough Energy
+  Foundation, Apache License 2.0. See LICENSES/Apache-2.0.txt; the upstream
+  NOTICE file is reproduced in LICENSES/NOTICE-pycontrails.txt per
+  Apache-2.0 section 4(d).
+
+* packages/openleaf-performance/src/openleaf/performance/models/openap/openap_aero.py
+  — derived from OpenAP (https://github.com/junzis/openap),
+  Copyright (c) Junzi Sun / TU Delft, GNU Lesser General Public License v3.0.
+  That file remains available under LGPL-3.0; see LICENSES/LGPL-3.0.txt
+  (which incorporates the GNU GPL v3, included as LICENSES/GPL-3.0.txt).
+
+OpenLeaf also uses third-party libraries installed as separate
+distributions (numpy, scipy, pandas, pydantic, structlog, rich, and
+optionally casadi (LGPL-3.0), openap (LGPL-3.0), pycontrails (Apache-2.0),
+jax, torch). Those projects' own licenses apply to their distributions.

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """BADA3 aircraft limitations model.
 
 Provides the BADA3LimitsModel class implementing aircraft operational limits

@@ -1,3 +1,12 @@
+# SPDX-License-Identifier: EUPL-1.2 AND Apache-2.0
+# Copyright (c) 2026 EUROCONTROL
+#
+# Derived from pycontrails (https://github.com/contrailcirrus/pycontrails)
+# Copyright (c) 2021-present Contrails.org and the Breakthrough Energy Foundation
+# Licensed under the Apache License, Version 2.0 (see LICENSES/Apache-2.0.txt and
+# LICENSES/NOTICE-pycontrails.txt). Modified by EUROCONTROL (2026): refactored into
+# standalone functions and vectorized for multi-backend (NumPy/CasADi) dispatch.
+
 """Poll-Schumann (PS) physics and aerodynamics functions.
 
 This module contains the physics-based functions specific to the Poll-Schumann

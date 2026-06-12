@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Configuration selection utilities shared across models.
 
 This module provides the ConfigurationSelector protocol and common helpers

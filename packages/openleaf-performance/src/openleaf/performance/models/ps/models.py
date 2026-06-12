@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Poll-Schumann (PS) aircraft performance models.
 
 Provides engine, aerodynamic, and aircraft models for PS aircraft

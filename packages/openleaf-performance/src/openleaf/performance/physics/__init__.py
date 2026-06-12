@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Physics utilities including ISA atmosphere, aerodynamic conversions, and unit conversions."""
 
 from __future__ import annotations

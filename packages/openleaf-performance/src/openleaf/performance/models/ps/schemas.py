@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Poll-Schumann (PS) data structures.
 
 Provides typed data classes for PS aircraft parameters following

@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: EUPL-1.2
+# Copyright (c) 2026 EUROCONTROL
+
 """Core performance model interfaces and aircraft trajectory data structures."""
 
 from __future__ import annotations
