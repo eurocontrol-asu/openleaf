@@ -255,8 +255,8 @@ class TestBADA3CrossBackend:
             model = self._get_model(aircraft_type, request)
             state = _bada3_engine_state_numpy(aircraft_type)
             result = model.engine.thrust_min(state)
-            # >= 0: AT72 CTdes,high = 0.0 makes idle thrust exactly zero
-            # above Hp,des (10,241 ft); the PTD reference lists 0 N there.
+            # >= 0: the AT72 OPF has CTdes,high = 0.0, so idle thrust is
+            # exactly zero above Hp,des; the PTD reference lists 0 N there.
             assert to_float(result) >= 0
 
         def test_fuel_flow(self, aircraft_type, request):

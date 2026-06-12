@@ -18,6 +18,8 @@ try:
 except Exception:
     pytest.skip("BADA4 data not configured", allow_module_level=True)
 
+import itertools
+
 import casadi as ca
 import numpy as np
 from ptd_parser import parse_ptd_file
@@ -62,48 +64,50 @@ class TestBADA4Parsing:
 
         assert data.aircraft.engine_type == EngineType.PISTON
 
-    def test_kinematic_limits_exact(self, bada4_a320_path):
-        """Verify A320 kinematic limits match known XML values.
+    def test_kinematic_limits_distinct_fields(self, bada4_a320_path):
+        """Verify the KLM kinematic limits are parsed as distinct fields.
 
-        A320-212 KLM section:
-          VMO=350 kt, MMO=0.82, VLE=280 kt, MLE=0.67
-          VFE: HLid1=230, HLid2=215, HLid3=200, HLid4=185, HLid5=177
-
-        Tests the vle/mle case-sensitive parsing fix (was parsing 'vLE'/'mLE'
-        instead of 'vle'/'mle', returning VMO/MMO fallbacks).
+        Guards the vle/mle case-sensitive parsing fix (the parser once read
+        'vLE'/'mLE', silently falling back to VMO/MMO). Licensed values are
+        deliberately not embedded: the check is that gear-extended limits
+        are real, lower, distinct values and the VFE ladder is coherent.
         """
         data = parse_bada4_file(str(bada4_a320_path))
         kin = data.limits.kinematic
 
-        assert kin.vmo == pytest.approx(350.0), "VMO should be 350 kt"
-        assert kin.mmo == pytest.approx(0.82), "MMO should be 0.82"
-        assert kin.vle == pytest.approx(280.0), "VLE should be 280 kt (not 350=VMO)"
-        assert kin.mle == pytest.approx(0.67), "MLE should be 0.67 (not 0.82=MMO)"
-        # VFE lookup table
-        assert kin.vfe["2"] == pytest.approx(215.0), "VFE[HLid=2] should be 215 kt"
-        assert kin.vfe["3"] == pytest.approx(200.0), "VFE[HLid=3] should be 200 kt"
-        assert kin.vfe["5"] == pytest.approx(177.0), "VFE[HLid=5] should be 177 kt"
+        assert 0.0 < kin.vmo < 600.0  # plausible kt range, sanity only
+        assert 0.0 < kin.mmo < 1.0
+        # The regression: vle/mle must NOT be the VMO/MMO fallback values
+        assert kin.vle < kin.vmo, "VLE must be parsed, not the VMO fallback"
+        assert kin.mle < kin.mmo, "MLE must be parsed, not the MMO fallback"
+        # VFE lookup table: all five A320 high-lift positions present,
+        # positive, below VMO, non-increasing with deeper flap settings
+        vfe = [kin.vfe[str(i)] for i in range(1, 6)]
+        assert all(v > 0.0 for v in vfe)
+        assert all(v < kin.vmo for v in vfe)
+        assert all(a >= b for a, b in itertools.pairwise(vfe)), "VFE must not increase with HLid"
 
     def test_vfe_by_config_populated(self, bada4_a320_path):
         """Verify VFE-by-config mapping built from AeroConfSchedule.
 
-        IC config maps to HLid=2 → VFE=215 kt.
-        TO/AP config maps to HLid=3 → VFE=200 kt.
-        LD config maps to HLid=5 → VFE=177 kt.
-        CR config must NOT appear (clean, no VFE limit).
+        For the A320-212 AeroConfSchedule: IC maps to HLid=2, TO/AP to
+        HLid=3, LD to HLid=5; CR must NOT appear (clean, no VFE limit).
+        Expectations are taken from the aircraft's own parsed VFE table, so
+        no licensed values are embedded — the target is the mapping logic.
         """
         data = parse_bada4_file(str(bada4_a320_path))
-        vfe_cfg = data.limits.kinematic.vfe_by_config
+        kin = data.limits.kinematic
+        vfe_cfg = kin.vfe_by_config
 
         assert AerodynamicConfig.IC in vfe_cfg, "IC must have a VFE entry"
         assert AerodynamicConfig.TO in vfe_cfg, "TO must have a VFE entry"
         assert AerodynamicConfig.AP in vfe_cfg, "AP must have a VFE entry"
         assert AerodynamicConfig.LD in vfe_cfg, "LD must have a VFE entry"
         assert AerodynamicConfig.CR not in vfe_cfg, "CR must NOT have VFE (clean)"
-        assert vfe_cfg[AerodynamicConfig.IC] == pytest.approx(215.0)
-        assert vfe_cfg[AerodynamicConfig.TO] == pytest.approx(200.0)
-        assert vfe_cfg[AerodynamicConfig.AP] == pytest.approx(200.0)
-        assert vfe_cfg[AerodynamicConfig.LD] == pytest.approx(177.0)
+        assert vfe_cfg[AerodynamicConfig.IC] == pytest.approx(kin.vfe["2"])
+        assert vfe_cfg[AerodynamicConfig.TO] == pytest.approx(kin.vfe["3"])
+        assert vfe_cfg[AerodynamicConfig.AP] == pytest.approx(kin.vfe["3"])
+        assert vfe_cfg[AerodynamicConfig.LD] == pytest.approx(kin.vfe["5"])
 
     def test_cl_max_config_populated(self, bada4_a320_path):
         """Verify CL_max by configuration is correctly parsed from BLM section.
@@ -149,22 +153,26 @@ class TestBADA4Parsing:
             surface_area=data.aero.surface_area,
         )
 
-        # CR (clean): must return VMO=350
+        kin = data.limits.kinematic
+
+        # CR (clean): must return VMO
         cas_cr = limits.max_cas({"aerodynamic_configuration": AerodynamicConfig.CR})
-        assert cas_cr == pytest.approx(350.0), f"CR max_cas should be VMO=350, got {cas_cr}"
+        assert cas_cr == pytest.approx(kin.vmo), f"CR max_cas should be VMO, got {cas_cr}"
 
-        # IC (HL deployed): must return VFE=215, NOT VMO=350
+        # IC (HL deployed): must return the HLid=2 VFE, NOT VMO
         cas_ic = limits.max_cas({"aerodynamic_configuration": AerodynamicConfig.IC})
-        assert cas_ic == pytest.approx(215.0), f"IC max_cas should be VFE=215, got {cas_ic}"
+        assert cas_ic == pytest.approx(kin.vfe["2"]), (
+            f"IC max_cas should be VFE[HLid=2], got {cas_ic}"
+        )
 
-        # LD (HL deployed, LG down): min(VFE=177, VLE=280) = 177
+        # LD (HL deployed, LG down): min(VFE[HLid=5], VLE)
         cas_ld = limits.max_cas({"aerodynamic_configuration": AerodynamicConfig.LD})
-        assert cas_ld == pytest.approx(177.0), (
-            f"LD max_cas should be min(VFE=177,VLE=280)=177, got {cas_ld}"
+        assert cas_ld == pytest.approx(min(kin.vfe["5"], kin.vle)), (
+            f"LD max_cas should be min(VFE[HLid=5], VLE), got {cas_ld}"
         )
 
     def test_max_mach_gear_down_uses_mle(self, bada4_a320_path):
-        """Verify max_mach for LD config returns MLE=0.67, not MMO=0.82."""
+        """Verify max_mach for LD config returns MLE, not the MMO fallback."""
         from openleaf.performance.models.bada4.limits import BADA4Limits
         from openleaf.performance.models.bada4.schemas import BADA4LimitsData
 
@@ -182,13 +190,15 @@ class TestBADA4Parsing:
             surface_area=data.aero.surface_area,
         )
 
+        kin = data.limits.kinematic
         mach_cr = limits.max_mach({"aerodynamic_configuration": AerodynamicConfig.CR})
         mach_ld = limits.max_mach({"aerodynamic_configuration": AerodynamicConfig.LD})
 
-        assert mach_cr == pytest.approx(0.82), f"CR max_mach should be MMO=0.82, got {mach_cr}"
-        assert mach_ld == pytest.approx(0.67), (
-            f"LD max_mach should be MLE=0.67 (not MMO=0.82), got {mach_ld}"
+        assert mach_cr == pytest.approx(kin.mmo), f"CR max_mach should be MMO, got {mach_cr}"
+        assert mach_ld == pytest.approx(kin.mle), (
+            f"LD max_mach should be MLE (not MMO), got {mach_ld}"
         )
+        assert mach_ld < mach_cr, "MLE must be a distinct, lower limit than MMO"
 
 
 class TestBADA4Model:
@@ -1116,7 +1126,8 @@ class TestBADA4DescentPTDValidation:
     XML elements (no positional-column risk like the BADA3 OPF format);
     this pins the LIDL polynomial end-to-end against EUROCONTROL's own
     reference values — including the regime where idle thrust is NEGATIVE
-    (ram drag exceeding gross thrust, e.g. A320-212: -4,259 N at FL30).
+    (ram drag exceeding gross thrust at idle in clean-configuration
+    descent).
 
     Rows below FL30 are excluded: the tables switch to approach/landing
     configurations there (explicit Conf column), while thrust_min models

@@ -64,61 +64,67 @@ class TestBADA3Parsing:
         assert data.aircraft.engine_type == EngineType.PISTON
         assert data.aircraft.model == "SR20__"
 
-    def test_mass_section_values_exact(self, bada3_a320_path):
-        """Verify A320 mass section values against known OPF values.
+    def test_mass_section_semantics(self, bada3_a320_path):
+        """Verify A320 mass-section parsing semantics.
 
-        OPF mass section (in tonnes):
-          reference=64t  minimum=39t  maximum=77t  max_payload=21.5t  mass_grad=0.4325 ft/kg
-
-        The 5th value is the mass gradient Gw [ft/kg], NOT a mass.
+        The OPF mass section lists four masses in tonnes (converted to kg)
+        and a 5th value that is the mass gradient Gw [ft/kg], NOT a mass.
         mmax must equal mtom (BADA3 Section 3.5: hmax defined at MTOM).
+
+        Licensed coefficient values are deliberately not embedded here;
+        field-order correctness is pinned by the synthetic fixture in
+        tests/models/bada3/test_parsing_synthetic.py.
         """
         data = parse_bada3_file(str(bada3_a320_path))
         lim = data.limits
 
-        assert lim.mref == pytest.approx(64_000.0), "mref should be 64t in kg"
-        assert lim.oem == pytest.approx(39_000.0), "oem should be 39t in kg"
-        assert lim.mtom == pytest.approx(77_000.0), "mtom should be 77t in kg"
-        assert lim.mpl == pytest.approx(21_500.0), "mpl should be 21.5t in kg"
+        # Masses converted tonnes -> kg: plausible airliner range, ordered
+        assert 10_000.0 < lim.oem < lim.mref < lim.mtom < 1_000_000.0
+        assert 0.0 < lim.mpl < lim.mtom
         # mmax must equal mtom — hmax is defined at MTOM per BADA3 Section 3.5
         assert lim.mmax == pytest.approx(lim.mtom), "mmax must equal mtom"
-        # gw comes from mass section 5th value (0.4325 ft/kg, no unit conversion)
-        assert lim.gw == pytest.approx(0.4325), "gw should be 0.4325 ft/kg"
+        # gw is a gradient [ft/kg]: a small positive number. If the parser
+        # ever treats it as a mass (tonnes -> kg conversion), this explodes.
+        assert 0.0 < lim.gw < 10.0, "gw must be parsed as ft/kg, unconverted"
 
     def test_mass_section_gw_turboprop(self, bada3_at72_path):
-        """Verify AT72 mass gradient Gw parsed correctly from mass section."""
+        """Verify AT72 mass gradient Gw parsed as a gradient, not a mass."""
         data = parse_bada3_file(str(bada3_at72_path))
         lim = data.limits
 
         assert lim.mmax == pytest.approx(lim.mtom), "mmax must equal mtom"
-        assert lim.gw == pytest.approx(0.81147), "AT72 gw should be 0.81147 ft/kg"
+        assert 0.0 < lim.gw < 10.0, "gw must be parsed as ft/kg, unconverted"
 
-    def test_max_altitude_mass_correction_exact(self, bada3_a320_path):
-        """Verify max_altitude uses gw correctly in the correction formula.
+    def test_max_altitude_mass_correction_formula(self, bada3_a320_path):
+        """Verify max_altitude applies the Gw mass correction formula.
 
-        Formula: hmax_act = min(hmo, hmax + Gt*(dTISA-CTc4) + Gw*(mmax-mact))
-        A320 values: hmax=33295, gw=0.4325, mmax=mtom=77000
-        At 70t mass reduction of 7000 kg: correction = 0.4325 * 7000 = 3027.5 ft
+        Formula: hmax_act = min(hmo, hmax + Gt*(dTISA-CTc4) + Gw*(mmax-mact)).
+        The expectation is built from the aircraft's own parsed coefficients,
+        so no licensed values are embedded in this file; the target of the
+        test is the formula in _max_altitude_impl, not the parser.
         """
         from openleaf.performance.models.bada3.limits import BADA3LimitsModel
 
         data = parse_bada3_file(str(bada3_a320_path))
-        lim = BADA3LimitsModel(data.limits)
+        lim_data = data.limits
+        lim = BADA3LimitsModel(lim_data)
 
-        # At MTOM, ISA: no corrections, should give hmax exactly
-        h_mtom = lim._max_altitude_impl(mass=77_000.0, delta_isa=0.0)
-        assert h_mtom == pytest.approx(33_295.0), "At MTOM/ISA expect hmax=33295 ft"
+        # At MTOM, ISA: no corrections — exactly the parsed hmax (capped by hmo)
+        h_mtom = lim._max_altitude_impl(mass=lim_data.mtom, delta_isa=0.0)
+        assert h_mtom == pytest.approx(min(lim_data.hmo, lim_data.hmax))
 
-        # At 70t lighter mass: +0.4325 * 7000 = +3027.5 ft
-        h_70t = lim._max_altitude_impl(mass=70_000.0, delta_isa=0.0)
-        expected = 33_295.0 + 0.4325 * 7_000.0
-        assert h_70t == pytest.approx(expected), (
-            f"Mass correction wrong: got {h_70t}, expected {expected}"
+        # At reduced mass: correction is +Gw * delta_m, still capped by HMO
+        delta_m = 0.1 * lim_data.mtom
+        h_lighter = lim._max_altitude_impl(mass=lim_data.mtom - delta_m, delta_isa=0.0)
+        expected = min(lim_data.hmo, lim_data.hmax + lim_data.gw * delta_m)
+        assert h_lighter == pytest.approx(expected), (
+            f"Mass correction wrong: got {h_lighter}, expected {expected}"
         )
+        assert h_lighter >= h_mtom
 
-        # Altitude must not exceed HMO (41000 ft)
-        h_min_mass = lim._max_altitude_impl(mass=data.limits.oem, delta_isa=0.0)
-        assert h_min_mass <= data.limits.hmo, "max_altitude must not exceed HMO"
+        # Altitude must never exceed HMO
+        h_min_mass = lim._max_altitude_impl(mass=lim_data.oem, delta_isa=0.0)
+        assert h_min_mass <= lim_data.hmo, "max_altitude must not exceed HMO"
 
 
 class TestBADA3Model:
@@ -824,10 +830,10 @@ class TestBADA3DescentPTDValidation:
     order: the PTD descent thrust column is computed by EUROCONTROL from
     those coefficients, including
 
-    - the A320 step-UP in thrust crossing Hp,des (~FL298): CTdes,high
-      (0.13603) applies above, CTdes,low (0.10847) below — at FL290 the
-      table shows 7,512 N vs 8,803 N at FL310;
-    - the AT72 zero-thrust rows at/above FL120 (CTdes,high = 0.0).
+    - the A320 step change in thrust crossing Hp,des, where the applied
+      coefficient switches from CTdes,low to CTdes,high;
+    - the AT72 zero-thrust descent rows above Hp,des (its CTdes,high
+      is zero in the OPF, so idle thrust vanishes there).
 
     Rows below FL30 are excluded: the reference tables switch to
     approach/landing configurations there, while this check pins the
