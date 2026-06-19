@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="OpenLeaf — Open-source aviation sustainability suite: performance modeling, emissions, and trajectory optimization.">
+        <meta name="description" content="OpenLeaf — Open-source aviation sustainability suite: aircraft performance modeling and trajectory optimization.">
       
       
       
@@ -1576,7 +1576,7 @@ you to point to the data directories provided by EUROCONTROL:</p>
 <div class="highlight"><span class="filename">Python</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">openleaf.performance.models.openap</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAPModel</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">model</span> <span class="o">=</span> <span class="n">OpenAPModel</span><span class="p">(</span><span class="s2">&quot;A320&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">aircraft</span><span class="p">)</span>  <span class="c1"># AircraftData: model, WTC, engine type</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>      <span class="c1"># Aircraft data: model, WTC, engine type</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">limits</span><span class="p">)</span>    <span class="c1"># LimitsData: MTOM, VMO, MMO, HMO</span>
 </code></pre></div>
 <h2 id="step-3-build-a-trajectory">Step 3: Build a trajectory</h2>
@@ -1613,7 +1613,7 @@ flow:</p>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">print</span><span class="p">(</span><span class="n">perf</span><span class="o">.</span><span class="n">drag</span><span class="p">)</span>            <span class="c1"># Aerodynamic drag [N]</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">print</span><span class="p">(</span><span class="n">perf</span><span class="o">.</span><span class="n">thrust</span><span class="p">)</span>          <span class="c1"># Required thrust [N]</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">perf</span><span class="o">.</span><span class="n">fuel_flow</span><span class="p">)</span>       <span class="c1"># Fuel flow [kg/s]</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">perf</span><span class="o">.</span><span class="n">drag_coefficient</span><span class="p">)</span>  <span class="c1"># CD [-]</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">print</span><span class="p">(</span><span class="n">perf</span><span class="o">.</span><span class="n">drag_coef</span><span class="p">)</span>       <span class="c1"># CD [-]</span>
 </code></pre></div>
 <p>The <code>with_aircraft</code> method also accepts a string shorthand:</p>
 <div class="highlight"><span class="filename">Python</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">perf</span> <span class="o">=</span> <span class="n">traj</span><span class="o">.</span><span class="n">with_aircraft</span><span class="p">(</span><span class="s2">&quot;OpenAP&quot;</span><span class="p">,</span> <span class="s2">&quot;A320&quot;</span><span class="p">)</span>

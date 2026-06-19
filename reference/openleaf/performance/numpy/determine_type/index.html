@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="OpenLeaf — Open-source aviation sustainability suite: performance modeling, emissions, and trajectory optimization.">
+        <meta name="description" content="OpenLeaf — Open-source aviation sustainability suite: aircraft performance modeling and trajectory optimization.">
       
       
       
@@ -1347,10 +1347,7 @@ CasADi type.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/numpy/backends.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-231">231</a></span>
-<span class="normal"><a href="#__codelineno-0-232">232</a></span>
-<span class="normal"><a href="#__codelineno-0-233">233</a></span>
-<span class="normal"><a href="#__codelineno-0-234">234</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-234">234</a></span>
 <span class="normal"><a href="#__codelineno-0-235">235</a></span>
 <span class="normal"><a href="#__codelineno-0-236">236</a></span>
 <span class="normal"><a href="#__codelineno-0-237">237</a></span>
@@ -1386,46 +1383,49 @@ CasADi type.</p>
 <span class="normal"><a href="#__codelineno-0-267">267</a></span>
 <span class="normal"><a href="#__codelineno-0-268">268</a></span>
 <span class="normal"><a href="#__codelineno-0-269">269</a></span>
-<span class="normal"><a href="#__codelineno-0-270">270</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-231" name="__codelineno-0-231"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_casadi_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-232" name="__codelineno-0-232"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is or contains a CasADi data type.</span>
-<a id="__codelineno-0-233" name="__codelineno-0-233"></a>
-<a id="__codelineno-0-234" name="__codelineno-0-234"></a><span class="sd">    This is the main dispatch check - returns True if the object is a CasADi</span>
-<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="sd">    type (MX, DM, SX) or, if recursive=True, if any nested element is a</span>
-<a id="__codelineno-0-236" name="__codelineno-0-236"></a><span class="sd">    CasADi type.</span>
-<a id="__codelineno-0-237" name="__codelineno-0-237"></a>
-<a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">        obj: The object to evaluate.</span>
-<a id="__codelineno-0-240" name="__codelineno-0-240"></a><span class="sd">        recursive: If True, recursively check container types (list, tuple,</span>
-<a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="sd">            dict, set) for nested CasADi types. Default is True.</span>
-<a id="__codelineno-0-242" name="__codelineno-0-242"></a>
-<a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="sd">        True if the object is (or contains) a CasADi type, False otherwise.</span>
-<a id="__codelineno-0-245" name="__codelineno-0-245"></a><span class="sd">        Always returns False if CasADi is not installed.</span>
-<a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-247" name="__codelineno-0-247"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">Backend</span><span class="o">.</span><span class="n">CASADI</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
-<a id="__codelineno-0-248" name="__codelineno-0-248"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-249" name="__codelineno-0-249"></a>
-<a id="__codelineno-0-250" name="__codelineno-0-250"></a>    <span class="n">ca</span> <span class="o">=</span> <span class="n">Backend</span><span class="o">.</span><span class="n">CASADI</span><span class="o">.</span><span class="n">module</span>
-<a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="n">np</span> <span class="o">=</span> <span class="n">Backend</span><span class="o">.</span><span class="n">NUMPY</span><span class="o">.</span><span class="n">module</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a>    <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-<a id="__codelineno-0-253" name="__codelineno-0-253"></a>
-<a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="c1"># NumPy arrays cannot contain CasADi types (unless object dtype)</span>
-<a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s2">&quot;O&quot;</span><span class="p">:</span>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-257" name="__codelineno-0-257"></a>
-<a id="__codelineno-0-258" name="__codelineno-0-258"></a>    <span class="c1"># Skip Python scalar types</span>
-<a id="__codelineno-0-259" name="__codelineno-0-259"></a>    <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">_SCALAR_TYPES</span><span class="p">:</span>
-<a id="__codelineno-0-260" name="__codelineno-0-260"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-261" name="__codelineno-0-261"></a>
-<a id="__codelineno-0-262" name="__codelineno-0-262"></a>    <span class="c1"># Direct CasADi type check</span>
-<a id="__codelineno-0-263" name="__codelineno-0-263"></a>    <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">,</span> <span class="n">ca</span><span class="o">.</span><span class="n">DM</span><span class="p">,</span> <span class="n">ca</span><span class="o">.</span><span class="n">SX</span><span class="p">):</span>
-<a id="__codelineno-0-264" name="__codelineno-0-264"></a>        <span class="k">return</span> <span class="kc">True</span>
-<a id="__codelineno-0-265" name="__codelineno-0-265"></a>
-<a id="__codelineno-0-266" name="__codelineno-0-266"></a>    <span class="c1"># Recursive check for containers</span>
-<a id="__codelineno-0-267" name="__codelineno-0-267"></a>    <span class="k">if</span> <span class="n">recursive</span><span class="p">:</span>
-<a id="__codelineno-0-268" name="__codelineno-0-268"></a>        <span class="k">return</span> <span class="n">_check_container</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">is_casadi_type</span><span class="p">,</span> <span class="n">np</span><span class="o">=</span><span class="n">np</span><span class="p">)</span>
-<a id="__codelineno-0-269" name="__codelineno-0-269"></a>
-<a id="__codelineno-0-270" name="__codelineno-0-270"></a>    <span class="k">return</span> <span class="kc">False</span>
+<span class="normal"><a href="#__codelineno-0-270">270</a></span>
+<span class="normal"><a href="#__codelineno-0-271">271</a></span>
+<span class="normal"><a href="#__codelineno-0-272">272</a></span>
+<span class="normal"><a href="#__codelineno-0-273">273</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-234" name="__codelineno-0-234"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_casadi_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is or contains a CasADi data type.</span>
+<a id="__codelineno-0-236" name="__codelineno-0-236"></a>
+<a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="sd">    This is the main dispatch check - returns True if the object is a CasADi</span>
+<a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">    type (MX, DM, SX) or, if recursive=True, if any nested element is a</span>
+<a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">    CasADi type.</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-242" name="__codelineno-0-242"></a><span class="sd">        obj: The object to evaluate.</span>
+<a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="sd">        recursive: If True, recursively check container types (list, tuple,</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="sd">            dict, set) for nested CasADi types. Default is True.</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">        True if the object is (or contains) a CasADi type, False otherwise.</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">        Always returns False if CasADi is not installed.</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-250" name="__codelineno-0-250"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">Backend</span><span class="o">.</span><span class="n">CASADI</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
+<a id="__codelineno-0-251" name="__codelineno-0-251"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="n">ca</span> <span class="o">=</span> <span class="n">Backend</span><span class="o">.</span><span class="n">CASADI</span><span class="o">.</span><span class="n">module</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="n">np</span> <span class="o">=</span> <span class="n">Backend</span><span class="o">.</span><span class="n">NUMPY</span><span class="o">.</span><span class="n">module</span>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a>
+<a id="__codelineno-0-257" name="__codelineno-0-257"></a>    <span class="c1"># NumPy arrays cannot contain CasADi types (unless object dtype)</span>
+<a id="__codelineno-0-258" name="__codelineno-0-258"></a>    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s2">&quot;O&quot;</span><span class="p">:</span>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-0-260" name="__codelineno-0-260"></a>
+<a id="__codelineno-0-261" name="__codelineno-0-261"></a>    <span class="c1"># Skip Python scalar types</span>
+<a id="__codelineno-0-262" name="__codelineno-0-262"></a>    <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">_SCALAR_TYPES</span><span class="p">:</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a>    <span class="c1"># Direct CasADi type check</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a>    <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">MX</span><span class="p">,</span> <span class="n">ca</span><span class="o">.</span><span class="n">DM</span><span class="p">,</span> <span class="n">ca</span><span class="o">.</span><span class="n">SX</span><span class="p">):</span>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a>        <span class="k">return</span> <span class="kc">True</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a>
+<a id="__codelineno-0-269" name="__codelineno-0-269"></a>    <span class="c1"># Recursive check for containers</span>
+<a id="__codelineno-0-270" name="__codelineno-0-270"></a>    <span class="k">if</span> <span class="n">recursive</span><span class="p">:</span>
+<a id="__codelineno-0-271" name="__codelineno-0-271"></a>        <span class="k">return</span> <span class="n">_check_container</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">is_casadi_type</span><span class="p">,</span> <span class="n">np</span><span class="o">=</span><span class="n">np</span><span class="p">)</span>
+<a id="__codelineno-0-272" name="__codelineno-0-272"></a>
+<a id="__codelineno-0-273" name="__codelineno-0-273"></a>    <span class="k">return</span> <span class="kc">False</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1452,33 +1452,33 @@ CasADi type.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/numpy/determine_type.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-26">26</a></span>
-<span class="normal"><a href="#__codelineno-0-27">27</a></span>
-<span class="normal"><a href="#__codelineno-0-28">28</a></span>
-<span class="normal"><a href="#__codelineno-0-29">29</a></span>
-<span class="normal"><a href="#__codelineno-0-30">30</a></span>
-<span class="normal"><a href="#__codelineno-0-31">31</a></span>
-<span class="normal"><a href="#__codelineno-0-32">32</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-32">32</a></span>
 <span class="normal"><a href="#__codelineno-0-33">33</a></span>
 <span class="normal"><a href="#__codelineno-0-34">34</a></span>
 <span class="normal"><a href="#__codelineno-0-35">35</a></span>
 <span class="normal"><a href="#__codelineno-0-36">36</a></span>
 <span class="normal"><a href="#__codelineno-0-37">37</a></span>
 <span class="normal"><a href="#__codelineno-0-38">38</a></span>
-<span class="normal"><a href="#__codelineno-0-39">39</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-26" name="__codelineno-0-26"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_iterable</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-27" name="__codelineno-0-27"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is iterable.</span>
-<a id="__codelineno-0-28" name="__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="sd">        x: Object to test for iterability.</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a>
-<a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">        Boolean indicating whether the object is iterable.</span>
-<a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-35" name="__codelineno-0-35"></a>    <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-36" name="__codelineno-0-36"></a>        <span class="nb">iter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<a id="__codelineno-0-37" name="__codelineno-0-37"></a>        <span class="k">return</span> <span class="kc">True</span>
-<a id="__codelineno-0-38" name="__codelineno-0-38"></a>    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
-<a id="__codelineno-0-39" name="__codelineno-0-39"></a>        <span class="k">return</span> <span class="kc">False</span>
+<span class="normal"><a href="#__codelineno-0-39">39</a></span>
+<span class="normal"><a href="#__codelineno-0-40">40</a></span>
+<span class="normal"><a href="#__codelineno-0-41">41</a></span>
+<span class="normal"><a href="#__codelineno-0-42">42</a></span>
+<span class="normal"><a href="#__codelineno-0-43">43</a></span>
+<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+<span class="normal"><a href="#__codelineno-0-45">45</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_iterable</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is iterable.</span>
+<a id="__codelineno-0-34" name="__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">        x: Object to test for iterability.</span>
+<a id="__codelineno-0-37" name="__codelineno-0-37"></a>
+<a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">        Boolean indicating whether the object is iterable.</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-42" name="__codelineno-0-42"></a>        <span class="nb">iter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a>        <span class="k">return</span> <span class="kc">True</span>
+<a id="__codelineno-0-44" name="__codelineno-0-44"></a>    <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+<a id="__codelineno-0-45" name="__codelineno-0-45"></a>        <span class="k">return</span> <span class="kc">False</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1508,10 +1508,7 @@ CasADi type.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/numpy/backends.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-273">273</a></span>
-<span class="normal"><a href="#__codelineno-0-274">274</a></span>
-<span class="normal"><a href="#__codelineno-0-275">275</a></span>
-<span class="normal"><a href="#__codelineno-0-276">276</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-276">276</a></span>
 <span class="normal"><a href="#__codelineno-0-277">277</a></span>
 <span class="normal"><a href="#__codelineno-0-278">278</a></span>
 <span class="normal"><a href="#__codelineno-0-279">279</a></span>
@@ -1543,42 +1540,45 @@ CasADi type.</p>
 <span class="normal"><a href="#__codelineno-0-305">305</a></span>
 <span class="normal"><a href="#__codelineno-0-306">306</a></span>
 <span class="normal"><a href="#__codelineno-0-307">307</a></span>
-<span class="normal"><a href="#__codelineno-0-308">308</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_torch_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is or contains a PyTorch tensor.</span>
-<a id="__codelineno-0-275" name="__codelineno-0-275"></a>
-<a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="sd">        obj: The object to evaluate.</span>
-<a id="__codelineno-0-278" name="__codelineno-0-278"></a><span class="sd">        recursive: If True, recursively check container types for nested</span>
-<a id="__codelineno-0-279" name="__codelineno-0-279"></a><span class="sd">            PyTorch tensors. Default is True.</span>
-<a id="__codelineno-0-280" name="__codelineno-0-280"></a>
-<a id="__codelineno-0-281" name="__codelineno-0-281"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="sd">        True if the object is (or contains) a PyTorch tensor, False otherwise.</span>
-<a id="__codelineno-0-283" name="__codelineno-0-283"></a><span class="sd">        Always returns False if PyTorch is not installed.</span>
-<a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-285" name="__codelineno-0-285"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">Backend</span><span class="o">.</span><span class="n">TORCH</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
-<a id="__codelineno-0-286" name="__codelineno-0-286"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-287" name="__codelineno-0-287"></a>
-<a id="__codelineno-0-288" name="__codelineno-0-288"></a>    <span class="n">torch</span> <span class="o">=</span> <span class="n">Backend</span><span class="o">.</span><span class="n">TORCH</span><span class="o">.</span><span class="n">module</span>
-<a id="__codelineno-0-289" name="__codelineno-0-289"></a>    <span class="n">np</span> <span class="o">=</span> <span class="n">Backend</span><span class="o">.</span><span class="n">NUMPY</span><span class="o">.</span><span class="n">module</span>
-<a id="__codelineno-0-290" name="__codelineno-0-290"></a>    <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-<a id="__codelineno-0-291" name="__codelineno-0-291"></a>
-<a id="__codelineno-0-292" name="__codelineno-0-292"></a>    <span class="c1"># NumPy arrays cannot contain PyTorch tensors</span>
-<a id="__codelineno-0-293" name="__codelineno-0-293"></a>    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<a id="__codelineno-0-294" name="__codelineno-0-294"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-295" name="__codelineno-0-295"></a>
-<a id="__codelineno-0-296" name="__codelineno-0-296"></a>    <span class="c1"># Skip Python scalar types</span>
-<a id="__codelineno-0-297" name="__codelineno-0-297"></a>    <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">_SCALAR_TYPES</span><span class="p">:</span>
-<a id="__codelineno-0-298" name="__codelineno-0-298"></a>        <span class="k">return</span> <span class="kc">False</span>
-<a id="__codelineno-0-299" name="__codelineno-0-299"></a>
-<a id="__codelineno-0-300" name="__codelineno-0-300"></a>    <span class="c1"># Direct PyTorch tensor check</span>
-<a id="__codelineno-0-301" name="__codelineno-0-301"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
-<a id="__codelineno-0-302" name="__codelineno-0-302"></a>        <span class="k">return</span> <span class="kc">True</span>
-<a id="__codelineno-0-303" name="__codelineno-0-303"></a>
-<a id="__codelineno-0-304" name="__codelineno-0-304"></a>    <span class="c1"># Recursive check for containers</span>
-<a id="__codelineno-0-305" name="__codelineno-0-305"></a>    <span class="k">if</span> <span class="n">recursive</span><span class="p">:</span>
-<a id="__codelineno-0-306" name="__codelineno-0-306"></a>        <span class="k">return</span> <span class="n">_check_container</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">is_torch_type</span><span class="p">,</span> <span class="n">np</span><span class="o">=</span><span class="n">np</span><span class="p">)</span>
-<a id="__codelineno-0-307" name="__codelineno-0-307"></a>
-<a id="__codelineno-0-308" name="__codelineno-0-308"></a>    <span class="k">return</span> <span class="kc">False</span>
+<span class="normal"><a href="#__codelineno-0-308">308</a></span>
+<span class="normal"><a href="#__codelineno-0-309">309</a></span>
+<span class="normal"><a href="#__codelineno-0-310">310</a></span>
+<span class="normal"><a href="#__codelineno-0-311">311</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_torch_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is or contains a PyTorch tensor.</span>
+<a id="__codelineno-0-278" name="__codelineno-0-278"></a>
+<a id="__codelineno-0-279" name="__codelineno-0-279"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-280" name="__codelineno-0-280"></a><span class="sd">        obj: The object to evaluate.</span>
+<a id="__codelineno-0-281" name="__codelineno-0-281"></a><span class="sd">        recursive: If True, recursively check container types for nested</span>
+<a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="sd">            PyTorch tensors. Default is True.</span>
+<a id="__codelineno-0-283" name="__codelineno-0-283"></a>
+<a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="sd">        True if the object is (or contains) a PyTorch tensor, False otherwise.</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="sd">        Always returns False if PyTorch is not installed.</span>
+<a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-288" name="__codelineno-0-288"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">Backend</span><span class="o">.</span><span class="n">TORCH</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
+<a id="__codelineno-0-289" name="__codelineno-0-289"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-0-290" name="__codelineno-0-290"></a>
+<a id="__codelineno-0-291" name="__codelineno-0-291"></a>    <span class="n">torch</span> <span class="o">=</span> <span class="n">Backend</span><span class="o">.</span><span class="n">TORCH</span><span class="o">.</span><span class="n">module</span>
+<a id="__codelineno-0-292" name="__codelineno-0-292"></a>    <span class="n">np</span> <span class="o">=</span> <span class="n">Backend</span><span class="o">.</span><span class="n">NUMPY</span><span class="o">.</span><span class="n">module</span>
+<a id="__codelineno-0-293" name="__codelineno-0-293"></a>    <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<a id="__codelineno-0-294" name="__codelineno-0-294"></a>
+<a id="__codelineno-0-295" name="__codelineno-0-295"></a>    <span class="c1"># NumPy arrays cannot contain PyTorch tensors</span>
+<a id="__codelineno-0-296" name="__codelineno-0-296"></a>    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<a id="__codelineno-0-297" name="__codelineno-0-297"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-0-298" name="__codelineno-0-298"></a>
+<a id="__codelineno-0-299" name="__codelineno-0-299"></a>    <span class="c1"># Skip Python scalar types</span>
+<a id="__codelineno-0-300" name="__codelineno-0-300"></a>    <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">_SCALAR_TYPES</span><span class="p">:</span>
+<a id="__codelineno-0-301" name="__codelineno-0-301"></a>        <span class="k">return</span> <span class="kc">False</span>
+<a id="__codelineno-0-302" name="__codelineno-0-302"></a>
+<a id="__codelineno-0-303" name="__codelineno-0-303"></a>    <span class="c1"># Direct PyTorch tensor check</span>
+<a id="__codelineno-0-304" name="__codelineno-0-304"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+<a id="__codelineno-0-305" name="__codelineno-0-305"></a>        <span class="k">return</span> <span class="kc">True</span>
+<a id="__codelineno-0-306" name="__codelineno-0-306"></a>
+<a id="__codelineno-0-307" name="__codelineno-0-307"></a>    <span class="c1"># Recursive check for containers</span>
+<a id="__codelineno-0-308" name="__codelineno-0-308"></a>    <span class="k">if</span> <span class="n">recursive</span><span class="p">:</span>
+<a id="__codelineno-0-309" name="__codelineno-0-309"></a>        <span class="k">return</span> <span class="n">_check_container</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">is_torch_type</span><span class="p">,</span> <span class="n">np</span><span class="o">=</span><span class="n">np</span><span class="p">)</span>
+<a id="__codelineno-0-310" name="__codelineno-0-310"></a>
+<a id="__codelineno-0-311" name="__codelineno-0-311"></a>    <span class="k">return</span> <span class="kc">False</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="OpenLeaf — Open-source aviation sustainability suite: performance modeling, emissions, and trajectory optimization.">
+        <meta name="description" content="OpenLeaf — Open-source aviation sustainability suite: aircraft performance modeling and trajectory optimization.">
       
       
       
@@ -1307,7 +1307,16 @@
 
         <p>Structured logging for OpenLeaf using structlog.</p>
 <p>Provides structured, contextual logging for the library with configurable
-verbosity. Uses structlog for better debugging and log analysis.</p>
+verbosity, without touching global logging state: importing openleaf never
+calls <code>structlog.configure()</code> nor <code>logging.basicConfig()</code>, so host
+applications keep full control of their own logging.</p>
+<p>Behavior:
+    - If the host application has configured structlog
+      (<code>structlog.is_configured()</code>), OpenLeaf loggers flow through the
+      application's pipeline untouched.
+    - Otherwise, OpenLeaf loggers use a private, library-scoped pipeline
+      writing to stderr, filtered at WARNING by default (override with the
+      <code>OPENLEAF_LOG_LEVEL</code> environment variable or <code>configure_logging()</code>).</p>
 <p>Usage:
     from openleaf.performance.logging import get_logger, configure_logging</p>
 <div class="highlight"><span class="filename">Text Only</span><pre><span></span><code># Get a logger for your module
@@ -1316,7 +1325,7 @@ logger.debug(&quot;Loading model&quot;, aircraft=&quot;A320&quot;, source=&quot;
 logger.info(&quot;Computation complete&quot;, duration=0.5)
 logger.warning(&quot;Value exceeds limit&quot;, value=350, limit=340)
 
-# Enable debug logging
+# Enable debug logging (affects OpenLeaf&#39;s own loggers only)
 configure_logging(level=&quot;DEBUG&quot;)
 
 # Or use environment variable
@@ -1354,9 +1363,13 @@ configure_logging(level=&quot;DEBUG&quot;)
 
     <div class="doc doc-contents ">
 
-        <p>Configure structured logging for OpenLeaf.</p>
-<p>This function sets up structlog with sensible defaults. Call it once
-at application startup, or let it auto-configure on first logger use.</p>
+        <p>Configure OpenLeaf's library-scoped logging.</p>
+<p>This adjusts only OpenLeaf's own loggers. It deliberately does NOT call
+<code>structlog.configure()</code> or <code>logging.basicConfig()</code> — a library must
+not reconfigure the host application's logging. If your application has
+configured structlog globally, OpenLeaf loggers use the application's
+pipeline and this function only records the requested level for the
+fallback pipeline.</p>
 <p>Args:
     level: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL) or None
         to use environment variable or default.
@@ -1371,269 +1384,15 @@ at application startup, or let it auto-configure on first logger use.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/logging.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-55"> 55</a></span>
-<span class="normal"><a href="#__codelineno-0-56"> 56</a></span>
-<span class="normal"><a href="#__codelineno-0-57"> 57</a></span>
-<span class="normal"><a href="#__codelineno-0-58"> 58</a></span>
-<span class="normal"><a href="#__codelineno-0-59"> 59</a></span>
-<span class="normal"><a href="#__codelineno-0-60"> 60</a></span>
-<span class="normal"><a href="#__codelineno-0-61"> 61</a></span>
-<span class="normal"><a href="#__codelineno-0-62"> 62</a></span>
-<span class="normal"><a href="#__codelineno-0-63"> 63</a></span>
-<span class="normal"><a href="#__codelineno-0-64"> 64</a></span>
-<span class="normal"><a href="#__codelineno-0-65"> 65</a></span>
-<span class="normal"><a href="#__codelineno-0-66"> 66</a></span>
-<span class="normal"><a href="#__codelineno-0-67"> 67</a></span>
-<span class="normal"><a href="#__codelineno-0-68"> 68</a></span>
-<span class="normal"><a href="#__codelineno-0-69"> 69</a></span>
-<span class="normal"><a href="#__codelineno-0-70"> 70</a></span>
-<span class="normal"><a href="#__codelineno-0-71"> 71</a></span>
-<span class="normal"><a href="#__codelineno-0-72"> 72</a></span>
-<span class="normal"><a href="#__codelineno-0-73"> 73</a></span>
-<span class="normal"><a href="#__codelineno-0-74"> 74</a></span>
-<span class="normal"><a href="#__codelineno-0-75"> 75</a></span>
-<span class="normal"><a href="#__codelineno-0-76"> 76</a></span>
-<span class="normal"><a href="#__codelineno-0-77"> 77</a></span>
-<span class="normal"><a href="#__codelineno-0-78"> 78</a></span>
-<span class="normal"><a href="#__codelineno-0-79"> 79</a></span>
-<span class="normal"><a href="#__codelineno-0-80"> 80</a></span>
-<span class="normal"><a href="#__codelineno-0-81"> 81</a></span>
-<span class="normal"><a href="#__codelineno-0-82"> 82</a></span>
-<span class="normal"><a href="#__codelineno-0-83"> 83</a></span>
-<span class="normal"><a href="#__codelineno-0-84"> 84</a></span>
-<span class="normal"><a href="#__codelineno-0-85"> 85</a></span>
-<span class="normal"><a href="#__codelineno-0-86"> 86</a></span>
-<span class="normal"><a href="#__codelineno-0-87"> 87</a></span>
-<span class="normal"><a href="#__codelineno-0-88"> 88</a></span>
-<span class="normal"><a href="#__codelineno-0-89"> 89</a></span>
-<span class="normal"><a href="#__codelineno-0-90"> 90</a></span>
-<span class="normal"><a href="#__codelineno-0-91"> 91</a></span>
-<span class="normal"><a href="#__codelineno-0-92"> 92</a></span>
-<span class="normal"><a href="#__codelineno-0-93"> 93</a></span>
-<span class="normal"><a href="#__codelineno-0-94"> 94</a></span>
-<span class="normal"><a href="#__codelineno-0-95"> 95</a></span>
-<span class="normal"><a href="#__codelineno-0-96"> 96</a></span>
-<span class="normal"><a href="#__codelineno-0-97"> 97</a></span>
-<span class="normal"><a href="#__codelineno-0-98"> 98</a></span>
-<span class="normal"><a href="#__codelineno-0-99"> 99</a></span>
-<span class="normal"><a href="#__codelineno-0-100">100</a></span>
-<span class="normal"><a href="#__codelineno-0-101">101</a></span>
-<span class="normal"><a href="#__codelineno-0-102">102</a></span>
-<span class="normal"><a href="#__codelineno-0-103">103</a></span>
-<span class="normal"><a href="#__codelineno-0-104">104</a></span>
-<span class="normal"><a href="#__codelineno-0-105">105</a></span>
-<span class="normal"><a href="#__codelineno-0-106">106</a></span>
-<span class="normal"><a href="#__codelineno-0-107">107</a></span>
-<span class="normal"><a href="#__codelineno-0-108">108</a></span>
-<span class="normal"><a href="#__codelineno-0-109">109</a></span>
-<span class="normal"><a href="#__codelineno-0-110">110</a></span>
-<span class="normal"><a href="#__codelineno-0-111">111</a></span>
-<span class="normal"><a href="#__codelineno-0-112">112</a></span>
-<span class="normal"><a href="#__codelineno-0-113">113</a></span>
-<span class="normal"><a href="#__codelineno-0-114">114</a></span>
-<span class="normal"><a href="#__codelineno-0-115">115</a></span>
-<span class="normal"><a href="#__codelineno-0-116">116</a></span>
-<span class="normal"><a href="#__codelineno-0-117">117</a></span>
-<span class="normal"><a href="#__codelineno-0-118">118</a></span>
-<span class="normal"><a href="#__codelineno-0-119">119</a></span>
-<span class="normal"><a href="#__codelineno-0-120">120</a></span>
-<span class="normal"><a href="#__codelineno-0-121">121</a></span>
-<span class="normal"><a href="#__codelineno-0-122">122</a></span>
-<span class="normal"><a href="#__codelineno-0-123">123</a></span>
-<span class="normal"><a href="#__codelineno-0-124">124</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-124">124</a></span>
 <span class="normal"><a href="#__codelineno-0-125">125</a></span>
 <span class="normal"><a href="#__codelineno-0-126">126</a></span>
 <span class="normal"><a href="#__codelineno-0-127">127</a></span>
 <span class="normal"><a href="#__codelineno-0-128">128</a></span>
-<span class="normal"><a href="#__codelineno-0-129">129</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_logging</span><span class="p">(</span>
-<a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="n">json_format</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="n">colors</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure structured logging for OpenLeaf.</span>
-<a id="__codelineno-0-61" name="__codelineno-0-61"></a>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="sd">    This function sets up structlog with sensible defaults. Call it once</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">    at application startup, or let it auto-configure on first logger use.</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>
-<a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">        level: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL) or None</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">            to use environment variable or default.</span>
-<a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">        json_format: If True, output logs as JSON (useful for log aggregation).</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">            If False (default), use human-readable console output.</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">        colors: Whether to use colors in console output. If None, auto-detect</span>
-<a id="__codelineno-0-71" name="__codelineno-0-71"></a><span class="sd">            based on terminal capabilities.</span>
-<a id="__codelineno-0-72" name="__codelineno-0-72"></a>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">        &gt;&gt;&gt; configure_logging(level=&quot;DEBUG&quot;)</span>
-<a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">        &gt;&gt;&gt; configure_logging(level=&quot;INFO&quot;, json_format=True)</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="k">global</span> <span class="n">_logging_configured</span>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a>
-<a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="c1"># Determine log level</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>    <span class="k">if</span> <span class="n">level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="n">numeric_level</span> <span class="o">=</span> <span class="n">_get_log_level</span><span class="p">()</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>        <span class="n">numeric_level</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">level</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
-<a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-85" name="__codelineno-0-85"></a>        <span class="n">numeric_level</span> <span class="o">=</span> <span class="n">level</span>
-<a id="__codelineno-0-86" name="__codelineno-0-86"></a>
-<a id="__codelineno-0-87" name="__codelineno-0-87"></a>    <span class="c1"># Auto-detect colors</span>
-<a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-89" name="__codelineno-0-89"></a>        <span class="n">colors</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">isatty</span><span class="p">()</span>
-<a id="__codelineno-0-90" name="__codelineno-0-90"></a>
-<a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="c1"># Configure processors based on output format</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="n">shared_processors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">structlog</span><span class="o">.</span><span class="n">types</span><span class="o">.</span><span class="n">Processor</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a>        <span class="n">structlog</span><span class="o">.</span><span class="n">contextvars</span><span class="o">.</span><span class="n">merge_contextvars</span><span class="p">,</span>
-<a id="__codelineno-0-94" name="__codelineno-0-94"></a>        <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">add_log_level</span><span class="p">,</span>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>        <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">StackInfoRenderer</span><span class="p">(),</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a>        <span class="n">structlog</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">set_exc_info</span><span class="p">,</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">TimeStamper</span><span class="p">(</span><span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;iso&quot;</span><span class="p">),</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>    <span class="p">]</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a>    <span class="k">if</span> <span class="n">json_format</span><span class="p">:</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="c1"># JSON output for production/log aggregation</span>
-<a id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="n">processors</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a>            <span class="o">*</span><span class="n">shared_processors</span><span class="p">,</span>
-<a id="__codelineno-0-104" name="__codelineno-0-104"></a>            <span class="n">structlog</span><span class="o">.</span><span class="n">processors</span><span class="o">.</span><span class="n">JSONRenderer</span><span class="p">(),</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a>        <span class="p">]</span>
-<a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a>        <span class="c1"># Human-readable console output</span>
-<a id="__codelineno-0-108" name="__codelineno-0-108"></a>        <span class="n">processors</span> <span class="o">=</span> <span class="p">[</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a>            <span class="o">*</span><span class="n">shared_processors</span><span class="p">,</span>
-<a id="__codelineno-0-110" name="__codelineno-0-110"></a>            <span class="n">structlog</span><span class="o">.</span><span class="n">dev</span><span class="o">.</span><span class="n">ConsoleRenderer</span><span class="p">(</span><span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">),</span>
-<a id="__codelineno-0-111" name="__codelineno-0-111"></a>        <span class="p">]</span>
-<a id="__codelineno-0-112" name="__codelineno-0-112"></a>
-<a id="__codelineno-0-113" name="__codelineno-0-113"></a>    <span class="c1"># Configure structlog</span>
-<a id="__codelineno-0-114" name="__codelineno-0-114"></a>    <span class="n">structlog</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span>
-<a id="__codelineno-0-115" name="__codelineno-0-115"></a>        <span class="n">processors</span><span class="o">=</span><span class="n">processors</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>
-<a id="__codelineno-0-116" name="__codelineno-0-116"></a>        <span class="n">wrapper_class</span><span class="o">=</span><span class="n">structlog</span><span class="o">.</span><span class="n">make_filtering_bound_logger</span><span class="p">(</span><span class="n">numeric_level</span><span class="p">),</span>
-<a id="__codelineno-0-117" name="__codelineno-0-117"></a>        <span class="n">context_class</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span>
-<a id="__codelineno-0-118" name="__codelineno-0-118"></a>        <span class="n">logger_factory</span><span class="o">=</span><span class="n">structlog</span><span class="o">.</span><span class="n">PrintLoggerFactory</span><span class="p">(),</span>
-<a id="__codelineno-0-119" name="__codelineno-0-119"></a>        <span class="n">cache_logger_on_first_use</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-<a id="__codelineno-0-120" name="__codelineno-0-120"></a>    <span class="p">)</span>
-<a id="__codelineno-0-121" name="__codelineno-0-121"></a>
-<a id="__codelineno-0-122" name="__codelineno-0-122"></a>    <span class="c1"># Also configure stdlib logging for any third-party libraries</span>
-<a id="__codelineno-0-123" name="__codelineno-0-123"></a>    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
-<a id="__codelineno-0-124" name="__codelineno-0-124"></a>        <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a>        <span class="n">stream</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">,</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a>        <span class="n">level</span><span class="o">=</span><span class="n">numeric_level</span><span class="p">,</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="p">)</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a>    <span class="n">_logging_configured</span> <span class="o">=</span> <span class="kc">True</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="openleaf.performance.logging.disable_logging" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">disable_logging</span><span class="p">()</span></code>
-
-</h4>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Disable all OpenLeaf logging output.</p>
-<p>Useful for library users who don't want any output.
-Sets the log level to CRITICAL+1 to suppress all messages.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/logging.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-177">177</a></span>
-<span class="normal"><a href="#__codelineno-0-178">178</a></span>
-<span class="normal"><a href="#__codelineno-0-179">179</a></span>
-<span class="normal"><a href="#__codelineno-0-180">180</a></span>
-<span class="normal"><a href="#__codelineno-0-181">181</a></span>
-<span class="normal"><a href="#__codelineno-0-182">182</a></span>
-<span class="normal"><a href="#__codelineno-0-183">183</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="k">def</span><span class="w"> </span><span class="nf">disable_logging</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Disable all OpenLeaf logging output.</span>
-<a id="__codelineno-0-179" name="__codelineno-0-179"></a>
-<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    Useful for library users who don&#39;t want any output.</span>
-<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">    Sets the log level to CRITICAL+1 to suppress all messages.</span>
-<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-183" name="__codelineno-0-183"></a>    <span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="openleaf.performance.logging.enable_logging" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">enable_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s1">&#39;WARNING&#39;</span><span class="p">)</span></code>
-
-</h4>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Re-enable OpenLeaf logging after disable_logging().</p>
-<p>Args:
-    level: Log level to restore. Defaults to WARNING.</p>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/logging.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-186">186</a></span>
-<span class="normal"><a href="#__codelineno-0-187">187</a></span>
-<span class="normal"><a href="#__codelineno-0-188">188</a></span>
-<span class="normal"><a href="#__codelineno-0-189">189</a></span>
-<span class="normal"><a href="#__codelineno-0-190">190</a></span>
-<span class="normal"><a href="#__codelineno-0-191">191</a></span>
-<span class="normal"><a href="#__codelineno-0-192">192</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="k">def</span><span class="w"> </span><span class="nf">enable_logging</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Re-enable OpenLeaf logging after disable_logging().</span>
-<a id="__codelineno-0-188" name="__codelineno-0-188"></a>
-<a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="sd">        level: Log level to restore. Defaults to WARNING.</span>
-<a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-192" name="__codelineno-0-192"></a>    <span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-            </details>
-    </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-<h4 id="openleaf.performance.logging.get_logger" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">get_logger</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">initial_context</span><span class="p">)</span></code>
-
-</h4>
-
-
-    <div class="doc doc-contents ">
-
-        <p>Get a structured logger for OpenLeaf modules.</p>
-<p>Returns a structlog bound logger with optional initial context.
-The logger supports structured key-value logging.</p>
-<p>Args:
-    name: Logger name. Typically <strong>name</strong> of the calling module.
-        If None, returns the root OpenLeaf logger.
-    **initial_context: Initial context to bind to the logger.</p>
-<p>Returns:
-    Configured structlog BoundLogger instance.</p>
-<p>Example:
-    &gt;&gt;&gt; logger = get_logger(<strong>name</strong>)
-    &gt;&gt;&gt; logger.debug("Loading model data")
-    &gt;&gt;&gt; logger.info("Model loaded", aircraft="A320", source="BADA4")
-    &gt;&gt;&gt; logger.warning("Value exceeds VMO", value=350, vmo=340)</p>
-<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code># With initial context
-&gt;&gt;&gt; logger = get_logger(__name__, aircraft=&quot;A320&quot;)
-&gt;&gt;&gt; logger.info(&quot;Computing drag&quot;)  # aircraft=&quot;A320&quot; included automatically
-</code></pre></div>
-
-
-            <details class="mkdocstrings-source">
-              <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/logging.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-132">132</a></span>
+<span class="normal"><a href="#__codelineno-0-129">129</a></span>
+<span class="normal"><a href="#__codelineno-0-130">130</a></span>
+<span class="normal"><a href="#__codelineno-0-131">131</a></span>
+<span class="normal"><a href="#__codelineno-0-132">132</a></span>
 <span class="normal"><a href="#__codelineno-0-133">133</a></span>
 <span class="normal"><a href="#__codelineno-0-134">134</a></span>
 <span class="normal"><a href="#__codelineno-0-135">135</a></span>
@@ -1660,10 +1419,157 @@ The logger supports structured key-value logging.</p>
 <span class="normal"><a href="#__codelineno-0-156">156</a></span>
 <span class="normal"><a href="#__codelineno-0-157">157</a></span>
 <span class="normal"><a href="#__codelineno-0-158">158</a></span>
-<span class="normal"><a href="#__codelineno-0-159">159</a></span>
-<span class="normal"><a href="#__codelineno-0-160">160</a></span>
-<span class="normal"><a href="#__codelineno-0-161">161</a></span>
-<span class="normal"><a href="#__codelineno-0-162">162</a></span>
+<span class="normal"><a href="#__codelineno-0-159">159</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="k">def</span><span class="w"> </span><span class="nf">configure_logging</span><span class="p">(</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a>    <span class="n">json_format</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="n">colors</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure OpenLeaf&#39;s library-scoped logging.</span>
+<a id="__codelineno-0-130" name="__codelineno-0-130"></a>
+<a id="__codelineno-0-131" name="__codelineno-0-131"></a><span class="sd">    This adjusts only OpenLeaf&#39;s own loggers. It deliberately does NOT call</span>
+<a id="__codelineno-0-132" name="__codelineno-0-132"></a><span class="sd">    ``structlog.configure()`` or ``logging.basicConfig()`` — a library must</span>
+<a id="__codelineno-0-133" name="__codelineno-0-133"></a><span class="sd">    not reconfigure the host application&#39;s logging. If your application has</span>
+<a id="__codelineno-0-134" name="__codelineno-0-134"></a><span class="sd">    configured structlog globally, OpenLeaf loggers use the application&#39;s</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a><span class="sd">    pipeline and this function only records the requested level for the</span>
+<a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="sd">    fallback pipeline.</span>
+<a id="__codelineno-0-137" name="__codelineno-0-137"></a>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a><span class="sd">        level: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL) or None</span>
+<a id="__codelineno-0-140" name="__codelineno-0-140"></a><span class="sd">            to use environment variable or default.</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a><span class="sd">        json_format: If True, output logs as JSON (useful for log aggregation).</span>
+<a id="__codelineno-0-142" name="__codelineno-0-142"></a><span class="sd">            If False (default), use human-readable console output.</span>
+<a id="__codelineno-0-143" name="__codelineno-0-143"></a><span class="sd">        colors: Whether to use colors in console output. If None, auto-detect</span>
+<a id="__codelineno-0-144" name="__codelineno-0-144"></a><span class="sd">            based on terminal capabilities.</span>
+<a id="__codelineno-0-145" name="__codelineno-0-145"></a>
+<a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">    Example:</span>
+<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">        &gt;&gt;&gt; configure_logging(level=&quot;DEBUG&quot;)</span>
+<a id="__codelineno-0-148" name="__codelineno-0-148"></a><span class="sd">        &gt;&gt;&gt; configure_logging(level=&quot;INFO&quot;, json_format=True)</span>
+<a id="__codelineno-0-149" name="__codelineno-0-149"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-150" name="__codelineno-0-150"></a>    <span class="k">if</span> <span class="n">level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-151" name="__codelineno-0-151"></a>        <span class="n">_state</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_get_log_level</span><span class="p">()</span>
+<a id="__codelineno-0-152" name="__codelineno-0-152"></a>    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+<a id="__codelineno-0-153" name="__codelineno-0-153"></a>        <span class="n">_state</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">level</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">logging</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+<a id="__codelineno-0-154" name="__codelineno-0-154"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-155" name="__codelineno-0-155"></a>        <span class="n">_state</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">level</span>
+<a id="__codelineno-0-156" name="__codelineno-0-156"></a>
+<a id="__codelineno-0-157" name="__codelineno-0-157"></a>    <span class="n">_state</span><span class="p">[</span><span class="s2">&quot;json_format&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">json_format</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="n">_state</span><span class="p">[</span><span class="s2">&quot;colors&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors</span>
+<a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="n">_state</span><span class="p">[</span><span class="s2">&quot;renderer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># rebuild lazily with the new settings</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="openleaf.performance.logging.disable_logging" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">disable_logging</span><span class="p">()</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Disable all OpenLeaf logging output.</p>
+<p>Useful for library users who don't want any output.
+Sets the log level to CRITICAL+1 to suppress all messages.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/logging.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-208">208</a></span>
+<span class="normal"><a href="#__codelineno-0-209">209</a></span>
+<span class="normal"><a href="#__codelineno-0-210">210</a></span>
+<span class="normal"><a href="#__codelineno-0-211">211</a></span>
+<span class="normal"><a href="#__codelineno-0-212">212</a></span>
+<span class="normal"><a href="#__codelineno-0-213">213</a></span>
+<span class="normal"><a href="#__codelineno-0-214">214</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="k">def</span><span class="w"> </span><span class="nf">disable_logging</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Disable all OpenLeaf logging output.</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    Useful for library users who don&#39;t want any output.</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">    Sets the log level to CRITICAL+1 to suppress all messages.</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a>    <span class="n">_state</span><span class="p">[</span><span class="s2">&quot;level&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">CRITICAL</span> <span class="o">+</span> <span class="mi">1</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="openleaf.performance.logging.enable_logging" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">enable_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s1">&#39;WARNING&#39;</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Re-enable OpenLeaf logging after disable_logging().</p>
+<p>Args:
+    level: Log level to restore. Defaults to WARNING.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/logging.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-217">217</a></span>
+<span class="normal"><a href="#__codelineno-0-218">218</a></span>
+<span class="normal"><a href="#__codelineno-0-219">219</a></span>
+<span class="normal"><a href="#__codelineno-0-220">220</a></span>
+<span class="normal"><a href="#__codelineno-0-221">221</a></span>
+<span class="normal"><a href="#__codelineno-0-222">222</a></span>
+<span class="normal"><a href="#__codelineno-0-223">223</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="k">def</span><span class="w"> </span><span class="nf">enable_logging</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;WARNING&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-218" name="__codelineno-0-218"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Re-enable OpenLeaf logging after disable_logging().</span>
+<a id="__codelineno-0-219" name="__codelineno-0-219"></a>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">        level: Log level to restore. Defaults to WARNING.</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-223" name="__codelineno-0-223"></a>    <span class="n">configure_logging</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">level</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="openleaf.performance.logging.get_logger" class="doc doc-heading">
+            <code class="highlight language-python"><span class="n">get_logger</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">initial_context</span><span class="p">)</span></code>
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Get a structured logger for OpenLeaf modules.</p>
+<p>Returns a structlog bound logger with optional initial context. If the
+host application has configured structlog, the application's pipeline is
+used; otherwise a library-scoped stderr pipeline (WARNING by default).</p>
+<p>Args:
+    name: Logger name. Typically <strong>name</strong> of the calling module.
+        If None, returns the root OpenLeaf logger.
+    **initial_context: Initial context to bind to the logger.</p>
+<p>Returns:
+    Configured structlog bound logger instance.</p>
+<p>Example:
+    &gt;&gt;&gt; logger = get_logger(<strong>name</strong>)
+    &gt;&gt;&gt; logger.debug("Loading model data")
+    &gt;&gt;&gt; logger.info("Model loaded", aircraft="A320", source="BADA4")
+    &gt;&gt;&gt; logger.warning("Value exceeds VMO", value=350, vmo=340)</p>
+<div class="highlight"><span class="filename">Text Only</span><pre><span></span><code># With initial context
+&gt;&gt;&gt; logger = get_logger(__name__, aircraft=&quot;A320&quot;)
+&gt;&gt;&gt; logger.info(&quot;Computing drag&quot;)  # aircraft=&quot;A320&quot; included automatically
+</code></pre></div>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/logging.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-162">162</a></span>
 <span class="normal"><a href="#__codelineno-0-163">163</a></span>
 <span class="normal"><a href="#__codelineno-0-164">164</a></span>
 <span class="normal"><a href="#__codelineno-0-165">165</a></span>
@@ -1675,49 +1581,81 @@ The logger supports structured key-value logging.</p>
 <span class="normal"><a href="#__codelineno-0-171">171</a></span>
 <span class="normal"><a href="#__codelineno-0-172">172</a></span>
 <span class="normal"><a href="#__codelineno-0-173">173</a></span>
-<span class="normal"><a href="#__codelineno-0-174">174</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-132" name="__codelineno-0-132"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">initial_context</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">structlog</span><span class="o">.</span><span class="n">BoundLogger</span><span class="p">:</span>
-<a id="__codelineno-0-133" name="__codelineno-0-133"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a structured logger for OpenLeaf modules.</span>
-<a id="__codelineno-0-134" name="__codelineno-0-134"></a>
-<a id="__codelineno-0-135" name="__codelineno-0-135"></a><span class="sd">    Returns a structlog bound logger with optional initial context.</span>
-<a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="sd">    The logger supports structured key-value logging.</span>
-<a id="__codelineno-0-137" name="__codelineno-0-137"></a>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a><span class="sd">        name: Logger name. Typically __name__ of the calling module.</span>
-<a id="__codelineno-0-140" name="__codelineno-0-140"></a><span class="sd">            If None, returns the root OpenLeaf logger.</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a><span class="sd">        **initial_context: Initial context to bind to the logger.</span>
-<a id="__codelineno-0-142" name="__codelineno-0-142"></a>
-<a id="__codelineno-0-143" name="__codelineno-0-143"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-144" name="__codelineno-0-144"></a><span class="sd">        Configured structlog BoundLogger instance.</span>
-<a id="__codelineno-0-145" name="__codelineno-0-145"></a>
-<a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">        &gt;&gt;&gt; logger = get_logger(__name__)</span>
-<a id="__codelineno-0-148" name="__codelineno-0-148"></a><span class="sd">        &gt;&gt;&gt; logger.debug(&quot;Loading model data&quot;)</span>
-<a id="__codelineno-0-149" name="__codelineno-0-149"></a><span class="sd">        &gt;&gt;&gt; logger.info(&quot;Model loaded&quot;, aircraft=&quot;A320&quot;, source=&quot;BADA4&quot;)</span>
-<a id="__codelineno-0-150" name="__codelineno-0-150"></a><span class="sd">        &gt;&gt;&gt; logger.warning(&quot;Value exceeds VMO&quot;, value=350, vmo=340)</span>
-<a id="__codelineno-0-151" name="__codelineno-0-151"></a>
-<a id="__codelineno-0-152" name="__codelineno-0-152"></a><span class="sd">        # With initial context</span>
-<a id="__codelineno-0-153" name="__codelineno-0-153"></a><span class="sd">        &gt;&gt;&gt; logger = get_logger(__name__, aircraft=&quot;A320&quot;)</span>
-<a id="__codelineno-0-154" name="__codelineno-0-154"></a><span class="sd">        &gt;&gt;&gt; logger.info(&quot;Computing drag&quot;)  # aircraft=&quot;A320&quot; included automatically</span>
-<a id="__codelineno-0-155" name="__codelineno-0-155"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-156" name="__codelineno-0-156"></a>    <span class="k">global</span> <span class="n">_logging_configured</span>
-<a id="__codelineno-0-157" name="__codelineno-0-157"></a>
-<a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="c1"># Auto-configure on first use</span>
-<a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">_logging_configured</span><span class="p">:</span>
-<a id="__codelineno-0-160" name="__codelineno-0-160"></a>        <span class="n">configure_logging</span><span class="p">()</span>
-<a id="__codelineno-0-161" name="__codelineno-0-161"></a>
-<a id="__codelineno-0-162" name="__codelineno-0-162"></a>    <span class="c1"># Get or create logger</span>
-<a id="__codelineno-0-163" name="__codelineno-0-163"></a>    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a>        <span class="n">name</span> <span class="o">=</span> <span class="n">_LOGGER_NAME</span>
-<a id="__codelineno-0-165" name="__codelineno-0-165"></a>    <span class="k">elif</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">_LOGGER_NAME</span><span class="p">):</span>
-<a id="__codelineno-0-166" name="__codelineno-0-166"></a>        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_LOGGER_NAME</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a>    <span class="n">logger</span> <span class="o">=</span> <span class="n">structlog</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
-<a id="__codelineno-0-169" name="__codelineno-0-169"></a>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a>    <span class="c1"># Bind initial context if provided</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="k">if</span> <span class="n">initial_context</span><span class="p">:</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a>        <span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="o">**</span><span class="n">initial_context</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-174">174</a></span>
+<span class="normal"><a href="#__codelineno-0-175">175</a></span>
+<span class="normal"><a href="#__codelineno-0-176">176</a></span>
+<span class="normal"><a href="#__codelineno-0-177">177</a></span>
+<span class="normal"><a href="#__codelineno-0-178">178</a></span>
+<span class="normal"><a href="#__codelineno-0-179">179</a></span>
+<span class="normal"><a href="#__codelineno-0-180">180</a></span>
+<span class="normal"><a href="#__codelineno-0-181">181</a></span>
+<span class="normal"><a href="#__codelineno-0-182">182</a></span>
+<span class="normal"><a href="#__codelineno-0-183">183</a></span>
+<span class="normal"><a href="#__codelineno-0-184">184</a></span>
+<span class="normal"><a href="#__codelineno-0-185">185</a></span>
+<span class="normal"><a href="#__codelineno-0-186">186</a></span>
+<span class="normal"><a href="#__codelineno-0-187">187</a></span>
+<span class="normal"><a href="#__codelineno-0-188">188</a></span>
+<span class="normal"><a href="#__codelineno-0-189">189</a></span>
+<span class="normal"><a href="#__codelineno-0-190">190</a></span>
+<span class="normal"><a href="#__codelineno-0-191">191</a></span>
+<span class="normal"><a href="#__codelineno-0-192">192</a></span>
+<span class="normal"><a href="#__codelineno-0-193">193</a></span>
+<span class="normal"><a href="#__codelineno-0-194">194</a></span>
+<span class="normal"><a href="#__codelineno-0-195">195</a></span>
+<span class="normal"><a href="#__codelineno-0-196">196</a></span>
+<span class="normal"><a href="#__codelineno-0-197">197</a></span>
+<span class="normal"><a href="#__codelineno-0-198">198</a></span>
+<span class="normal"><a href="#__codelineno-0-199">199</a></span>
+<span class="normal"><a href="#__codelineno-0-200">200</a></span>
+<span class="normal"><a href="#__codelineno-0-201">201</a></span>
+<span class="normal"><a href="#__codelineno-0-202">202</a></span>
+<span class="normal"><a href="#__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#__codelineno-0-205">205</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-162" name="__codelineno-0-162"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_logger</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">initial_context</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a structured logger for OpenLeaf modules.</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a>
+<a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="sd">    Returns a structlog bound logger with optional initial context. If the</span>
+<a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">    host application has configured structlog, the application&#39;s pipeline is</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    used; otherwise a library-scoped stderr pipeline (WARNING by default).</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a>
+<a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">        name: Logger name. Typically __name__ of the calling module.</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">            If None, returns the root OpenLeaf logger.</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">        **initial_context: Initial context to bind to the logger.</span>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a>
-<a id="__codelineno-0-174" name="__codelineno-0-174"></a>    <span class="k">return</span> <span class="n">logger</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">        Configured structlog bound logger instance.</span>
+<a id="__codelineno-0-176" name="__codelineno-0-176"></a>
+<a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    Example:</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">        &gt;&gt;&gt; logger = get_logger(__name__)</span>
+<a id="__codelineno-0-179" name="__codelineno-0-179"></a><span class="sd">        &gt;&gt;&gt; logger.debug(&quot;Loading model data&quot;)</span>
+<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">        &gt;&gt;&gt; logger.info(&quot;Model loaded&quot;, aircraft=&quot;A320&quot;, source=&quot;BADA4&quot;)</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">        &gt;&gt;&gt; logger.warning(&quot;Value exceeds VMO&quot;, value=350, vmo=340)</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">        # With initial context</span>
+<a id="__codelineno-0-184" name="__codelineno-0-184"></a><span class="sd">        &gt;&gt;&gt; logger = get_logger(__name__, aircraft=&quot;A320&quot;)</span>
+<a id="__codelineno-0-185" name="__codelineno-0-185"></a><span class="sd">        &gt;&gt;&gt; logger.info(&quot;Computing drag&quot;)  # aircraft=&quot;A320&quot; included automatically</span>
+<a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a>    <span class="k">if</span> <span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188"></a>        <span class="n">name</span> <span class="o">=</span> <span class="n">_LOGGER_NAME</span>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a>    <span class="k">elif</span> <span class="ow">not</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">_LOGGER_NAME</span><span class="p">):</span>
+<a id="__codelineno-0-190" name="__codelineno-0-190"></a>        <span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">_LOGGER_NAME</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191"></a>
+<a id="__codelineno-0-192" name="__codelineno-0-192"></a>    <span class="k">if</span> <span class="n">structlog</span><span class="o">.</span><span class="n">is_configured</span><span class="p">():</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a>        <span class="c1"># Respect the application&#39;s structlog configuration.</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a>        <span class="n">logger</span> <span class="o">=</span> <span class="n">structlog</span><span class="o">.</span><span class="n">get_logger</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<a id="__codelineno-0-195" name="__codelineno-0-195"></a>    <span class="k">else</span><span class="p">:</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a>        <span class="c1"># Library-scoped fallback: never touches global structlog/stdlib state.</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a>        <span class="n">logger</span> <span class="o">=</span> <span class="n">structlog</span><span class="o">.</span><span class="n">wrap_logger</span><span class="p">(</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a>            <span class="n">structlog</span><span class="o">.</span><span class="n">PrintLogger</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">),</span>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a>            <span class="n">processors</span><span class="o">=</span><span class="n">_PROCESSORS</span><span class="p">,</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a>        <span class="p">)</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">logger</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a>    <span class="k">if</span> <span class="n">initial_context</span><span class="p">:</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a>        <span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="o">**</span><span class="n">initial_context</span><span class="p">)</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a>    <span class="k">return</span> <span class="n">logger</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

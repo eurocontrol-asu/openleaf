@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="OpenLeaf — Open-source aviation sustainability suite: performance modeling, emissions, and trajectory optimization.">
+        <meta name="description" content="OpenLeaf — Open-source aviation sustainability suite: aircraft performance modeling and trajectory optimization.">
       
       
       
@@ -1353,10 +1353,7 @@ in np.where and other array operations.</p>
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/core/types.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-161">161</a></span>
-<span class="normal"><a href="#__codelineno-0-162">162</a></span>
-<span class="normal"><a href="#__codelineno-0-163">163</a></span>
-<span class="normal"><a href="#__codelineno-0-164">164</a></span>
+                <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-164">164</a></span>
 <span class="normal"><a href="#__codelineno-0-165">165</a></span>
 <span class="normal"><a href="#__codelineno-0-166">166</a></span>
 <span class="normal"><a href="#__codelineno-0-167">167</a></span>
@@ -1394,48 +1391,51 @@ in np.where and other array operations.</p>
 <span class="normal"><a href="#__codelineno-0-199">199</a></span>
 <span class="normal"><a href="#__codelineno-0-200">200</a></span>
 <span class="normal"><a href="#__codelineno-0-201">201</a></span>
-<span class="normal"><a href="#__codelineno-0-202">202</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="k">class</span><span class="w"> </span><span class="nc">AerodynamicConfig</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
-<a id="__codelineno-0-162" name="__codelineno-0-162"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Unified aerodynamic configuration across all models.</span>
-<a id="__codelineno-0-163" name="__codelineno-0-163"></a>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="sd">    These configurations represent discrete flight phases with different</span>
-<a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="sd">    aerodynamic characteristics (flap/gear settings).</span>
+<span class="normal"><a href="#__codelineno-0-202">202</a></span>
+<span class="normal"><a href="#__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#__codelineno-0-205">205</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="k">class</span><span class="w"> </span><span class="nc">AerodynamicConfig</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Unified aerodynamic configuration across all models.</span>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a>
-<a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    Uses IntEnum for array API compatibility - values can be used directly</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    in np.where and other array operations.</span>
+<a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    These configurations represent discrete flight phases with different</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    aerodynamic characteristics (flap/gear settings).</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    BADA3 Manual Section 3.5 defines altitude thresholds:</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">        - TO: Take-off (up to 400 ft AGL in climb)</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">        - IC: Initial Climb (400-2000 ft AGL in climb)</span>
-<a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">        - CR: Cruise (above 2000 ft climb, above 8000 ft descent, or fast descent)</span>
-<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">        - AP: Approach (below 8000 ft descent when V &lt; Vmin_CR + 10 kt)</span>
-<a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">        - LD: Landing (below 3000 ft descent when V &lt; Vmin_AP + 10 kt)</span>
-<a id="__codelineno-0-176" name="__codelineno-0-176"></a>
-<a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    BADA4 Manual Section 6 uses similar logic with aircraft-specific thresholds.</span>
-<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    Uses IntEnum for array API compatibility - values can be used directly</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">    in np.where and other array operations.</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a>
+<a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">    BADA3 Manual Section 3.5 defines altitude thresholds:</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">        - TO: Take-off (up to 400 ft AGL in climb)</span>
+<a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">        - IC: Initial Climb (400-2000 ft AGL in climb)</span>
+<a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">        - CR: Cruise (above 2000 ft climb, above 8000 ft descent, or fast descent)</span>
+<a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">        - AP: Approach (below 8000 ft descent when V &lt; Vmin_CR + 10 kt)</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">        - LD: Landing (below 3000 ft descent when V &lt; Vmin_AP + 10 kt)</span>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a>
-<a id="__codelineno-0-180" name="__codelineno-0-180"></a>    <span class="n">TO</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Take-off</span>
-<a id="__codelineno-0-181" name="__codelineno-0-181"></a>    <span class="n">IC</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Initial Climb</span>
-<a id="__codelineno-0-182" name="__codelineno-0-182"></a>    <span class="n">CR</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Cruise (clean)</span>
-<a id="__codelineno-0-183" name="__codelineno-0-183"></a>    <span class="n">AP</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># Approach</span>
-<a id="__codelineno-0-184" name="__codelineno-0-184"></a>    <span class="n">LD</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Landing</span>
-<a id="__codelineno-0-185" name="__codelineno-0-185"></a>
-<a id="__codelineno-0-186" name="__codelineno-0-186"></a>    <span class="nd">@classmethod</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AerodynamicConfig</span><span class="p">:</span>
-<a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create from string name (for XML/OPF parsing compatibility).</span>
-<a id="__codelineno-0-189" name="__codelineno-0-189"></a>
-<a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="sd">        Args:</span>
-<a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="sd">            name: Configuration name (&quot;TO&quot;, &quot;IC&quot;, &quot;CR&quot;, &quot;AP&quot;, &quot;LD&quot;).</span>
+<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    BADA4 Manual Section 6 uses similar logic with aircraft-specific thresholds.</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a>    <span class="n">TO</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># Take-off</span>
+<a id="__codelineno-0-184" name="__codelineno-0-184"></a>    <span class="n">IC</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Initial Climb</span>
+<a id="__codelineno-0-185" name="__codelineno-0-185"></a>    <span class="n">CR</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Cruise (clean)</span>
+<a id="__codelineno-0-186" name="__codelineno-0-186"></a>    <span class="n">AP</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># Approach</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a>    <span class="n">LD</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Landing</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188"></a>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a>    <span class="nd">@classmethod</span>
+<a id="__codelineno-0-190" name="__codelineno-0-190"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AerodynamicConfig</span><span class="p">:</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create from string name (for XML/OPF parsing compatibility).</span>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">        Returns:</span>
-<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">            Corresponding AerodynamicConfig enum value.</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">        Args:</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">            name: Configuration name (&quot;TO&quot;, &quot;IC&quot;, &quot;CR&quot;, &quot;AP&quot;, &quot;LD&quot;).</span>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a>
-<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">        Raises:</span>
-<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">            ValueError: If name is not a valid configuration.</span>
-<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-199" name="__codelineno-0-199"></a>        <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-200" name="__codelineno-0-200"></a>            <span class="k">return</span> <span class="bp">cls</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a>        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown aerodynamic configuration: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">        Returns:</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">            Corresponding AerodynamicConfig enum value.</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">        Raises:</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">            ValueError: If name is not a valid configuration.</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a>        <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a>            <span class="k">return</span> <span class="bp">cls</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a>        <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown aerodynamic configuration: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1478,10 +1478,7 @@ in np.where and other array operations.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/core/types.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-186">186</a></span>
-<span class="normal"><a href="#__codelineno-0-187">187</a></span>
-<span class="normal"><a href="#__codelineno-0-188">188</a></span>
-<span class="normal"><a href="#__codelineno-0-189">189</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-189">189</a></span>
 <span class="normal"><a href="#__codelineno-0-190">190</a></span>
 <span class="normal"><a href="#__codelineno-0-191">191</a></span>
 <span class="normal"><a href="#__codelineno-0-192">192</a></span>
@@ -1494,23 +1491,26 @@ in np.where and other array operations.</p>
 <span class="normal"><a href="#__codelineno-0-199">199</a></span>
 <span class="normal"><a href="#__codelineno-0-200">200</a></span>
 <span class="normal"><a href="#__codelineno-0-201">201</a></span>
-<span class="normal"><a href="#__codelineno-0-202">202</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="nd">@classmethod</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AerodynamicConfig</span><span class="p">:</span>
-<a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create from string name (for XML/OPF parsing compatibility).</span>
-<a id="__codelineno-0-189" name="__codelineno-0-189"></a>
-<a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="sd">        name: Configuration name (&quot;TO&quot;, &quot;IC&quot;, &quot;CR&quot;, &quot;AP&quot;, &quot;LD&quot;).</span>
+<span class="normal"><a href="#__codelineno-0-202">202</a></span>
+<span class="normal"><a href="#__codelineno-0-203">203</a></span>
+<span class="normal"><a href="#__codelineno-0-204">204</a></span>
+<span class="normal"><a href="#__codelineno-0-205">205</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="nd">@classmethod</span>
+<a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="k">def</span><span class="w"> </span><span class="nf">from_string</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AerodynamicConfig</span><span class="p">:</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create from string name (for XML/OPF parsing compatibility).</span>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">        Corresponding AerodynamicConfig enum value.</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">        name: Configuration name (&quot;TO&quot;, &quot;IC&quot;, &quot;CR&quot;, &quot;AP&quot;, &quot;LD&quot;).</span>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a>
-<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">        ValueError: If name is not a valid configuration.</span>
-<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-199" name="__codelineno-0-199"></a>    <span class="k">try</span><span class="p">:</span>
-<a id="__codelineno-0-200" name="__codelineno-0-200"></a>        <span class="k">return</span> <span class="bp">cls</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a>    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown aerodynamic configuration: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="sd">        Corresponding AerodynamicConfig enum value.</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a>
+<a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">    Raises:</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">        ValueError: If name is not a valid configuration.</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a>    <span class="k">try</span><span class="p">:</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a>        <span class="k">return</span> <span class="bp">cls</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a>    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown aerodynamic configuration: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

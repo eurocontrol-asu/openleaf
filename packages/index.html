@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="OpenLeaf — Open-source aviation sustainability suite: performance modeling, emissions, and trajectory optimization.">
+        <meta name="description" content="OpenLeaf — Open-source aviation sustainability suite: aircraft performance modeling and trajectory optimization.">
       
       
       
@@ -1278,9 +1278,9 @@
 <li>
 <p><span class="twemoji lg middle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 16.5c0 .38-.21.71-.53.88l-7.9 4.44c-.16.12-.36.18-.57.18s-.41-.06-.57-.18l-7.9-4.44A.99.99 0 0 1 3 16.5v-9c0-.38.21-.71.53-.88l7.9-4.44c.16-.12.36-.18.57-.18s.41.06.57.18l7.9 4.44c.32.17.53.5.53.88zM12 4.15 6.04 7.5 12 10.85l5.96-3.35zM5 15.91l6 3.38v-6.71L5 9.21zm14 0v-6.7l-6 3.37v6.71z"/></svg></span> <strong>openleaf-core</strong></p>
 <hr />
-<p>Shared types, protocols, and interfaces that form the foundation of the
-OpenLeaf suite. Installed automatically as a dependency of
-<code>openleaf-performance</code>.</p>
+<p>Reserved for shared types, protocols, and interfaces for the OpenLeaf
+suite. Currently a placeholder package: <code>openleaf-performance</code> does not
+yet depend on it.</p>
 </li>
 </ul>
 </div>
@@ -1289,7 +1289,7 @@ OpenLeaf suite. Installed automatically as a dependency of
     classDef perf fill:#B3D4F0,stroke:#023961
     classDef core fill:#C4DFF5,stroke:#15588F
 
-    PERF["openleaf-performance&lt;br/&gt;Aircraft performance"]:::perf --&gt; CORE
+    PERF["openleaf-performance&lt;br/&gt;Aircraft performance"]:::perf -. planned .-&gt; CORE
     CORE["openleaf-core&lt;br/&gt;Shared types &amp; interfaces"]:::core</code></pre>
 
 
