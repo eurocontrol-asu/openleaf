@@ -1811,6 +1811,7 @@ source = { virtual = "." }
 [package.dev-dependencies]
 dev = [
     { name = "mypy" },
+    { name = "pip-audit" },
     { name = "pre-commit" },
     { name = "pytest" },
     { name = "pytest-cov" },
@@ -1830,6 +1831,7 @@ docs = [
 [package.metadata.requires-dev]
 dev = [
     { name = "mypy", specifier = ">=1.0" },
+    { name = "pip-audit", specifier = ">=2.7.0" },
     { name = "pre-commit", specifier = ">=4.0" },
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-cov", specifier = ">=4.0" },
