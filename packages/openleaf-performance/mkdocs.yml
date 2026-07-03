@@ -1,0 +1,19 @@
+site_name: openleaf-performance
+docs_dir: docs
+
+nav:
+  - index.md
+  - Tutorials:
+    - tutorials/getting-started.md
+  - How-To Guides:
+    - howto/index.md
+    - howto/add-aircraft.md
+    - howto/switch-backend.md
+  - Explanation:
+    - explanation/architecture.md
+    - explanation/backends.md
+    - explanation/models.md
+  - Reference:
+    - reference/interpolation.md
+    - reference/synonyms.md
+    - reference/mixins.md

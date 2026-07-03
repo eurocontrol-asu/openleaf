@@ -1,0 +1,12 @@
+version: 2
+updates:
+  # uv ecosystem covers pyproject.toml + uv.lock (the pip ecosystem does
+  # not update uv lockfiles, so the previous config never bumped anything).
+  - package-ecosystem: uv
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

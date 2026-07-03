@@ -1,0 +1,218 @@
+name: CI
+
+# Public-repo CI policy:
+# - Everything triggered by pull_request runs on GitHub-hosted runners only.
+#   Self-hosted runners must never execute fork-PR code (arbitrary code
+#   execution on internal infrastructure — see GitHub's own guidance).
+# - The proprietary-data (BADA) + GPU suite runs on the internal runner only
+#   for pushes to main of this repository, i.e. after review and merge.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+      - run: uv python install 3.12
+      - run: uv sync --all-groups
+      - name: Ruff check
+        run: uv run ruff check .
+      - name: Ruff format
+        run: uv run ruff format --check .
+      - name: MyPy (openleaf-core)
+        run: uv run --package openleaf-core mypy --config-file packages/openleaf-core/pyproject.toml packages/openleaf-core/src/ packages/openleaf-core/tests/
+      - name: MyPy (openleaf-performance)
+        working-directory: packages/openleaf-performance
+        run: uv run mypy src/ tests/
+
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+      - run: uv python install 3.12
+      - run: uv sync --all-groups
+      # Blocking on purpose: a known-vulnerable locked dependency fails CI.
+      - run: uv run pip-audit
+
+  install-smoke:
+    name: Base install smoke (no extras)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+      - run: uv python install 3.12
+      - name: Install openleaf-performance without extras and import it
+        run: |
+          uv venv /tmp/smoke
+          VIRTUAL_ENV=/tmp/smoke uv pip install ./packages/openleaf-performance
+          /tmp/smoke/bin/python - <<'EOF'
+          import numpy as np
+          import openleaf.performance
+          import openleaf.performance.numpy as onp
+          from openleaf.performance.core.factory import ModelFactory
+          from openleaf.performance.physics.aero import AircraftAirspeed
+
+          a = AircraftAirspeed(T=288.15, p=101325.0, cas=150.0)
+          assert np.isclose(float(a.true_airspeed), 150.0, rtol=1e-6)
+          assert onp.interp(1.5, np.array([0.0, 1.0, 2.0]), np.array([0.0, 2.0, 4.0])) == 3.0
+          # Optional backends must report unavailable, not crash
+          availability = ModelFactory.is_available("A320")
+          assert all(v is False for v in availability.values())
+          print("base install OK")
+          EOF
+
+  test:
+    name: Test ${{ matrix.package }} (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package: [openleaf-core, openleaf-performance]
+        python-version: ["3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7
+      - run: uv python install ${{ matrix.python-version }}
+      - run: uv sync --all-groups
+
+      # BADA tests skip automatically when no BADA data is configured;
+      # they run against the licensed data in the trusted job below.
+      - name: Run tests
+        run: |
+          uv run --package ${{ matrix.package }} --directory packages/${{ matrix.package }} \
+            pytest --cov --cov-report=json:coverage.json --no-cov-on-fail -q
+
+      - name: Upload coverage artifact
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: coverage-${{ matrix.package }}
+          path: packages/${{ matrix.package }}/coverage.json
+
+  # Proprietary BADA data + GPU backends. Trusted context only: never on
+  # pull_request, never for forks. Requires the org self-hosted runner group
+  # to be restricted to this repository in GitHub settings.
+  test-bada-gpu:
+    name: Test with BADA data + GPU (trusted, main only)
+    if: github.event_name == 'push' && github.repository == 'eurocontrol-asu/openleaf'
+    runs-on: [self-hosted, mandrell]
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Checkout BADA data
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          repository: eurocontrol-asu/bada-data
+          token: ${{ secrets.DATA_REPO_TOKEN }}
+          path: bada_data
+
+      - run: uv python install 3.12
+      - run: uv sync --all-groups --all-extras
+
+      - name: Run tests
+        env:
+          OPENLEAF_BADA3_PATH: ${{ github.workspace }}/bada_data/3.16
+          OPENLEAF_BADA4_PATH: ${{ github.workspace }}/bada_data/4.2.1
+        run: |
+          uv run --package openleaf-performance --directory packages/openleaf-performance \
+            pytest --no-cov -q
+
+      - name: Clean BADA data from runner workspace
+        if: always()
+        run: rm -rf "${{ github.workspace }}/bada_data"
+
+  badges:
+    name: Coverage Badges
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          path: _artifacts
+
+      - name: Generate badge JSON
+        id: badges
+        run: |
+          mkdir -p _publish/badges
+
+          score_color() {
+            local SCORE=$1
+            if [ "$SCORE" -ge 95 ]; then echo "brightgreen"
+            elif [ "$SCORE" -ge 80 ]; then echo "green"
+            elif [ "$SCORE" -ge 60 ]; then echo "yellow"
+            else echo "red"; fi
+          }
+
+          write_badge() {
+            local DIR=$1 NAME=$2 LABEL=$3 VALUE=$4
+            mkdir -p "$DIR"
+            local SCORE_INT=$(python3 -c "print(int(float('${VALUE}')))")
+            local COLOR=$(score_color "$SCORE_INT")
+            jq -n --arg l "$LABEL" --arg v "$VALUE" --arg c "$COLOR" \
+              '{schemaVersion:1, label:$l, message:"\($v)%", color:$c, style:"flat"}' \
+              > "$DIR/$NAME.json"
+          }
+
+          TOTAL_COV=0
+          COUNT=0
+
+          for PKG in openleaf-core openleaf-performance; do
+            COV_FILE="_artifacts/coverage-$PKG/coverage.json"
+            if [ -f "$COV_FILE" ]; then
+              COV=$(jq '.totals.percent_covered_display' "$COV_FILE" | tr -d '"')
+            else
+              COV=0
+            fi
+
+            echo ":: $PKG — Coverage ${COV}%"
+            write_badge "_publish/badges/$PKG" "coverage" "coverage" "$COV"
+
+            TOTAL_COV=$(python3 -c "print(round($TOTAL_COV + float('${COV}'), 1))")
+            COUNT=$((COUNT + 1))
+          done
+
+          AVG_COV=$(python3 -c "print(round($TOTAL_COV / $COUNT))")
+          write_badge "_publish/badges" "coverage" "coverage" "$AVG_COV"
+
+          echo "coverage=$AVG_COV" >> "$GITHUB_OUTPUT"
+          echo ":: Average coverage: ${AVG_COV}%"
+
+      - name: Push badges to gh-pages
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: ./_publish
+          keep_files: true
+          commit_message: "ci: coverage=${{ steps.badges.outputs.coverage }}%"

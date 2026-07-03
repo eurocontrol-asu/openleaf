@@ -1,0 +1,358 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "openleaf-performance"
+dynamic = ["version"]
+description = "A modular, differentiable aircraft performance modeling framework supporting BADA, Poll-Schumann, OpenAP and more"
+readme = "README.md"
+license = "EUPL-1.2"
+license-files = ["LICENSE", "NOTICE", "LICENSES/*"]
+requires-python = ">=3.12"
+authors = [
+    { name = "Ramon DALMAU", email = "ramon.dalmau-codina@eurocontrol.int" },
+    { name = "Gabriel JARRY", email = "gabriel.jarry@eurocontrol.int" },
+    { name = "Philippe VERY", email = "philippe.very@eurocontrol.int" },
+]
+keywords = [
+    "aircraft",
+    "performance",
+    "aviation",
+    "trajectory",
+    "optimization",
+    "BADA",
+    "CasADi",
+    "differentiable",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Typing :: Typed",
+]
+dependencies = [
+    "numpy>=1.24.0",
+    "pandas>=2.0.0",
+    "scipy>=1.10.0",
+    "pydantic>=2.0.0",
+    "structlog>=24.4.0",
+    "pydantic-settings>=2.7.0",
+    "rich>=13.9.0",
+    "array-api-compat>=1.4.0",  # Array API standard for multi-backend support
+]
+
+[project.optional-dependencies]
+# Computational backends (optional; the NumPy backend works out of the box)
+casadi = [
+    "casadi>=3.6.0",
+]
+torch = [
+    "torch>=2.0.0",
+]
+jax = [
+    "jax>=0.9.1",
+]
+# JAX GPU extra — CUDA 12 wheels (CUDA 11 is no longer supported by jax>=0.9)
+cuda12 = [
+    "jax[cuda12]>=0.9.1",
+]
+# Backend aliases
+optimization = ["openleaf-performance[casadi]"]  # Trajectory optimization requires CasADi
+gpu = ["openleaf-performance[torch]"]            # GPU acceleration via PyTorch
+# Optional aircraft performance data sources
+openap = [
+    "openap>=2.4,<2.5",
+]
+ps = [
+    "pycontrails>=0.60.2,<0.60.5",
+]
+# All optional runtime features (dev tooling lives in [dependency-groups])
+all = [
+    "openleaf-performance[casadi,torch,jax,openap,ps]",
+]
+
+[project.urls]
+Homepage = "https://github.com/eurocontrol-asu/openleaf"
+Documentation = "https://eurocontrol-asu.github.io/openleaf/"
+Repository = "https://github.com/eurocontrol-asu/openleaf.git"
+Issues = "https://github.com/eurocontrol-asu/openleaf/issues"
+Changelog = "https://github.com/eurocontrol-asu/openleaf/blob/main/CHANGELOG.md"
+
+# ============================================
+# DEPENDENCY GROUPS (PEP 735 - for uv sync)
+# ============================================
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=6.0.0",
+    "pytest-asyncio>=0.24.0",
+    "hypothesis>=6.100.0",
+    "ruff>=0.9.0",
+    "mypy>=1.13.0",
+    "pandas-stubs>=2.0.0",
+    "pip-audit>=2.7.0",
+    "casadi>=3.6.0",
+    "torch>=2.0.0",
+    "jax>=0.9.1",
+    "openap>=2.4,<2.5",
+    "pycontrails>=0.60.2,<0.60.5",
+    "xarray>=2023.0.0",
+    "cyclopts>=3.0.0",
+    "pre-commit>=4.0",
+]
+docs = [
+    "mkdocs>=1.5.0",
+    "mkdocs-material>=9.0.0",
+    "mkdocstrings[python]>=0.24.0",
+    "mkdocs-gen-files>=0.5.0",
+    "mkdocs-literate-nav>=0.6.0",
+    "mkdocs-section-index>=0.3.0",
+]
+examples = [
+    "matplotlib>=3.8.0",
+]
+
+# ============================================
+# UV - Workspace source for openleaf-core
+# ============================================
+[tool.uv.sources]
+
+# ============================================
+# HATCH - Build & Versioning
+# ============================================
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "0.0.0"
+
+# Monorepo tagging: releases are tagged "performance/vX.Y.Z" (see
+# .github/workflows/publish.yml). Without these options setuptools-scm
+# matches any tag (e.g. core/v*) or none, and publishes a wrong version.
+[tool.hatch.version.raw-options]
+git_describe_command = [
+    "git",
+    "describe",
+    "--dirty",
+    "--tags",
+    "--long",
+    "--match",
+    "performance/v*",
+]
+tag_regex = "^performance/v(?P<version>[0-9][^/]*)$"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/openleaf/performance/_version.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/openleaf"]
+
+# ============================================
+# MYPY - Type Checking
+# ============================================
+[tool.mypy]
+python_version = "3.12"
+mypy_path = "src"
+explicit_package_bases = true
+warn_return_any = false
+warn_unused_configs = true
+ignore_missing_imports = true
+show_error_codes = true
+show_column_numbers = true
+pretty = true
+strict_optional = false
+warn_redundant_casts = true
+warn_unused_ignores = false
+no_implicit_optional = false
+
+[[tool.mypy.overrides]]
+module = [
+    "openap.*",
+    "pycontrails.*",
+    "casadi.*",
+    "pandas.*",
+    "scipy.*",
+    "xarray.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "openleaf.performance.numpy.*",
+]
+# CasADi dispatch layer has complex type unions - targeted ignores
+disable_error_code = ["arg-type", "return-value", "assignment", "union-attr"]
+
+[[tool.mypy.overrides]]
+module = [
+    "openleaf.performance.physics.*",
+    "openleaf.performance.models.*",
+]
+# Physics and models modules: allow flexible return types for CasADi compat
+# call-overload: np.equal/np.where with enum types
+# operator: bitwise ops with ArrayScalarLike unions
+# attr-defined: duck-typed generics access attributes via TypeVar
+# assignment: flexible type assignments in parsing/initialization
+warn_return_any = false
+disable_error_code = ["arg-type", "return-value", "call-overload", "operator", "attr-defined", "assignment", "override"]
+
+[[tool.mypy.overrides]]
+module = [
+    "openleaf.performance.core.*",
+]
+# Core modules: disable return-value for ArrayScalarLike and attr-defined for duck-typed generics
+warn_return_any = false
+disable_error_code = ["return-value", "attr-defined", "call-overload", "override"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_untyped_decorators = false
+disable_error_code = ["arg-type", "attr-defined", "name-defined", "return-value"]
+
+# ============================================
+# PYTEST - Testing
+# ============================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--strict-config",
+    "--import-mode=importlib",
+    "-ra",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning:hypothesis.*:",
+    # PyTorch has not updated Tensor.__array_wrap__() for NumPy 2.0 yet.
+    # Triggered when numpy scalars from np.where(enum_condition, ...) are
+    # multiplied with torch tensors. Resolves with a future PyTorch release.
+    "ignore:__array_wrap__ must accept context:DeprecationWarning",
+]
+
+# ============================================
+# COVERAGE
+# ============================================
+[tool.coverage.run]
+source = ["src"]
+branch = true
+parallel = true
+omit = [
+    "*/_version.py",
+    "*/tests/*",
+    "*/__init__.py",
+    # CasADi-specific code paths tested separately
+    "*/numpy/interpolate.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "@abstractmethod",
+    "@overload",
+    "def __repr__",
+    "raise AssertionError",
+]
+fail_under = 65
+show_missing = true
+
+[tool.coverage.paths]
+source = [
+    "src/",
+    "*/site-packages/",
+]
+
+# ============================================
+# DEPTRY - Dependency Hygiene
+# ============================================
+[tool.deptry]
+extend_exclude = ["examples"]
+
+[tool.deptry.per_rule_ignores]
+# Dev/test/docs tools — not imported in source code
+# openleaf-core: namespace sibling, resolved at runtime as openleaf.core.*
+# torch: optional backend, imported dynamically via Backend.TORCH.module
+# xarray: optional, used in tests only
+DEP002 = [
+    "hypothesis",
+    "mkdocs",
+    "mkdocs-gen-files",
+    "mkdocs-literate-nav",
+    "mkdocs-material",
+    "mkdocs-section-index",
+    "mkdocstrings",
+    "mypy",
+    "openleaf-performance",
+    "pandas-stubs",
+    "pip-audit",
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "ruff",
+    "torch",
+    "xarray",
+]
+
+# ============================================
+# GIT-CLIFF - Changelog Generation
+# ============================================
+[tool.git-cliff.changelog]
+header = """
+# Changelog\n
+All notable changes to this project will be documented in this file.\n
+"""
+body = """
+{% for group, commits in commits | group_by(attribute="group") %}
+    ### {{ group | striptags | trim | upper_first }}
+    {% for commit in commits %}
+        - {% if commit.scope %}*({{ commit.scope }})* {% endif %}\
+            {{ commit.message | upper_first }}\
+    {% endfor %}
+{% endfor %}\n
+"""
+trim = true
+
+[tool.git-cliff.git]
+conventional_commits = true
+filter_unconventional = true
+split_commits = false
+commit_parsers = [
+    { message = "^feat", group = "Added" },
+    { message = "^fix", group = "Fixed" },
+    { message = "^doc", group = "Documentation" },
+    { message = "^perf", group = "Performance" },
+    { message = "^refactor", group = "Changed" },
+    { message = "^style", group = "Styling" },
+    { message = "^test", group = "Testing" },
+    { message = "^ci", group = "CI/CD" },
+    { message = "^chore\\(release\\)", skip = true },
+    { message = "^chore", group = "Miscellaneous" },
+]
+protect_breaking_commits = false
+filter_commits = false
+tag_pattern = "v[0-9].*"
+topo_order = false
+sort_commits = "oldest"

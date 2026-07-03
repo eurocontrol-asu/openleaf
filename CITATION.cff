@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+title: "OpenLeaf: A Unified, Vectorized and Differentiable Framework for Aircraft Performance Modelling"
+message: "If you use this software, please cite both the software and the paper below."
+type: software
+authors:
+  - family-names: Dalmau
+    given-names: Ramon
+    affiliation: EUROCONTROL
+    email: ramon.dalmau-codina@eurocontrol.int
+  - family-names: Jarry
+    given-names: Gabriel
+    affiliation: EUROCONTROL
+    email: gabriel.jarry@eurocontrol.int
+  - family-names: Very
+    given-names: Philippe
+    affiliation: EUROCONTROL
+    email: philippe.very@eurocontrol.int
+repository-code: "https://github.com/eurocontrol-asu/openleaf"
+url: "https://eurocontrol-asu.github.io/openleaf/"
+license: EUPL-1.2
+preferred-citation:
+  type: conference-paper
+  title: "OpenLeaf: A Unified, Vectorized and Differentiable Framework for Aircraft Performance Modelling"
+  authors:
+    - family-names: Dalmau
+      given-names: Ramon
+    - family-names: Jarry
+      given-names: Gabriel
+    - family-names: Very
+      given-names: Philippe
+  collection-title: "US-Europe Air Transportation Research & Development Symposium"
+  conference:
+    name: "US-Europe Air Transportation Research & Development Symposium"
+    location: "Delft, Netherlands"
+  year: 2026

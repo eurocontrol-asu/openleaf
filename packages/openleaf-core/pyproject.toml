@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "openleaf-core"
+version = "0.1.0"
+description = "Shared types and interfaces for the OpenLeaf aviation sustainability suite"
+readme = "README.md"
+license = "EUPL-1.2"
+license-files = ["LICENSE", "NOTICE"]
+requires-python = ">=3.12"
+authors = [{ name = "Ramon DALMAU", email = "ramon.dalmau-codina@eurocontrol.int" }]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/eurocontrol-asu/openleaf"
+Repository = "https://github.com/eurocontrol-asu/openleaf.git"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/openleaf"]
