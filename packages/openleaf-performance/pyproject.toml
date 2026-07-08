@@ -60,7 +60,7 @@ jax = [
 ]
 # JAX GPU extra — CUDA 12 wheels (CUDA 11 is no longer supported by jax>=0.9)
 cuda12 = [
-    "jax[cuda12]>=0.9.1",
+    "jax[cuda12]>=0.10.2",
 ]
 # Backend aliases
 optimization = ["openleaf-performance[casadi]"]  # Trajectory optimization requires CasADi
