@@ -1797,7 +1797,7 @@ wheels = [
 
 [[package]]
 name = "openap"
-version = "2.4"
+version = "2.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "matplotlib" },
@@ -1806,9 +1806,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "scipy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f9/90/8e32c7ae454f1ced6a96590064b2c2e88bfc75e171a80beb82b8905b6e36/openap-2.4.tar.gz", hash = "sha256:a07b05316dd646bc8e7a1298c47941439f8d40f8bd1e87ce174fcf308406d3aa", size = 9361062, upload-time = "2025-08-14T16:49:07.828Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cc/3e/ee62c66def7c570d1aec06e6e0e04c46492028d7ae4c135ab24aa8ce4978/openap-2.6.0.tar.gz", hash = "sha256:be47e75c5ade7c56b9476fbf45d506a385ed3abfc2185197da6ee7e20ea8ada3", size = 9410048, upload-time = "2026-07-02T14:42:27.54Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/bf/3c/e44ba37ec362e9bbe13ba5aa17b625a0ff955272e8b7e83e826ee7b10fa5/openap-2.4-py3-none-any.whl", hash = "sha256:33c8d1366c7b1fd9b6d13aff8c21f81b1f780f7f5917b2026f2d6b4e8b0bf260", size = 2688166, upload-time = "2025-08-14T16:49:05.909Z" },
+    { url = "https://files.pythonhosted.org/packages/66/b1/4263c069ca2177d9c71d2c19046e2b587b13b6936f22df9e082233b5ec64/openap-2.6.0-py3-none-any.whl", hash = "sha256:aed9a19f232f57744bbe3276e1e044f74f1984dc16a72d00797aa70f54800fab", size = 2699866, upload-time = "2026-07-02T14:42:25.368Z" },
 ]
 
 [[package]]
@@ -1947,8 +1947,8 @@ requires-dist = [
     { name = "jax", marker = "extra == 'jax'", specifier = ">=0.9.1" },
     { name = "jax", extras = ["cuda12"], marker = "extra == 'cuda12'", specifier = ">=0.9.1" },
     { name = "numpy", specifier = ">=1.24.0" },
-    { name = "openap", marker = "extra == 'all'", specifier = ">=2.4,<2.5" },
-    { name = "openap", marker = "extra == 'openap'", specifier = ">=2.4,<2.5" },
+    { name = "openap", marker = "extra == 'all'", specifier = ">=2.6.0,<2.7" },
+    { name = "openap", marker = "extra == 'openap'", specifier = ">=2.6.0,<2.7" },
     { name = "pandas", specifier = ">=2.0.0" },
     { name = "pycontrails", marker = "extra == 'all'", specifier = ">=0.60.2,<0.60.5" },
     { name = "pycontrails", marker = "extra == 'ps'", specifier = ">=0.60.2,<0.60.5" },
@@ -1970,7 +1970,7 @@ dev = [
     { name = "hypothesis", specifier = ">=6.100.0" },
     { name = "jax", specifier = ">=0.9.1" },
     { name = "mypy", specifier = ">=1.13.0" },
-    { name = "openap", specifier = ">=2.4,<2.5" },
+    { name = "openap", specifier = ">=2.6.0,<2.7" },
     { name = "pandas-stubs", specifier = ">=2.0.0" },
     { name = "pip-audit", specifier = ">=2.7.0" },
     { name = "pre-commit", specifier = ">=4.0" },
