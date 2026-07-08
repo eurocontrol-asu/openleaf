@@ -43,7 +43,7 @@ dependencies = [
     "pydantic>=2.0.0",
     "structlog>=24.4.0",
     "pydantic-settings>=2.7.0",
-    "rich>=13.9.0",
+    "rich>=15.0.0",
     "array-api-compat>=1.4.0",  # Array API standard for multi-backend support
 ]
 
