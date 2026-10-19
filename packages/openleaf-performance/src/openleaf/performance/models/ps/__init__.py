@@ -21,7 +21,8 @@ Usage:
 Reference:
     Poll, D.I.A., and Schumann, U. (2021). "An estimation method for the fuel burn
     and other performance characteristics of civil transport aircraft in the cruise."
-    The Aeronautical Journal, 125(1284), 550-577.
+    The Aeronautical Journal, 125(1284), 257-295.
+    https://doi.org/10.1017/aer.2020.62
 """
 
 from __future__ import annotations
