@@ -19,7 +19,8 @@ Usage:
 Reference:
     Poll, D.I.A., and Schumann, U. (2021). "An estimation method for the fuel burn
     and other performance characteristics of civil transport aircraft in the cruise."
-    The Aeronautical Journal, 125(1284), 550-577.
+    The Aeronautical Journal, 125(1284), 257-295.
+    https://doi.org/10.1017/aer.2020.62
 """
 
 from __future__ import annotations
@@ -112,7 +113,8 @@ class PSAeroModel(AerodynamicsModel[PSAerodynamicsData]):
         Reference:
             Poll & Schumann (2021), "An estimation method for the fuel burn
             and other performance characteristics of civil transport aircraft
-            in the cruise." The Aeronautical Journal, 125(1284), 550-577.
+            in the cruise." The Aeronautical Journal, 125(1284), 257-295.
+            https://doi.org/10.1017/aer.2020.62
         """
         # PS model is cruise-only - compute clean configuration drag
         return self._drag_coef_clean(
@@ -567,8 +569,8 @@ class PSModel(AircraftModel):
 
         Example:
             >>> model = PSModel("A320")
-            >>> model.mtom
-            78000.0
+            >>> model.mtom  # [kg], from the pycontrails 0.60.4 database
+            73500.0
             >>> model_conservative = PSModel("A320", thrust_buffer=0.20)
         """
         logger.info("Loading PS model for %s", icao)
