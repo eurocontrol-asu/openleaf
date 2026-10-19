@@ -19,12 +19,14 @@ __all__ = [
     "dynamic_pressure",
     "f_from_gradient",
     "thrust_required",
+    "thrust_required_from_acceleration",
 ]
 
 from functools import cached_property
 
 import openleaf.performance.numpy as np
 from openleaf.performance.physics import isa
+from openleaf.performance.physics.units import EPSILON_CLAMP
 from openleaf.performance.utils.types import ArrayScalarLike
 
 
@@ -132,6 +134,11 @@ def thrust_required(
 
     T = D + m · g · (dh/dt) / (V · f)
 
+    At f = 0 all excess power goes to acceleration and the vertical speed
+    carries no information about it, so the climb term is dropped and thrust
+    equals drag, as in tem.thrust_from_rocd. When the acceleration is known,
+    use thrust_required_from_acceleration(), which does not divide by f.
+
     Args:
         drag: Aerodynamic drag force [N].
         mass: Aircraft mass [kg].
@@ -146,7 +153,45 @@ def thrust_required(
         openleaf.performance.physics.tem.thrust_from_rocd: Temperature-corrected version
             using pressure altitude rate.
     """
-    return drag + mass * isa.G * vertical_speed / (true_airspeed * f)
+    # The inner where() keeps the unselected branch from dividing by f = 0.
+    zero_f = np.abs(f) < EPSILON_CLAMP
+    safe_f = np.where(zero_f, 1.0, f)
+    climb_term = np.where(zero_f, 0.0, mass * isa.G * vertical_speed / (true_airspeed * safe_f))
+    return drag + climb_term
+
+
+def thrust_required_from_acceleration(
+    drag: ArrayScalarLike,
+    mass: ArrayScalarLike,
+    true_airspeed: ArrayScalarLike,
+    vertical_speed: ArrayScalarLike,
+    acceleration: ArrayScalarLike,
+) -> ArrayScalarLike:
+    """Calculate thrust required from the vertical speed and the acceleration.
+
+    Simple TEM formula assuming GEOMETRIC altitude rate (dh/dt), solved
+    directly (BADA 3.1-1) rather than through the energy share factor:
+
+    T = D + m · g · (dh/dt) / V + m · (dV/dt)
+
+    Unlike thrust_required(), it does not divide by f, so it stays exact in
+    level acceleration, where f = 0.
+
+    Args:
+        drag: Aerodynamic drag force [N].
+        mass: Aircraft mass [kg].
+        true_airspeed: True airspeed [m/s].
+        vertical_speed: GEOMETRIC altitude rate [m/s] (positive = climbing).
+        acceleration: Longitudinal acceleration dV_TAS/dt [m/s²].
+
+    Returns:
+        Required thrust [N].
+
+    See Also:
+        openleaf.performance.physics.tem.thrust_from_acceleration: Temperature-corrected
+            version using pressure altitude rate.
+    """
+    return drag + mass * (isa.G * vertical_speed / true_airspeed + acceleration)
 
 
 # --- Speed Conversions ---

@@ -17,6 +17,8 @@ import openleaf.performance.physics.isa as isa
 from openleaf.performance.physics.aero import AircraftAirspeed
 from openleaf.performance.physics.aero import crossover_altitude
 from openleaf.performance.physics.aero import dynamic_pressure
+from openleaf.performance.physics.aero import thrust_required
+from openleaf.performance.physics.aero import thrust_required_from_acceleration
 from openleaf.performance.physics.isa import air_pressure
 from openleaf.performance.physics.isa import air_temperature
 from openleaf.performance.physics.isa import delta
@@ -372,6 +374,64 @@ class TestCrossoverAltitude:
 
         # Should be around FL300-FL350 for typical values
         assert 8000 < h < 12000  # meters
+
+
+class TestThrustRequired:
+    """Tests for the geometric-rate TEM thrust functions and their model wrapper."""
+
+    DRAG, MASS, TAS = 40000.0, 65000.0, 230.0
+
+    def test_level_acceleration_keeps_m_a(self):
+        """Level acceleration (f = 0): T - D = m a, without NaN (#58)."""
+        t = thrust_required_from_acceleration(self.DRAG, self.MASS, self.TAS, 0.0, 0.5)
+        assert t - self.DRAG == pytest.approx(self.MASS * 0.5)
+
+    @pytest.mark.parametrize("f", [0.0, np.array([0.0])])
+    def test_zero_f_gives_drag(self, f):
+        """f = 0 drops the climb term instead of dividing by zero (#58)."""
+        t = thrust_required(self.DRAG, self.MASS, self.TAS, 0.0, f)
+        assert np.all(np.isfinite(t))
+        assert np.all(t == self.DRAG)
+
+    @pytest.mark.parametrize("vs,acc", [(5.0, 0.0), (5.0, 0.5), (-3.0, -0.2)])
+    def test_both_forms_agree_when_f_is_consistent(self, vs, acc):
+        """With f = vs / (vs + V a / g), the f form equals the acceleration form."""
+        f = vs / (vs + self.TAS * acc / isa.G)
+        assert thrust_required(self.DRAG, self.MASS, self.TAS, vs, f) == pytest.approx(
+            thrust_required_from_acceleration(self.DRAG, self.MASS, self.TAS, vs, acc),
+            rel=1e-12,
+        )
+
+    def test_casadi_symbolic_zero_f(self):
+        """The guarded f form stays symbolic and evaluates to drag at f = 0."""
+        f = ca.MX.sym("f")
+        expr = thrust_required(self.DRAG, self.MASS, self.TAS, 0.0, f)
+        evaluate = ca.Function("thrust", [f], [expr])
+        assert float(evaluate(0.0)) == pytest.approx(self.DRAG)
+        assert float(evaluate(1.0)) == pytest.approx(self.DRAG)
+
+    @pytest.mark.parametrize("as_array", [False, True])
+    def test_model_uses_acceleration_when_given(self, as_array):
+        """AircraftModel.thrust_required prefers acceleration over f (#58)."""
+        pytest.importorskip("pycontrails")
+        from openleaf.performance.models.ps import PSModel
+
+        def value(x):
+            return np.array([x]) if as_array else x
+
+        state = {
+            "drag": value(self.DRAG),
+            "aircraft_mass": value(self.MASS),
+            "true_airspeed": value(self.TAS),
+            "vertical_speed": value(0.0),
+            "f": value(0.0),
+            "acceleration": value(0.5),
+        }
+        model = PSModel("A320")
+        assert np.all(model.thrust_required(state) - self.DRAG == pytest.approx(self.MASS * 0.5))
+
+        without_acceleration = {k: v for k, v in state.items() if k != "acceleration"}
+        assert np.all(model.thrust_required(without_acceleration) == self.DRAG)
 
 
 # =============================================================================
