@@ -288,7 +288,10 @@ class TrajectoryData:
         # Handle f=1 (constant speed): a=0
         # Handle vs=0 (level flight): a=0
         return np.where(
-            (np.abs(f - 1.0) < EPSILON_TOLERANCE) | (np.abs(vs_geo) < EPSILON_TOLERANCE),
+            np.logical_or(
+                np.abs(f - 1.0) < EPSILON_TOLERANCE,
+                np.abs(vs_geo) < EPSILON_TOLERANCE,
+            ),
             0.0,
             (isa.G / V) * vs_geo * (1.0 - f) / f,
         )

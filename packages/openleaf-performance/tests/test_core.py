@@ -342,6 +342,24 @@ class TestTrajectoryDataEnergyFactor:
         a = traj.acceleration
         np.testing.assert_array_almost_equal(a, [0.0])
 
+    def test_acceleration_derived_from_symbolic_f(self):
+        """Acceleration derived from a CasADi f matches the numeric result."""
+        ca = pytest.importorskip("casadi")
+        f_values = np.array([0.9, 1.0])
+        data = {
+            "altitude": np.array([10000.0, 10000.0]),
+            "true_airspeed": np.array([230.0, 230.0]),
+            "vertical_speed": np.array([5.0, 5.0]),
+            "aircraft_mass": np.array([65000.0, 65000.0]),
+        }
+        f = ca.MX.sym("f", 2)
+
+        a_symbolic = TrajectoryData({**data, "f": f}).acceleration
+        a_numeric = TrajectoryData({**data, "f": f_values}).acceleration
+
+        a_evaluated = ca.Function("a", [f], [a_symbolic])(f_values)
+        np.testing.assert_allclose(np.asarray(a_evaluated).ravel(), a_numeric)
+
 
 class TestTrajectoryDataCaching:
     """Tests for TrajectoryData property caching."""
