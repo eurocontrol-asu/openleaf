@@ -112,8 +112,10 @@ class PerformanceMixin:
     Expects the container class to provide:
         - ``_model``: an ``AircraftModel`` instance
         - ``_traj``: a dict-like trajectory data store
+        - ``data``: the input columns only, without derived quantities
         - ``drag``, ``aircraft_mass``, ``f``, ``air_temperature``
-          (for the TEM thrust calculation)
+          (for the TEM thrust calculation; an input ``acceleration`` column
+          is used in preference to ``f``)
     """
 
     # ---- Aerodynamic coefficients ----
@@ -143,17 +145,27 @@ class PerformanceMixin:
     def thrust(self) -> ArrayScalarLike:
         """Required thrust [N] from Total Energy Model.
 
-        Uses the TEM equation to compute thrust given:
-        - drag (from aerodynamic model)
-        - vertical_speed (pressure altitude rate)
-        - energy share factor f
+        When the trajectory provides an acceleration, thrust comes from the
+        fundamental TEM equation (BADA Manual 3.1-1):
+            T = D + m · g · (dh_geo/dt) / V + m · (dV/dt)
 
-        Formula (BADA Manual 3.1-4):
-            T = D + (m \u00b7 g \u00b7 dh_geo/dt) / (V \u00b7 f)
+        Otherwise it comes from the energy share factor f (BADA Manual 3.1-4):
+            T = D + (m · g · dh_geo/dt) / (V · f)
 
-        where dh_geo/dt is derived from pressure altitude rate using
-        temperature correction.
+        The first form is preferred because it never divides by f, which is
+        0 in level acceleration. In both, dh_geo/dt is derived from the
+        pressure altitude rate using temperature correction.
         """
+        if "acceleration" in self.data:
+            return tem.thrust_from_acceleration(
+                rocd=self._traj["vertical_speed"],
+                acceleration=self._traj["acceleration"],
+                drag=self.drag,
+                mass=self.aircraft_mass,
+                true_airspeed=self._traj["true_airspeed"],
+                air_temperature=self.air_temperature,
+                altitude=self._traj["altitude"],
+            )
         return tem.thrust_from_rocd(
             rocd=self._traj["vertical_speed"],
             drag=self.drag,

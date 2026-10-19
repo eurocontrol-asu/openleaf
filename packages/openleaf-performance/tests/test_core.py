@@ -461,6 +461,48 @@ class TestAircraftTrajectoryData:
 
         assert np.all(T < D)
 
+    @pytest.mark.parametrize(
+        ("vertical_speed", "acceleration", "expected_excess"),
+        [
+            (0.0, 0.5, 32500.0),
+            (0.0, -0.5, -32500.0),
+            (5.0, 0.5, 46357.2),
+            (5.0, 0.0, 13857.2),
+        ],
+    )
+    def test_thrust_includes_acceleration(
+        self, ps_model, vertical_speed, acceleration, expected_excess
+    ):
+        """T - D = m g dh/dt / V + m a, including level acceleration (issue #47)."""
+        data = {
+            "altitude": np.array([10000.0]),
+            "true_airspeed": np.array([230.0]),
+            "vertical_speed": np.array([vertical_speed]),
+            "aircraft_mass": np.array([65000.0]),
+            "acceleration": np.array([acceleration]),
+        }
+        perf = TrajectoryData(data).with_aircraft(ps_model)
+
+        np.testing.assert_allclose(perf.thrust - perf.drag, expected_excess, atol=0.1)
+
+    def test_thrust_from_acceleration_matches_f_path(self, ps_model):
+        """Climbing and descending thrust is the same from acceleration or from f."""
+        data = {
+            "altitude": np.array([10000.0, 10000.0, 9000.0, 9000.0]),
+            "true_airspeed": np.array([230.0, 230.0, 220.0, 220.0]),
+            "vertical_speed": np.array([5.0, 5.0, -8.0, -8.0]),
+            "aircraft_mass": np.array([65000.0, 65000.0, 60000.0, 60000.0]),
+            "acceleration": np.array([0.5, -0.2, 0.3, -0.4]),
+            "air_temperature": isa.air_temperature(np.array([10000.0, 10000.0, 9000.0, 9000.0]))
+            + 15.0,
+        }
+        from_acceleration = TrajectoryData(data).with_aircraft(ps_model)
+        f_data = {k: v for k, v in data.items() if k != "acceleration"}
+        f_data["f"] = from_acceleration.f
+        from_f = TrajectoryData(f_data).with_aircraft(ps_model)
+
+        np.testing.assert_allclose(from_acceleration.thrust, from_f.thrust, rtol=1e-12)
+
     def test_fuel_flow(self, basic_trajectory_data, ps_model):
         """Test fuel_flow computed by model."""
         traj = TrajectoryData(basic_trajectory_data)
