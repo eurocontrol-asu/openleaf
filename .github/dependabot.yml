@@ -11,17 +11,8 @@ updates:
     # than raising every minimum version users must install.
     versioning-strategy: increase-if-necessary
     groups:
-      # numpy and casadi stay out of the group: numpy 2.5 needs casadi 3.8,
-      # which the CasADi backend does not support yet, and a failing bump
-      # should not hold back the others.
       python:
         patterns: ["*"]
-        exclude-patterns: ["numpy", "casadi"]
-    ignore:
-      # openap 2.5+ breaks the CasADi backend (np.maximum on MX values);
-      # keep the <2.5 pin until the backend is ported.
-      - dependency-name: openap
-        versions: [">=2.5"]
   - package-ecosystem: github-actions
     directory: /
     schedule:

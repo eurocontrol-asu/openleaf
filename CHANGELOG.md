@@ -26,9 +26,21 @@ and `core/vX.Y.Z` for `openleaf-core`.
   if absent), never below FL200. It requires `aircraft_mass` and `delta_isa`,
   and the envelope `ceiling` flag follows it. `PSLimits` now takes the PS
   `engine` and `aerodynamics` models as keyword arguments (#44).
+- The OpenAP extra requires `openap>=2.5,<2.7` (was `>=2.4,<2.5`). OpenAP is
+  evaluated through an openap math backend that forwards to
+  `openleaf.performance.numpy`, so it no longer falls back to raw NumPy on
+  openap 2.5+. Outputs are unchanged between openap 2.4 and 2.6.
+- `ArrayScalarLike` is typed by the operators backend values provide
+  (`ArrayExpression`) rather than by CasADi classes, so code type-checks with
+  the annotations casadi 3.8 ships.
 
 #### Fixed
 
+- The CasADi backend works with numpy 2.5 and casadi 3.8: no NumPy function
+  is applied to CasADi values any more (casadi 3.7 failed on them under
+  numpy 2.5; casadi 3.8 warned). Symbolic `TrajectoryData.acceleration` and
+  `TotalEnergyModel` with symbolic inputs, which failed on every casadi
+  release, now work.
 - `tem.f_from_state`: the level-flight test is on specific excess power
   (1e-3 m/s) rather than a 1e-10 N thrust excess, so f no longer jumps between
   1 and ~1e14 with the last bits of thrust and drag (#46).
