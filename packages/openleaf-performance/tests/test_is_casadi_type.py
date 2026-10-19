@@ -83,10 +83,14 @@ def test_is_casadi_type_container_recursive_tuple(casadi_dm):
     assert is_casadi_type((casadi_dm,), recursive=False) is False
 
 
-def test_is_casadi_type_container_recursive_set(casadi_dm):
-    """Set containing CasADi DM: True with recursive, False without."""
-    assert is_casadi_type({casadi_dm}, recursive=True) is True
-    assert is_casadi_type({casadi_dm}, recursive=False) is False
+def test_is_casadi_type_container_recursive_set(casadi_module):
+    """Set containing a CasADi MX: True with recursive, False without.
+
+    MX rather than DM, because CasADi's DM is not hashable.
+    """
+    x = casadi_module.MX.sym("x")
+    assert is_casadi_type({x}, recursive=True) is True
+    assert is_casadi_type({x}, recursive=False) is False
 
 
 def test_is_casadi_type_container_recursive_dict(casadi_dm):

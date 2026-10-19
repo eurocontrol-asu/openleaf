@@ -15,22 +15,6 @@ import pytest
 # Add tests directory to path for local test modules (e.g., ptd_parser)
 sys.path.insert(0, str(Path(__file__).parent))
 
-# Patch CasADi's broken SWIG __hash__ binding (GenSharedObject___hash__)
-# so that CasADi types can be used in sets and as dict keys in tests.
-try:
-    import casadi
-
-    for _cls in (casadi.DM, casadi.MX, casadi.SX):
-        if not callable(getattr(_cls, "__hash__", None)):
-            continue
-        try:
-            hash(_cls(0))
-        except (NotImplementedError, TypeError):
-            _cls.__hash__ = lambda self: id(self)
-except ImportError:
-    pass
-
-
 # --- Helper Functions ---
 
 

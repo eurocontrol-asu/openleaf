@@ -199,7 +199,7 @@ class TestPSOverallPropulsionEfficiency:
 
         eta = ps_model.engine.overall_propulsion_efficiency(flight_state)
         tas = state["mach_number"] * np.sqrt(units.GAMMA * units.R_AIR * state["air_temperature"])
-        expected = min(thrust, thrust_max) * tas / (eta * units.Q_FUEL)
+        expected = np.minimum(thrust, thrust_max) * tas / (eta * units.Q_FUEL)
 
         assert ps_model.engine.fuel_flow(flight_state) == pytest.approx(expected, rel=1e-10)
 
