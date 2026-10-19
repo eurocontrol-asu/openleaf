@@ -36,6 +36,7 @@ __all__ = [
     "TotalEnergyModel",
     "rocd_pressure",
     "thrust_from_rocd",
+    "thrust_from_acceleration",
     "f_from_state",
     "residual",
     "rocd_geometric",
@@ -145,6 +146,14 @@ def thrust_from_rocd(
     Inverse of rocd_pressure(): given the desired vertical speed and f,
     compute the required thrust.
 
+    At f = 0 all excess power goes to acceleration, the vertical speed
+    carries no information about it, and the thrust is undetermined; the
+    climb term is then dropped and thrust equals drag. The zero test,
+    |f| < EPSILON_CLAMP, is a round-off guard, not a physical band: for any
+    larger f the climb term is kept, and while climbing it grows without
+    bound as f -> 0, as the physics requires. When the acceleration is
+    known, use thrust_from_acceleration(), which does not divide by f.
+
     Args:
         rocd: Rate of climb/descent in pressure altitude [m/s].
         drag: Aerodynamic drag [N].
@@ -164,13 +173,51 @@ def thrust_from_rocd(
     correction = temp_correction_factor(air_temperature, altitude)
     rocd_geo = rocd / correction
 
-    # Solve TEM for thrust: T = D + (m · g · rocd_geo) / (V · f)
-    # Clamp denominator to avoid division by zero (level flight with f→0)
-    denom = true_airspeed * f
-    # Sign via where(): np.sign(denom + EPS) flips the sign for denom in
-    # (-EPS, 0), negating the clamped denominator near level flight.
-    safe_denom = np.maximum(np.abs(denom), EPSILON_CLAMP) * np.where(denom >= 0, 1.0, -1.0)
-    return drag + (mass * isa.G * rocd_geo) / safe_denom
+    # Solve TEM for thrust: T = D + (m · g · rocd_geo) / (V · f). The inner
+    # where() keeps the unselected branch from dividing by f = 0.
+    zero_f = np.abs(f) < EPSILON_CLAMP
+    safe_f = np.where(zero_f, 1.0, f)
+    climb_term = np.where(zero_f, 0.0, (mass * isa.G * rocd_geo) / (true_airspeed * safe_f))
+    return drag + climb_term
+
+
+def thrust_from_acceleration(
+    rocd: ArrayScalarLike,
+    acceleration: ArrayScalarLike,
+    drag: ArrayScalarLike,
+    mass: ArrayScalarLike,
+    true_airspeed: ArrayScalarLike,
+    air_temperature: ArrayScalarLike,
+    altitude: ArrayScalarLike,
+) -> ArrayScalarLike:
+    """Compute required thrust from PRESSURE altitude rate and acceleration.
+
+    Solves the fundamental TEM equation (BADA 3.1-1) directly:
+        T = D + m · g · (dh_geo/dt) / V_TAS + m · (dV_TAS/dt)
+
+    Unlike thrust_from_rocd(), it does not go through f, so it stays exact
+    in level acceleration, where f = 0.
+
+    Args:
+        rocd: Rate of climb/descent in pressure altitude [m/s].
+        acceleration: Longitudinal acceleration dV_TAS/dt [m/s²].
+        drag: Aerodynamic drag [N].
+        mass: Aircraft mass [kg].
+        true_airspeed: True airspeed [m/s].
+        air_temperature: Actual air temperature [K].
+        altitude: Geometric altitude [m] (for ISA reference).
+
+    Returns:
+        Required thrust [N].
+
+    Reference:
+        BADA User Manual, TEM equation (3.1-1)
+    """
+    # Convert pressure ROCD to geometric ROCD
+    correction = temp_correction_factor(air_temperature, altitude)
+    rocd_geo = rocd / correction
+
+    return drag + mass * (isa.G * rocd_geo / true_airspeed + acceleration)
 
 
 def f_from_state(

@@ -212,6 +212,75 @@ class TestFFromStateNearLevel:
         assert all(float(g) == 0.0 for g in grads)
 
 
+class TestThrustFromAcceleration:
+    """Thrust from the fundamental TEM equation, without dividing by f (issue #47)."""
+
+    ALTITUDE = 10000.0  # m
+    MASS = 65000.0  # kg
+    TAS = 230.0  # m/s
+    DRAG = 40000.0  # N
+
+    def test_level_acceleration_keeps_m_a(self):
+        """Level acceleration: T - D = m a, where thrust_from_rocd has f = 0."""
+        acceleration = np.array([0.5, -0.5])
+        thrust = tem.thrust_from_acceleration(
+            0.0,
+            acceleration,
+            self.DRAG,
+            self.MASS,
+            self.TAS,
+            isa.air_temperature(self.ALTITUDE),
+            self.ALTITUDE,
+        )
+        np.testing.assert_allclose(thrust - self.DRAG, self.MASS * acceleration, rtol=1e-12)
+
+    def test_matches_thrust_from_rocd_when_f_nonzero(self):
+        """Climbing or descending, both forms of the TEM give the same thrust."""
+        rocd = np.array([5.0, 5.0, -8.0, -8.0])
+        acceleration = np.array([0.5, -0.2, 0.3, -0.4])
+        air_temperature = isa.air_temperature(self.ALTITUDE) + 15.0
+        rocd_geo = tem.rocd_geometric(rocd, air_temperature, self.ALTITUDE)
+        f = rocd_geo / (rocd_geo + self.TAS / isa.G * acceleration)
+        args = (self.DRAG, self.MASS, self.TAS)
+        thrust_acc = tem.thrust_from_acceleration(
+            rocd, acceleration, *args, air_temperature, self.ALTITUDE
+        )
+        thrust_f = tem.thrust_from_rocd(rocd, *args, f, air_temperature, self.ALTITUDE)
+        np.testing.assert_allclose(thrust_acc, thrust_f, rtol=1e-12)
+
+    def test_thrust_from_rocd_zero_f_drops_climb_term(self):
+        """At f = 0 the vertical speed does not determine thrust; T = D."""
+        thrust = tem.thrust_from_rocd(
+            np.array([0.0, 5.0]),
+            self.DRAG,
+            self.MASS,
+            self.TAS,
+            0.0,
+            isa.air_temperature(self.ALTITUDE),
+            self.ALTITUDE,
+        )
+        np.testing.assert_array_equal(thrust, self.DRAG)
+
+    def test_thrust_from_rocd_jax_gradient_finite_at_zero_f(self):
+        """Reverse-mode gradient through thrust_from_rocd is finite at f = 0."""
+        jax = pytest.importorskip("jax")
+        jnp = pytest.importorskip("jax.numpy")
+
+        def thrust(rocd, f):
+            return tem.thrust_from_rocd(
+                rocd,
+                self.DRAG,
+                self.MASS,
+                self.TAS,
+                f,
+                isa.air_temperature(self.ALTITUDE),
+                self.ALTITUDE,
+            )
+
+        grads = jax.grad(thrust, argnums=(0, 1))(jnp.asarray(5.0), jnp.asarray(0.0))
+        assert all(np.isfinite(float(g)) for g in grads)
+
+
 class TestTemperatureCorrection:
     """Test temperature correction for non-ISA conditions."""
 

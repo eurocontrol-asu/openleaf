@@ -23,6 +23,10 @@ class DummyContainer(PerformanceMixin):
         self._air_temperature = air_temperature
 
     @property
+    def data(self):
+        return self._traj
+
+    @property
     def drag(self):
         return self._model.drag(self)
 
@@ -172,6 +176,26 @@ class TestThrustEdgeCases:
 
         result = obj.thrust
         np.testing.assert_allclose(result, drag_val, rtol=1e-6)
+
+    def test_level_acceleration_uses_acceleration_column(
+        self,
+        mock_model: MagicMock,
+    ) -> None:
+        """An acceleration column wins over f, so level acceleration keeps m * a."""
+        drag_val = 45_000.0
+        mass = 70_000.0
+        traj = {
+            "vertical_speed": np.array([0.0]),
+            "true_airspeed": np.array([230.0]),
+            "altitude": np.array([10_000.0]),
+            "mass": mass,
+            "f": 0.0,
+            "acceleration": np.array([0.5]),
+        }
+        mock_model.drag.return_value = np.array([drag_val])
+        obj = DummyContainer(model=mock_model, traj=traj)
+
+        np.testing.assert_allclose(obj.thrust, drag_val + mass * 0.5, rtol=1e-12)
 
     def test_descent_thrust_less_than_drag(
         self,
