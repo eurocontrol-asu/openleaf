@@ -77,10 +77,10 @@ from openleaf.performance.models.openap import OpenAPModel
 from openleaf.performance.models.ps import PSModel
 
 # Initialize any model with ICAO code
-model = OpenAPModel("A320")      # Works out of the box
-model = PSModel("B738")          # Requires pycontrails
-model = BADA3Model("A320")       # Requires configuration (see below)
-model = BADA4Model("A320")       # Requires configuration (see below)
+model = OpenAPModel("A320")  # Works out of the box
+model = PSModel("B738")  # Requires pycontrails
+model = BADA3Model("A320")  # Requires configuration (see below)
+model = BADA4Model("A320")  # Requires configuration (see below)
 
 # Access aircraft properties
 print(f"Aircraft: {model.model}")
@@ -127,6 +127,7 @@ Once configured, ICAO codes work directly:
 
 ```python
 from openleaf.performance.models.bada3 import BADA3Model
+
 model = BADA3Model("A320")
 ```
 
@@ -155,18 +156,21 @@ air_pressure = isa.air_pressure(altitude)
 # PSModel methods work with CasADi!
 c_lift = ps_model.lift_coefficient(aircraft_mass, air_pressure, mach)
 c_drag = ps_model.aerodynamics.drag_coef_with_state(
-    cl=c_lift, mach=mach,
+    cl=c_lift,
+    mach=mach,
     air_temperature=air_temperature,
     air_pressure=air_pressure,
 )
 thrust = ps_model.compute_thrust_required(aircraft_mass, c_lift, c_drag)
-fuel_flow = ps_model.engine.fuel_flow({
-    "thrust": thrust,
-    "mach_number": mach,
-    "air_temperature": air_temperature,
-    "air_pressure": air_pressure,
-    "altitude": altitude,
-})
+fuel_flow = ps_model.engine.fuel_flow(
+    {
+        "thrust": thrust,
+        "mach_number": mach,
+        "air_temperature": air_temperature,
+        "air_pressure": air_pressure,
+        "altitude": altitude,
+    }
+)
 
 # Compute gradients for optimization
 grad = ca.gradient(fuel_flow, altitude)
@@ -182,13 +186,13 @@ import numpy as np
 model = PSModel("A320")
 
 # Flight conditions (FL350)
-h = 10668.0       # altitude [m]
-mach = 0.78       # Mach number
-m = 65000.0       # aircraft mass [kg]
+h = 10668.0  # altitude [m]
+mach = 0.78  # Mach number
+m = 65000.0  # aircraft mass [kg]
 
 # Atmospheric state using OpenLeaf ISA
 T = isa.air_temperature(h)  # [K]
-p = isa.air_pressure(h)     # [Pa]
+p = isa.air_pressure(h)  # [Pa]
 
 # Calculate lift and drag coefficients
 cl = model.lift_coefficient(m, p, mach)
@@ -196,18 +200,20 @@ cd = model.aerodynamics.drag_coef_with_state(cl=cl, mach=mach, air_temperature=T
 
 # Thrust required for level flight
 thrust = model.compute_thrust_required(m, cl, cd)
-print(f"Thrust required: {thrust/1000:.1f} kN")
-print(f"L/D ratio: {cl/cd:.1f}")
+print(f"Thrust required: {thrust / 1000:.1f} kN")
+print(f"L/D ratio: {cl / cd:.1f}")
 
 # Calculate fuel flow
-ff = model.engine.fuel_flow({
-    "thrust": thrust,
-    "mach_number": mach,
-    "air_temperature": T,
-    "air_pressure": p,
-    "altitude": h,
-})
-print(f"Fuel flow: {ff*3600:.0f} kg/h")
+ff = model.engine.fuel_flow(
+    {
+        "thrust": thrust,
+        "mach_number": mach,
+        "air_temperature": T,
+        "air_pressure": p,
+        "altitude": h,
+    }
+)
+print(f"Fuel flow: {ff * 3600:.0f} kg/h")
 ```
 
 ### Flight Envelope Limits
@@ -323,6 +329,7 @@ result_torch = anp.sqrt(x_torch)  # Returns torch.Tensor
 
 # Works with CasADi symbols for optimization
 import casadi as ca
+
 x_sym = ca.SX.sym("x")
 result_sym = anp.sqrt(x_sym)  # Returns CasADi expression
 

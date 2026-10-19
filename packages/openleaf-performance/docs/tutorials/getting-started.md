@@ -59,8 +59,8 @@ You can also instantiate models directly:
 from openleaf.performance.models.openap import OpenAPModel
 
 model = OpenAPModel("A320")
-print(model.data)      # Aircraft data: model, WTC, engine type
-print(model.limits)    # LimitsData: MTOM, VMO, MMO, HMO
+print(model.data)  # Aircraft data: model, WTC, engine type
+print(model.limits)  # LimitsData: MTOM, VMO, MMO, HMO
 ```
 
 ## Step 3: Build a trajectory
@@ -74,20 +74,20 @@ import numpy as np
 from openleaf.performance.core import TrajectoryData
 
 data = {
-    "altitude": np.array([10000.0, 10500.0, 11000.0]),       # Pressure altitude Hp [m]
-    "true_airspeed": np.array([230.0, 232.0, 234.0]),        # TAS [m/s]
-    "vertical_speed": np.array([5.0, 5.0, 0.0]),             # dHp/dt [m/s]
+    "altitude": np.array([10000.0, 10500.0, 11000.0]),  # Pressure altitude Hp [m]
+    "true_airspeed": np.array([230.0, 232.0, 234.0]),  # TAS [m/s]
+    "vertical_speed": np.array([5.0, 5.0, 0.0]),  # dHp/dt [m/s]
     "aircraft_mass": np.array([65000.0, 64900.0, 64800.0]),  # [kg]
-    "acceleration": np.array([0.1, 0.1, 0.0]),               # dV/dt [m/s^2]
+    "acceleration": np.array([0.1, 0.1, 0.0]),  # dV/dt [m/s^2]
 }
 
 traj = TrajectoryData(data)
 
 # Derived quantities are computed lazily
-print(traj.mach_number)          # Mach from TAS and ISA temperature
+print(traj.mach_number)  # Mach from TAS and ISA temperature
 print(traj.calibrated_airspeed)  # CAS [m/s]
-print(traj.air_temperature)      # ISA temperature [K]
-print(traj.air_pressure)         # ISA pressure [Pa]
+print(traj.air_temperature)  # ISA temperature [K]
+print(traj.air_pressure)  # ISA pressure [Pa]
 ```
 
 You can provide either `acceleration` (dV/dt) or `f` (energy share factor).
@@ -102,10 +102,10 @@ flow:
 perf = traj.with_aircraft(model)
 
 # Performance quantities (computed lazily, cached)
-print(perf.drag)            # Aerodynamic drag [N]
-print(perf.thrust)          # Required thrust [N]
-print(perf.fuel_flow)       # Fuel flow [kg/s]
-print(perf.drag_coef)       # CD [-]
+print(perf.drag)  # Aerodynamic drag [N]
+print(perf.thrust)  # Required thrust [N]
+print(perf.fuel_flow)  # Fuel flow [kg/s]
+print(perf.drag_coef)  # CD [-]
 ```
 
 The `with_aircraft` method also accepts a string shorthand:

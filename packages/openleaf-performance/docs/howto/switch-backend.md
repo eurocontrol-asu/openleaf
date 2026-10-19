@@ -26,13 +26,15 @@ mass = ca.MX.sym("mass", n)
 accel = ca.MX.sym("accel", n)
 
 # TrajectoryData works with CasADi MX types unchanged
-traj = TrajectoryData({
-    "altitude": altitude,
-    "true_airspeed": tas,
-    "vertical_speed": vs,
-    "aircraft_mass": mass,
-    "acceleration": accel,
-})
+traj = TrajectoryData(
+    {
+        "altitude": altitude,
+        "true_airspeed": tas,
+        "vertical_speed": vs,
+        "aircraft_mass": mass,
+        "acceleration": accel,
+    }
+)
 
 perf = traj.with_aircraft(model)
 
@@ -53,13 +55,15 @@ from openleaf.performance.models.openap import OpenAPModel
 
 model = OpenAPModel("A320")
 
-traj = TrajectoryData({
-    "altitude": jnp.array([10000.0, 10500.0]),
-    "true_airspeed": jnp.array([230.0, 232.0]),
-    "vertical_speed": jnp.array([5.0, 5.0]),
-    "aircraft_mass": jnp.array([65000.0, 64900.0]),
-    "acceleration": jnp.array([0.1, 0.1]),
-})
+traj = TrajectoryData(
+    {
+        "altitude": jnp.array([10000.0, 10500.0]),
+        "true_airspeed": jnp.array([230.0, 232.0]),
+        "vertical_speed": jnp.array([5.0, 5.0]),
+        "aircraft_mass": jnp.array([65000.0, 64900.0]),
+        "acceleration": jnp.array([0.1, 0.1]),
+    }
+)
 
 perf = traj.with_aircraft(model)
 print(perf.fuel_flow)  # JAX array on GPU
@@ -74,13 +78,15 @@ from openleaf.performance.models.openap import OpenAPModel
 
 model = OpenAPModel("A320")
 
-traj = TrajectoryData({
-    "altitude": torch.tensor([10000.0, 10500.0]),
-    "true_airspeed": torch.tensor([230.0, 232.0]),
-    "vertical_speed": torch.tensor([5.0, 5.0]),
-    "aircraft_mass": torch.tensor([65000.0, 64900.0]),
-    "acceleration": torch.tensor([0.1, 0.1]),
-})
+traj = TrajectoryData(
+    {
+        "altitude": torch.tensor([10000.0, 10500.0]),
+        "true_airspeed": torch.tensor([230.0, 232.0]),
+        "vertical_speed": torch.tensor([5.0, 5.0]),
+        "aircraft_mass": torch.tensor([65000.0, 64900.0]),
+        "acceleration": torch.tensor([0.1, 0.1]),
+    }
+)
 
 perf = traj.with_aircraft(model)
 print(perf.fuel_flow)  # PyTorch tensor

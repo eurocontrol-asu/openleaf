@@ -33,18 +33,20 @@ from openleaf.performance.core import ModelFactory, TrajectoryData
 model = ModelFactory.load("A320", model_type="openap")
 
 # Build a trajectory
-traj = TrajectoryData({
-    "altitude": np.array([10000.0, 10500.0]),       # Pressure altitude [m]
-    "true_airspeed": np.array([230.0, 232.0]),       # TAS [m/s]
-    "vertical_speed": np.array([5.0, 5.0]),          # dHp/dt [m/s]
-    "aircraft_mass": np.array([65000.0, 64900.0]),   # [kg]
-    "acceleration": np.array([0.1, 0.1]),            # dV/dt [m/s^2]
-})
+traj = TrajectoryData(
+    {
+        "altitude": np.array([10000.0, 10500.0]),  # Pressure altitude [m]
+        "true_airspeed": np.array([230.0, 232.0]),  # TAS [m/s]
+        "vertical_speed": np.array([5.0, 5.0]),  # dHp/dt [m/s]
+        "aircraft_mass": np.array([65000.0, 64900.0]),  # [kg]
+        "acceleration": np.array([0.1, 0.1]),  # dV/dt [m/s^2]
+    }
+)
 
 # Attach model and compute performance
 perf = traj.with_aircraft(model)
-print(perf.drag)       # Aerodynamic drag [N]
-print(perf.thrust)     # Required thrust [N]
+print(perf.drag)  # Aerodynamic drag [N]
+print(perf.thrust)  # Required thrust [N]
 print(perf.fuel_flow)  # Fuel flow rate [kg/s]
 ```
 
