@@ -1810,7 +1810,7 @@ aircraft performance model for drag, propulsion efficiency, and thrust calculati
 <a id="__codelineno-0-403" name="__codelineno-0-403"></a>    <span class="n">e_ls</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-404" name="__codelineno-0-404"></a>    <span class="n">wing_aspect_ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-405" name="__codelineno-0-405"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-406" name="__codelineno-0-406"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate total airframe drag coefficient.</span>
+<a id="__codelineno-0-406" name="__codelineno-0-406"></a><span class="w">    </span><span class="sd">"""Calculate total airframe drag coefficient.</span>
 <a id="__codelineno-0-407" name="__codelineno-0-407"></a>
 <a id="__codelineno-0-408" name="__codelineno-0-408"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-409" name="__codelineno-0-409"></a><span class="sd">        c_drag_0: Zero-lift drag coefficient.</span>
@@ -1824,7 +1824,7 @@ aircraft performance model for drag, propulsion efficiency, and thrust calculati
 <a id="__codelineno-0-417" name="__codelineno-0-417"></a>
 <a id="__codelineno-0-418" name="__codelineno-0-418"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-419" name="__codelineno-0-419"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 2.</span>
-<a id="__codelineno-0-420" name="__codelineno-0-420"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-420" name="__codelineno-0-420"></a><span class="sd">    """</span>
 <a id="__codelineno-0-421" name="__codelineno-0-421"></a>    <span class="n">k</span> <span class="o">=</span> <span class="n">low_speed_lift_dependent_drag_factor</span><span class="p">(</span><span class="n">e_ls</span><span class="p">,</span> <span class="n">wing_aspect_ratio</span><span class="p">)</span>
 <a id="__codelineno-0-422" name="__codelineno-0-422"></a>    <span class="k">return</span> <span class="n">c_drag_0</span> <span class="o">+</span> <span class="p">(</span><span class="n">k</span> <span class="o">*</span> <span class="n">c_lift</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">c_drag_w</span>
 </code></pre></div></td></tr></table></div>
@@ -1868,7 +1868,7 @@ aircraft performance model for drag, propulsion efficiency, and thrust calculati
 <span class="normal"><a href="#__codelineno-0-222">222</a></span>
 <span class="normal"><a href="#__codelineno-0-223">223</a></span>
 <span class="normal"><a href="#__codelineno-0-224">224</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="k">def</span><span class="w"> </span><span class="nf">fluid_dynamic_viscosity</span><span class="p">(</span><span class="n">air_temperature</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate fluid dynamic viscosity using Sutherland&#39;s Law.</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="w">    </span><span class="sd">"""Calculate fluid dynamic viscosity using Sutherland's Law.</span>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">        air_temperature: Air temperature [K].</span>
@@ -1877,8 +1877,8 @@ aircraft performance model for drag, propulsion efficiency, and thrust calculati
 <a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">        Dynamic viscosity [Pa*s].</span>
 <a id="__codelineno-0-220" name="__codelineno-0-220"></a>
 <a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">    References:</span>
-<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">        Sutherland&#39;s Law for air viscosity.</span>
-<a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">        Sutherland's Law for air viscosity.</span>
+<a id="__codelineno-0-223" name="__codelineno-0-223"></a><span class="sd">    """</span>
 <a id="__codelineno-0-224" name="__codelineno-0-224"></a>    <span class="k">return</span> <span class="mf">1.458e-6</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">air_temperature</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">110.4</span> <span class="o">+</span> <span class="n">air_temperature</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1927,7 +1927,7 @@ aircraft performance model for drag, propulsion efficiency, and thrust calculati
 <span class="normal"><a href="#__codelineno-0-396">396</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-381" name="__codelineno-0-381"></a><span class="k">def</span><span class="w"> </span><span class="nf">low_speed_lift_dependent_drag_factor</span><span class="p">(</span>
 <a id="__codelineno-0-382" name="__codelineno-0-382"></a>    <span class="n">e_ls</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span> <span class="n">wing_aspect_ratio</span><span class="p">:</span> <span class="nb">float</span>
 <a id="__codelineno-0-383" name="__codelineno-0-383"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-384" name="__codelineno-0-384"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate low-speed lift-dependent drag factor.</span>
+<a id="__codelineno-0-384" name="__codelineno-0-384"></a><span class="w">    </span><span class="sd">"""Calculate low-speed lift-dependent drag factor.</span>
 <a id="__codelineno-0-385" name="__codelineno-0-385"></a>
 <a id="__codelineno-0-386" name="__codelineno-0-386"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-387" name="__codelineno-0-387"></a><span class="sd">        e_ls: Oswald efficiency factor.</span>
@@ -1938,7 +1938,7 @@ aircraft performance model for drag, propulsion efficiency, and thrust calculati
 <a id="__codelineno-0-392" name="__codelineno-0-392"></a>
 <a id="__codelineno-0-393" name="__codelineno-0-393"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-394" name="__codelineno-0-394"></a><span class="sd">        Poll &amp; Schumann (2021), induced drag term.</span>
-<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="sd">    """</span>
 <a id="__codelineno-0-396" name="__codelineno-0-396"></a>    <span class="k">return</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">wing_aspect_ratio</span> <span class="o">*</span> <span class="n">e_ls</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1974,14 +1974,7 @@ aircraft performance model for drag, propulsion efficiency, and thrust calculati
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/models/ps/ps_physics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-582">582</a></span>
-<span class="normal"><a href="#__codelineno-0-583">583</a></span>
-<span class="normal"><a href="#__codelineno-0-584">584</a></span>
-<span class="normal"><a href="#__codelineno-0-585">585</a></span>
-<span class="normal"><a href="#__codelineno-0-586">586</a></span>
-<span class="normal"><a href="#__codelineno-0-587">587</a></span>
-<span class="normal"><a href="#__codelineno-0-588">588</a></span>
-<span class="normal"><a href="#__codelineno-0-589">589</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-589">589</a></span>
 <span class="normal"><a href="#__codelineno-0-590">590</a></span>
 <span class="normal"><a href="#__codelineno-0-591">591</a></span>
 <span class="normal"><a href="#__codelineno-0-592">592</a></span>
@@ -2009,42 +2002,49 @@ aircraft performance model for drag, propulsion efficiency, and thrust calculati
 <span class="normal"><a href="#__codelineno-0-614">614</a></span>
 <span class="normal"><a href="#__codelineno-0-615">615</a></span>
 <span class="normal"><a href="#__codelineno-0-616">616</a></span>
-<span class="normal"><a href="#__codelineno-0-617">617</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-582" name="__codelineno-0-582"></a><span class="k">def</span><span class="w"> </span><span class="nf">max_available_thrust_coefficient</span><span class="p">(</span>
-<a id="__codelineno-0-583" name="__codelineno-0-583"></a>    <span class="n">air_temperature</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
-<a id="__codelineno-0-584" name="__codelineno-0-584"></a>    <span class="n">mach_number</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
-<a id="__codelineno-0-585" name="__codelineno-0-585"></a>    <span class="n">c_t_eta_b</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
-<a id="__codelineno-0-586" name="__codelineno-0-586"></a>    <span class="n">tet_mcc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<a id="__codelineno-0-587" name="__codelineno-0-587"></a>    <span class="n">tr_ec</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<a id="__codelineno-0-588" name="__codelineno-0-588"></a>    <span class="n">m_ec</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<a id="__codelineno-0-589" name="__codelineno-0-589"></a>    <span class="n">buffer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.20</span><span class="p">,</span>
-<a id="__codelineno-0-590" name="__codelineno-0-590"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-591" name="__codelineno-0-591"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate maximum available thrust coefficient.</span>
-<a id="__codelineno-0-592" name="__codelineno-0-592"></a>
-<a id="__codelineno-0-593" name="__codelineno-0-593"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-594" name="__codelineno-0-594"></a><span class="sd">        air_temperature: Air temperature [K].</span>
-<a id="__codelineno-0-595" name="__codelineno-0-595"></a><span class="sd">        mach_number: Mach number.</span>
-<a id="__codelineno-0-596" name="__codelineno-0-596"></a><span class="sd">        c_t_eta_b: Thrust coefficient at max efficiency.</span>
-<a id="__codelineno-0-597" name="__codelineno-0-597"></a><span class="sd">        tet_mcc: Maximum combustor temperature [K].</span>
-<a id="__codelineno-0-598" name="__codelineno-0-598"></a><span class="sd">        tr_ec: Engine temperature ratio at max efficiency.</span>
-<a id="__codelineno-0-599" name="__codelineno-0-599"></a><span class="sd">        m_ec: Mach number at engine corner point.</span>
-<a id="__codelineno-0-600" name="__codelineno-0-600"></a><span class="sd">        buffer: Safety buffer.</span>
-<a id="__codelineno-0-601" name="__codelineno-0-601"></a>
-<a id="__codelineno-0-602" name="__codelineno-0-602"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-603" name="__codelineno-0-603"></a><span class="sd">        Maximum available thrust coefficient.</span>
-<a id="__codelineno-0-604" name="__codelineno-0-604"></a>
-<a id="__codelineno-0-605" name="__codelineno-0-605"></a><span class="sd">    References:</span>
-<a id="__codelineno-0-606" name="__codelineno-0-606"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 18-20.</span>
-<a id="__codelineno-0-607" name="__codelineno-0-607"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-608" name="__codelineno-0-608"></a>    <span class="n">tr_max</span> <span class="o">=</span> <span class="n">normalised_max_throttle_parameter</span><span class="p">(</span>
-<a id="__codelineno-0-609" name="__codelineno-0-609"></a>        <span class="n">air_temperature</span><span class="p">,</span>
-<a id="__codelineno-0-610" name="__codelineno-0-610"></a>        <span class="n">mach_number</span><span class="p">,</span>
-<a id="__codelineno-0-611" name="__codelineno-0-611"></a>        <span class="n">tet_mcc</span><span class="p">,</span>
-<a id="__codelineno-0-612" name="__codelineno-0-612"></a>        <span class="n">tr_ec</span><span class="p">,</span>
-<a id="__codelineno-0-613" name="__codelineno-0-613"></a>        <span class="n">m_ec</span><span class="p">,</span>
-<a id="__codelineno-0-614" name="__codelineno-0-614"></a>        <span class="n">buffer</span><span class="p">,</span>
-<a id="__codelineno-0-615" name="__codelineno-0-615"></a>    <span class="p">)</span>
-<a id="__codelineno-0-616" name="__codelineno-0-616"></a>    <span class="n">c_t_max_over_c_t_eta_b</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">tr_max</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
-<a id="__codelineno-0-617" name="__codelineno-0-617"></a>    <span class="k">return</span> <span class="n">c_t_max_over_c_t_eta_b</span> <span class="o">*</span> <span class="n">c_t_eta_b</span>
+<span class="normal"><a href="#__codelineno-0-617">617</a></span>
+<span class="normal"><a href="#__codelineno-0-618">618</a></span>
+<span class="normal"><a href="#__codelineno-0-619">619</a></span>
+<span class="normal"><a href="#__codelineno-0-620">620</a></span>
+<span class="normal"><a href="#__codelineno-0-621">621</a></span>
+<span class="normal"><a href="#__codelineno-0-622">622</a></span>
+<span class="normal"><a href="#__codelineno-0-623">623</a></span>
+<span class="normal"><a href="#__codelineno-0-624">624</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-589" name="__codelineno-0-589"></a><span class="k">def</span><span class="w"> </span><span class="nf">max_available_thrust_coefficient</span><span class="p">(</span>
+<a id="__codelineno-0-590" name="__codelineno-0-590"></a>    <span class="n">air_temperature</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
+<a id="__codelineno-0-591" name="__codelineno-0-591"></a>    <span class="n">mach_number</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
+<a id="__codelineno-0-592" name="__codelineno-0-592"></a>    <span class="n">c_t_eta_b</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
+<a id="__codelineno-0-593" name="__codelineno-0-593"></a>    <span class="n">tet_mcc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-0-594" name="__codelineno-0-594"></a>    <span class="n">tr_ec</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-0-595" name="__codelineno-0-595"></a>    <span class="n">m_ec</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-0-596" name="__codelineno-0-596"></a>    <span class="n">buffer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.20</span><span class="p">,</span>
+<a id="__codelineno-0-597" name="__codelineno-0-597"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
+<a id="__codelineno-0-598" name="__codelineno-0-598"></a><span class="w">    </span><span class="sd">"""Calculate maximum available thrust coefficient.</span>
+<a id="__codelineno-0-599" name="__codelineno-0-599"></a>
+<a id="__codelineno-0-600" name="__codelineno-0-600"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-601" name="__codelineno-0-601"></a><span class="sd">        air_temperature: Air temperature [K].</span>
+<a id="__codelineno-0-602" name="__codelineno-0-602"></a><span class="sd">        mach_number: Mach number.</span>
+<a id="__codelineno-0-603" name="__codelineno-0-603"></a><span class="sd">        c_t_eta_b: Thrust coefficient at max efficiency.</span>
+<a id="__codelineno-0-604" name="__codelineno-0-604"></a><span class="sd">        tet_mcc: Maximum combustor temperature [K].</span>
+<a id="__codelineno-0-605" name="__codelineno-0-605"></a><span class="sd">        tr_ec: Engine temperature ratio at max efficiency.</span>
+<a id="__codelineno-0-606" name="__codelineno-0-606"></a><span class="sd">        m_ec: Mach number at engine corner point.</span>
+<a id="__codelineno-0-607" name="__codelineno-0-607"></a><span class="sd">        buffer: Safety buffer.</span>
+<a id="__codelineno-0-608" name="__codelineno-0-608"></a>
+<a id="__codelineno-0-609" name="__codelineno-0-609"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-610" name="__codelineno-0-610"></a><span class="sd">        Maximum available thrust coefficient.</span>
+<a id="__codelineno-0-611" name="__codelineno-0-611"></a>
+<a id="__codelineno-0-612" name="__codelineno-0-612"></a><span class="sd">    References:</span>
+<a id="__codelineno-0-613" name="__codelineno-0-613"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 18-20.</span>
+<a id="__codelineno-0-614" name="__codelineno-0-614"></a><span class="sd">    """</span>
+<a id="__codelineno-0-615" name="__codelineno-0-615"></a>    <span class="n">tr_max</span> <span class="o">=</span> <span class="n">normalised_max_throttle_parameter</span><span class="p">(</span>
+<a id="__codelineno-0-616" name="__codelineno-0-616"></a>        <span class="n">air_temperature</span><span class="p">,</span>
+<a id="__codelineno-0-617" name="__codelineno-0-617"></a>        <span class="n">mach_number</span><span class="p">,</span>
+<a id="__codelineno-0-618" name="__codelineno-0-618"></a>        <span class="n">tet_mcc</span><span class="p">,</span>
+<a id="__codelineno-0-619" name="__codelineno-0-619"></a>        <span class="n">tr_ec</span><span class="p">,</span>
+<a id="__codelineno-0-620" name="__codelineno-0-620"></a>        <span class="n">m_ec</span><span class="p">,</span>
+<a id="__codelineno-0-621" name="__codelineno-0-621"></a>        <span class="n">buffer</span><span class="p">,</span>
+<a id="__codelineno-0-622" name="__codelineno-0-622"></a>    <span class="p">)</span>
+<a id="__codelineno-0-623" name="__codelineno-0-623"></a>    <span class="n">c_t_max_over_c_t_eta_b</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">2.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">tr_max</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span>
+<a id="__codelineno-0-624" name="__codelineno-0-624"></a>    <span class="k">return</span> <span class="n">c_t_max_over_c_t_eta_b</span> <span class="o">*</span> <span class="n">c_t_eta_b</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2146,7 +2146,7 @@ In between, computes Mach from impact pressure constraint.</p>
 <a id="__codelineno-0-103" name="__codelineno-0-103"></a>    <span class="n">atm_speed_limit</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <a id="__codelineno-0-104" name="__codelineno-0-104"></a>    <span class="n">buffer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">,</span>
 <a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate maximum Mach number considering altitude and pressure limits.</span>
+<a id="__codelineno-0-106" name="__codelineno-0-106"></a><span class="w">    </span><span class="sd">"""Calculate maximum Mach number considering altitude and pressure limits.</span>
 <a id="__codelineno-0-107" name="__codelineno-0-107"></a>
 <a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="sd">    Below 10,000 ft with ATM speed limit enabled, uses reduced impact pressure.</span>
 <a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="sd">    Above crossover pressure altitude, returns aircraft max Mach.</span>
@@ -2166,7 +2166,7 @@ In between, computes Mach from impact pressure constraint.</p>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="sd">        pycontrails ps_operational_limits.max_mach_number_by_altitude</span>
-<a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">    """</span>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="c1"># ATM speed limit of 250kt below FL100 corresponds to ~10510 Pa impact pressure</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a>    <span class="k">if</span> <span class="n">atm_speed_limit</span><span class="p">:</span>
 <a id="__codelineno-0-129" name="__codelineno-0-129"></a>        <span class="n">p_i_max_eff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
@@ -2242,7 +2242,7 @@ In between, computes Mach from impact pressure constraint.</p>
 <span class="normal"><a href="#__codelineno-0-468">468</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-451" name="__codelineno-0-451"></a><span class="k">def</span><span class="w"> </span><span class="nf">max_overall_propulsion_efficiency</span><span class="p">(</span>
 <a id="__codelineno-0-452" name="__codelineno-0-452"></a>    <span class="n">mach_num</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span> <span class="n">mach_num_des</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eta_1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">eta_2</span><span class="p">:</span> <span class="nb">float</span>
 <a id="__codelineno-0-453" name="__codelineno-0-453"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-454" name="__codelineno-0-454"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate maximum overall propulsion efficiency.</span>
+<a id="__codelineno-0-454" name="__codelineno-0-454"></a><span class="w">    </span><span class="sd">"""Calculate maximum overall propulsion efficiency.</span>
 <a id="__codelineno-0-455" name="__codelineno-0-455"></a>
 <a id="__codelineno-0-456" name="__codelineno-0-456"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-457" name="__codelineno-0-457"></a><span class="sd">        mach_num: Mach number.</span>
@@ -2255,7 +2255,7 @@ In between, computes Mach from impact pressure constraint.</p>
 <a id="__codelineno-0-464" name="__codelineno-0-464"></a>
 <a id="__codelineno-0-465" name="__codelineno-0-465"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-466" name="__codelineno-0-466"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 15.</span>
-<a id="__codelineno-0-467" name="__codelineno-0-467"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-467" name="__codelineno-0-467"></a><span class="sd">    """</span>
 <a id="__codelineno-0-468" name="__codelineno-0-468"></a>    <span class="k">return</span> <span class="n">eta_1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">mach_num</span><span class="p">,</span> <span class="n">eta_2</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2316,7 +2316,7 @@ In between, computes Mach from impact pressure constraint.</p>
 <a id="__codelineno-0-155" name="__codelineno-0-155"></a>    <span class="n">m_des</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-156" name="__codelineno-0-156"></a>    <span class="n">c_l_do</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate maximum usable lift coefficient.</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="w">    </span><span class="sd">"""Calculate maximum usable lift coefficient.</span>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="sd">        mach_num: Mach number.</span>
@@ -2328,7 +2328,7 @@ In between, computes Mach from impact pressure constraint.</p>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">        pycontrails ps_operational_limits.max_usable_lift_coefficient</span>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    """</span>
 <a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="n">m_over_m_des</span> <span class="o">=</span> <span class="n">mach_num</span> <span class="o">/</span> <span class="n">m_des</span>
 <a id="__codelineno-0-172" name="__codelineno-0-172"></a>    <span class="n">c_l_maxu_over_c_l_do</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a>        <span class="n">m_over_m_des</span> <span class="o">&lt;</span> <span class="mf">0.70</span><span class="p">,</span>
@@ -2383,7 +2383,7 @@ In between, computes Mach from impact pressure constraint.</p>
 <span class="normal"><a href="#__codelineno-0-304">304</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-289" name="__codelineno-0-289"></a><span class="k">def</span><span class="w"> </span><span class="nf">non_vortex_lift_dependent_drag_factor</span><span class="p">(</span>
 <a id="__codelineno-0-290" name="__codelineno-0-290"></a>    <span class="n">c_drag_0</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span> <span class="n">cos_sweep</span><span class="p">:</span> <span class="nb">float</span>
 <a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-292" name="__codelineno-0-292"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate non-vortex lift-dependent drag factor.</span>
+<a id="__codelineno-0-292" name="__codelineno-0-292"></a><span class="w">    </span><span class="sd">"""Calculate non-vortex lift-dependent drag factor.</span>
 <a id="__codelineno-0-293" name="__codelineno-0-293"></a>
 <a id="__codelineno-0-294" name="__codelineno-0-294"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-295" name="__codelineno-0-295"></a><span class="sd">        c_drag_0: Zero-lift drag coefficient.</span>
@@ -2394,7 +2394,7 @@ In between, computes Mach from impact pressure constraint.</p>
 <a id="__codelineno-0-300" name="__codelineno-0-300"></a>
 <a id="__codelineno-0-301" name="__codelineno-0-301"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-302" name="__codelineno-0-302"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 7.</span>
-<a id="__codelineno-0-303" name="__codelineno-0-303"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-303" name="__codelineno-0-303"></a><span class="sd">    """</span>
 <a id="__codelineno-0-304" name="__codelineno-0-304"></a>    <span class="k">return</span> <span class="n">K1_BASE_COEFF</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">K1_SWEEP_COEFF</span> <span class="o">*</span> <span class="n">cos_sweep</span><span class="p">)</span> <span class="o">*</span> <span class="n">c_drag_0</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2429,14 +2429,7 @@ In between, computes Mach from impact pressure constraint.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>packages/openleaf-performance/src/openleaf/performance/models/ps/ps_physics.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-551">551</a></span>
-<span class="normal"><a href="#__codelineno-0-552">552</a></span>
-<span class="normal"><a href="#__codelineno-0-553">553</a></span>
-<span class="normal"><a href="#__codelineno-0-554">554</a></span>
-<span class="normal"><a href="#__codelineno-0-555">555</a></span>
-<span class="normal"><a href="#__codelineno-0-556">556</a></span>
-<span class="normal"><a href="#__codelineno-0-557">557</a></span>
-<span class="normal"><a href="#__codelineno-0-558">558</a></span>
+              <div class="highlight"><table class="highlighttable"><tr><th colspan="2" class="filename"><span class="filename">Python</span></th></tr><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-558">558</a></span>
 <span class="normal"><a href="#__codelineno-0-559">559</a></span>
 <span class="normal"><a href="#__codelineno-0-560">560</a></span>
 <span class="normal"><a href="#__codelineno-0-561">561</a></span>
@@ -2457,35 +2450,42 @@ In between, computes Mach from impact pressure constraint.</p>
 <span class="normal"><a href="#__codelineno-0-576">576</a></span>
 <span class="normal"><a href="#__codelineno-0-577">577</a></span>
 <span class="normal"><a href="#__codelineno-0-578">578</a></span>
-<span class="normal"><a href="#__codelineno-0-579">579</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-551" name="__codelineno-0-551"></a><span class="k">def</span><span class="w"> </span><span class="nf">normalised_max_throttle_parameter</span><span class="p">(</span>
-<a id="__codelineno-0-552" name="__codelineno-0-552"></a>    <span class="n">air_temperature</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
-<a id="__codelineno-0-553" name="__codelineno-0-553"></a>    <span class="n">mach_number</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
-<a id="__codelineno-0-554" name="__codelineno-0-554"></a>    <span class="n">tet_mcc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<a id="__codelineno-0-555" name="__codelineno-0-555"></a>    <span class="n">tr_ec</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<a id="__codelineno-0-556" name="__codelineno-0-556"></a>    <span class="n">m_ec</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<a id="__codelineno-0-557" name="__codelineno-0-557"></a>    <span class="n">buffer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.20</span><span class="p">,</span>
-<a id="__codelineno-0-558" name="__codelineno-0-558"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-559" name="__codelineno-0-559"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate normalised maximum throttle parameter.</span>
-<a id="__codelineno-0-560" name="__codelineno-0-560"></a>
-<a id="__codelineno-0-561" name="__codelineno-0-561"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-562" name="__codelineno-0-562"></a><span class="sd">        air_temperature: Air temperature [K].</span>
-<a id="__codelineno-0-563" name="__codelineno-0-563"></a><span class="sd">        mach_number: Mach number.</span>
-<a id="__codelineno-0-564" name="__codelineno-0-564"></a><span class="sd">        tet_mcc: Maximum combustor temperature [K].</span>
-<a id="__codelineno-0-565" name="__codelineno-0-565"></a><span class="sd">        tr_ec: Engine temperature ratio at max efficiency.</span>
-<a id="__codelineno-0-566" name="__codelineno-0-566"></a><span class="sd">        m_ec: Mach number at engine corner point.</span>
-<a id="__codelineno-0-567" name="__codelineno-0-567"></a><span class="sd">        buffer: Safety buffer.</span>
-<a id="__codelineno-0-568" name="__codelineno-0-568"></a>
-<a id="__codelineno-0-569" name="__codelineno-0-569"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-570" name="__codelineno-0-570"></a><span class="sd">        Normalised maximum throttle parameter.</span>
-<a id="__codelineno-0-571" name="__codelineno-0-571"></a>
-<a id="__codelineno-0-572" name="__codelineno-0-572"></a><span class="sd">    References:</span>
-<a id="__codelineno-0-573" name="__codelineno-0-573"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 18-19.</span>
-<a id="__codelineno-0-574" name="__codelineno-0-574"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-575" name="__codelineno-0-575"></a>    <span class="k">return</span> <span class="p">(</span>
-<a id="__codelineno-0-576" name="__codelineno-0-576"></a>        <span class="p">(</span><span class="n">tet_mcc</span> <span class="o">/</span> <span class="n">air_temperature</span><span class="p">)</span>
-<a id="__codelineno-0-577" name="__codelineno-0-577"></a>        <span class="o">/</span> <span class="p">(</span><span class="n">tr_ec</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">0.53</span> <span class="o">*</span> <span class="p">(</span><span class="n">mach_number</span> <span class="o">-</span> <span class="n">m_ec</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">mach_number</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
-<a id="__codelineno-0-578" name="__codelineno-0-578"></a>        <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">buffer</span><span class="p">)</span>
-<a id="__codelineno-0-579" name="__codelineno-0-579"></a>    <span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-579">579</a></span>
+<span class="normal"><a href="#__codelineno-0-580">580</a></span>
+<span class="normal"><a href="#__codelineno-0-581">581</a></span>
+<span class="normal"><a href="#__codelineno-0-582">582</a></span>
+<span class="normal"><a href="#__codelineno-0-583">583</a></span>
+<span class="normal"><a href="#__codelineno-0-584">584</a></span>
+<span class="normal"><a href="#__codelineno-0-585">585</a></span>
+<span class="normal"><a href="#__codelineno-0-586">586</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-558" name="__codelineno-0-558"></a><span class="k">def</span><span class="w"> </span><span class="nf">normalised_max_throttle_parameter</span><span class="p">(</span>
+<a id="__codelineno-0-559" name="__codelineno-0-559"></a>    <span class="n">air_temperature</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
+<a id="__codelineno-0-560" name="__codelineno-0-560"></a>    <span class="n">mach_number</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
+<a id="__codelineno-0-561" name="__codelineno-0-561"></a>    <span class="n">tet_mcc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-0-562" name="__codelineno-0-562"></a>    <span class="n">tr_ec</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-0-563" name="__codelineno-0-563"></a>    <span class="n">m_ec</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<a id="__codelineno-0-564" name="__codelineno-0-564"></a>    <span class="n">buffer</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.20</span><span class="p">,</span>
+<a id="__codelineno-0-565" name="__codelineno-0-565"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
+<a id="__codelineno-0-566" name="__codelineno-0-566"></a><span class="w">    </span><span class="sd">"""Calculate normalised maximum throttle parameter.</span>
+<a id="__codelineno-0-567" name="__codelineno-0-567"></a>
+<a id="__codelineno-0-568" name="__codelineno-0-568"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-569" name="__codelineno-0-569"></a><span class="sd">        air_temperature: Air temperature [K].</span>
+<a id="__codelineno-0-570" name="__codelineno-0-570"></a><span class="sd">        mach_number: Mach number.</span>
+<a id="__codelineno-0-571" name="__codelineno-0-571"></a><span class="sd">        tet_mcc: Maximum combustor temperature [K].</span>
+<a id="__codelineno-0-572" name="__codelineno-0-572"></a><span class="sd">        tr_ec: Engine temperature ratio at max efficiency.</span>
+<a id="__codelineno-0-573" name="__codelineno-0-573"></a><span class="sd">        m_ec: Mach number at engine corner point.</span>
+<a id="__codelineno-0-574" name="__codelineno-0-574"></a><span class="sd">        buffer: Safety buffer.</span>
+<a id="__codelineno-0-575" name="__codelineno-0-575"></a>
+<a id="__codelineno-0-576" name="__codelineno-0-576"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-577" name="__codelineno-0-577"></a><span class="sd">        Normalised maximum throttle parameter.</span>
+<a id="__codelineno-0-578" name="__codelineno-0-578"></a>
+<a id="__codelineno-0-579" name="__codelineno-0-579"></a><span class="sd">    References:</span>
+<a id="__codelineno-0-580" name="__codelineno-0-580"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 18-19.</span>
+<a id="__codelineno-0-581" name="__codelineno-0-581"></a><span class="sd">    """</span>
+<a id="__codelineno-0-582" name="__codelineno-0-582"></a>    <span class="k">return</span> <span class="p">(</span>
+<a id="__codelineno-0-583" name="__codelineno-0-583"></a>        <span class="p">(</span><span class="n">tet_mcc</span> <span class="o">/</span> <span class="n">air_temperature</span><span class="p">)</span>
+<a id="__codelineno-0-584" name="__codelineno-0-584"></a>        <span class="o">/</span> <span class="p">(</span><span class="n">tr_ec</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="mf">0.53</span> <span class="o">*</span> <span class="p">(</span><span class="n">mach_number</span> <span class="o">-</span> <span class="n">m_ec</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">mach_number</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+<a id="__codelineno-0-585" name="__codelineno-0-585"></a>        <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">buffer</span><span class="p">)</span>
+<a id="__codelineno-0-586" name="__codelineno-0-586"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2550,7 +2550,7 @@ In between, computes Mach from impact pressure constraint.</p>
 <a id="__codelineno-0-311" name="__codelineno-0-311"></a>    <span class="n">delta_2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-312" name="__codelineno-0-312"></a>    <span class="n">winglets</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
 <a id="__codelineno-0-313" name="__codelineno-0-313"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-314" name="__codelineno-0-314"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Oswald efficiency factor.</span>
+<a id="__codelineno-0-314" name="__codelineno-0-314"></a><span class="w">    </span><span class="sd">"""Calculate Oswald efficiency factor.</span>
 <a id="__codelineno-0-315" name="__codelineno-0-315"></a>
 <a id="__codelineno-0-316" name="__codelineno-0-316"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-317" name="__codelineno-0-317"></a><span class="sd">        c_drag_0: Zero-lift drag coefficient.</span>
@@ -2564,7 +2564,7 @@ In between, computes Mach from impact pressure constraint.</p>
 <a id="__codelineno-0-325" name="__codelineno-0-325"></a>
 <a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-327" name="__codelineno-0-327"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 6-8.</span>
-<a id="__codelineno-0-328" name="__codelineno-0-328"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-328" name="__codelineno-0-328"></a><span class="sd">    """</span>
 <a id="__codelineno-0-329" name="__codelineno-0-329"></a>    <span class="n">numer</span> <span class="o">=</span> <span class="n">WINGLET_BONUS_FACTOR</span> <span class="k">if</span> <span class="n">winglets</span> <span class="k">else</span> <span class="mf">1.0</span>
 <a id="__codelineno-0-330" name="__codelineno-0-330"></a>    <span class="n">k_1</span> <span class="o">=</span> <span class="n">non_vortex_lift_dependent_drag_factor</span><span class="p">(</span><span class="n">c_drag_0</span><span class="p">,</span> <span class="n">cos_sweep</span><span class="p">)</span>
 <a id="__codelineno-0-331" name="__codelineno-0-331"></a>    <span class="n">denom</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="n">INDUCED_DRAG_BASE_FACTOR</span> <span class="o">+</span> <span class="n">delta_2</span> <span class="o">+</span> <span class="p">(</span><span class="n">k_1</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">wing_aspect_ratio</span><span class="p">)</span>
@@ -2579,7 +2579,7 @@ In between, computes Mach from impact pressure constraint.</p>
 
 
 <h4 id="openleaf.performance.models.ps.ps_physics.overall_propulsion_efficiency" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">overall_propulsion_efficiency</span><span class="p">(</span><span class="n">mach_num</span><span class="p">,</span> <span class="n">c_t</span><span class="p">,</span> <span class="n">c_t_eta_b</span><span class="p">,</span> <span class="n">m_des</span><span class="p">,</span> <span class="n">eta_1</span><span class="p">,</span> <span class="n">eta_2</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">overall_propulsion_efficiency</span><span class="p">(</span><span class="n">mach_num</span><span class="p">,</span> <span class="n">c_t</span><span class="p">,</span> <span class="n">c_t_eta_b</span><span class="p">,</span> <span class="n">m_des</span><span class="p">,</span> <span class="n">eta_1</span><span class="p">,</span> <span class="n">eta_2</span><span class="p">,</span> <span class="n">engine_deterioration_factor</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></code>
 
 </h4>
 
@@ -2599,7 +2599,11 @@ PSEngineModel.overall_propulsion_efficiency.</p>
     c_t_eta_b: Thrust coefficient at max efficiency.
     m_des: Design Mach number.
     eta_1: Propulsion efficiency coefficient 1.
-    eta_2: Propulsion efficiency coefficient 2.</p>
+    eta_2: Propulsion efficiency coefficient 2.
+    engine_deterioration_factor: In-service engine deterioration, as a
+        fractional increase in fuel flow; eta_1 is divided by
+        (1 + factor), as in pycontrails' PSFlight. Default 0.0, the
+        undeteriorated engine; PSModel uses 0.025.</p>
 <p>Returns:
     Overall propulsion efficiency.</p>
 <p>References:
@@ -2641,40 +2645,54 @@ PSEngineModel.overall_propulsion_efficiency.</p>
 <span class="normal"><a href="#__codelineno-0-542">542</a></span>
 <span class="normal"><a href="#__codelineno-0-543">543</a></span>
 <span class="normal"><a href="#__codelineno-0-544">544</a></span>
-<span class="normal"><a href="#__codelineno-0-545">545</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-512" name="__codelineno-0-512"></a><span class="k">def</span><span class="w"> </span><span class="nf">overall_propulsion_efficiency</span><span class="p">(</span>
+<span class="normal"><a href="#__codelineno-0-545">545</a></span>
+<span class="normal"><a href="#__codelineno-0-546">546</a></span>
+<span class="normal"><a href="#__codelineno-0-547">547</a></span>
+<span class="normal"><a href="#__codelineno-0-548">548</a></span>
+<span class="normal"><a href="#__codelineno-0-549">549</a></span>
+<span class="normal"><a href="#__codelineno-0-550">550</a></span>
+<span class="normal"><a href="#__codelineno-0-551">551</a></span>
+<span class="normal"><a href="#__codelineno-0-552">552</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-512" name="__codelineno-0-512"></a><span class="k">def</span><span class="w"> </span><span class="nf">overall_propulsion_efficiency</span><span class="p">(</span>
 <a id="__codelineno-0-513" name="__codelineno-0-513"></a>    <span class="n">mach_num</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-514" name="__codelineno-0-514"></a>    <span class="n">c_t</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-515" name="__codelineno-0-515"></a>    <span class="n">c_t_eta_b</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-516" name="__codelineno-0-516"></a>    <span class="n">m_des</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-517" name="__codelineno-0-517"></a>    <span class="n">eta_1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-518" name="__codelineno-0-518"></a>    <span class="n">eta_2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<a id="__codelineno-0-519" name="__codelineno-0-519"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-520" name="__codelineno-0-520"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate overall propulsion efficiency.</span>
-<a id="__codelineno-0-521" name="__codelineno-0-521"></a>
-<a id="__codelineno-0-522" name="__codelineno-0-522"></a><span class="sd">    This is the raw Poll-Schumann correlation, meaningful for</span>
-<a id="__codelineno-0-523" name="__codelineno-0-523"></a><span class="sd">    0 &lt;= c_t &lt;= c_t,max. It applies no guards: above c_t,max it extrapolates the</span>
-<a id="__codelineno-0-524" name="__codelineno-0-524"></a><span class="sd">    efficiency polynomial (which turns negative at high c_t), and it returns 0</span>
-<a id="__codelineno-0-525" name="__codelineno-0-525"></a><span class="sd">    at zero thrust. For the value used by the fuel flow model, with c_t clipped</span>
-<a id="__codelineno-0-526" name="__codelineno-0-526"></a><span class="sd">    to the available range and the efficiency floored, use</span>
-<a id="__codelineno-0-527" name="__codelineno-0-527"></a><span class="sd">    PSEngineModel.overall_propulsion_efficiency.</span>
-<a id="__codelineno-0-528" name="__codelineno-0-528"></a>
-<a id="__codelineno-0-529" name="__codelineno-0-529"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-530" name="__codelineno-0-530"></a><span class="sd">        mach_num: Mach number.</span>
-<a id="__codelineno-0-531" name="__codelineno-0-531"></a><span class="sd">        c_t: Thrust coefficient.</span>
-<a id="__codelineno-0-532" name="__codelineno-0-532"></a><span class="sd">        c_t_eta_b: Thrust coefficient at max efficiency.</span>
-<a id="__codelineno-0-533" name="__codelineno-0-533"></a><span class="sd">        m_des: Design Mach number.</span>
-<a id="__codelineno-0-534" name="__codelineno-0-534"></a><span class="sd">        eta_1: Propulsion efficiency coefficient 1.</span>
-<a id="__codelineno-0-535" name="__codelineno-0-535"></a><span class="sd">        eta_2: Propulsion efficiency coefficient 2.</span>
-<a id="__codelineno-0-536" name="__codelineno-0-536"></a>
-<a id="__codelineno-0-537" name="__codelineno-0-537"></a><span class="sd">    Returns:</span>
-<a id="__codelineno-0-538" name="__codelineno-0-538"></a><span class="sd">        Overall propulsion efficiency.</span>
-<a id="__codelineno-0-539" name="__codelineno-0-539"></a>
-<a id="__codelineno-0-540" name="__codelineno-0-540"></a><span class="sd">    References:</span>
-<a id="__codelineno-0-541" name="__codelineno-0-541"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 14-16.</span>
-<a id="__codelineno-0-542" name="__codelineno-0-542"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-543" name="__codelineno-0-543"></a>    <span class="n">eta_over_eta_b</span> <span class="o">=</span> <span class="n">propulsion_efficiency_over_max</span><span class="p">(</span><span class="n">mach_num</span><span class="p">,</span> <span class="n">c_t</span><span class="p">,</span> <span class="n">c_t_eta_b</span><span class="p">)</span>
-<a id="__codelineno-0-544" name="__codelineno-0-544"></a>    <span class="n">eta_b</span> <span class="o">=</span> <span class="n">max_overall_propulsion_efficiency</span><span class="p">(</span><span class="n">mach_num</span><span class="p">,</span> <span class="n">m_des</span><span class="p">,</span> <span class="n">eta_1</span><span class="p">,</span> <span class="n">eta_2</span><span class="p">)</span>
-<a id="__codelineno-0-545" name="__codelineno-0-545"></a>    <span class="k">return</span> <span class="n">eta_over_eta_b</span> <span class="o">*</span> <span class="n">eta_b</span>
+<a id="__codelineno-0-519" name="__codelineno-0-519"></a>    <span class="n">engine_deterioration_factor</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+<a id="__codelineno-0-520" name="__codelineno-0-520"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
+<a id="__codelineno-0-521" name="__codelineno-0-521"></a><span class="w">    </span><span class="sd">"""Calculate overall propulsion efficiency.</span>
+<a id="__codelineno-0-522" name="__codelineno-0-522"></a>
+<a id="__codelineno-0-523" name="__codelineno-0-523"></a><span class="sd">    This is the raw Poll-Schumann correlation, meaningful for</span>
+<a id="__codelineno-0-524" name="__codelineno-0-524"></a><span class="sd">    0 &lt;= c_t &lt;= c_t,max. It applies no guards: above c_t,max it extrapolates the</span>
+<a id="__codelineno-0-525" name="__codelineno-0-525"></a><span class="sd">    efficiency polynomial (which turns negative at high c_t), and it returns 0</span>
+<a id="__codelineno-0-526" name="__codelineno-0-526"></a><span class="sd">    at zero thrust. For the value used by the fuel flow model, with c_t clipped</span>
+<a id="__codelineno-0-527" name="__codelineno-0-527"></a><span class="sd">    to the available range and the efficiency floored, use</span>
+<a id="__codelineno-0-528" name="__codelineno-0-528"></a><span class="sd">    PSEngineModel.overall_propulsion_efficiency.</span>
+<a id="__codelineno-0-529" name="__codelineno-0-529"></a>
+<a id="__codelineno-0-530" name="__codelineno-0-530"></a><span class="sd">    Args:</span>
+<a id="__codelineno-0-531" name="__codelineno-0-531"></a><span class="sd">        mach_num: Mach number.</span>
+<a id="__codelineno-0-532" name="__codelineno-0-532"></a><span class="sd">        c_t: Thrust coefficient.</span>
+<a id="__codelineno-0-533" name="__codelineno-0-533"></a><span class="sd">        c_t_eta_b: Thrust coefficient at max efficiency.</span>
+<a id="__codelineno-0-534" name="__codelineno-0-534"></a><span class="sd">        m_des: Design Mach number.</span>
+<a id="__codelineno-0-535" name="__codelineno-0-535"></a><span class="sd">        eta_1: Propulsion efficiency coefficient 1.</span>
+<a id="__codelineno-0-536" name="__codelineno-0-536"></a><span class="sd">        eta_2: Propulsion efficiency coefficient 2.</span>
+<a id="__codelineno-0-537" name="__codelineno-0-537"></a><span class="sd">        engine_deterioration_factor: In-service engine deterioration, as a</span>
+<a id="__codelineno-0-538" name="__codelineno-0-538"></a><span class="sd">            fractional increase in fuel flow; eta_1 is divided by</span>
+<a id="__codelineno-0-539" name="__codelineno-0-539"></a><span class="sd">            (1 + factor), as in pycontrails' PSFlight. Default 0.0, the</span>
+<a id="__codelineno-0-540" name="__codelineno-0-540"></a><span class="sd">            undeteriorated engine; PSModel uses 0.025.</span>
+<a id="__codelineno-0-541" name="__codelineno-0-541"></a>
+<a id="__codelineno-0-542" name="__codelineno-0-542"></a><span class="sd">    Returns:</span>
+<a id="__codelineno-0-543" name="__codelineno-0-543"></a><span class="sd">        Overall propulsion efficiency.</span>
+<a id="__codelineno-0-544" name="__codelineno-0-544"></a>
+<a id="__codelineno-0-545" name="__codelineno-0-545"></a><span class="sd">    References:</span>
+<a id="__codelineno-0-546" name="__codelineno-0-546"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 14-16.</span>
+<a id="__codelineno-0-547" name="__codelineno-0-547"></a><span class="sd">    """</span>
+<a id="__codelineno-0-548" name="__codelineno-0-548"></a>    <span class="n">eta_over_eta_b</span> <span class="o">=</span> <span class="n">propulsion_efficiency_over_max</span><span class="p">(</span><span class="n">mach_num</span><span class="p">,</span> <span class="n">c_t</span><span class="p">,</span> <span class="n">c_t_eta_b</span><span class="p">)</span>
+<a id="__codelineno-0-549" name="__codelineno-0-549"></a>    <span class="n">eta_b</span> <span class="o">=</span> <span class="n">max_overall_propulsion_efficiency</span><span class="p">(</span>
+<a id="__codelineno-0-550" name="__codelineno-0-550"></a>        <span class="n">mach_num</span><span class="p">,</span> <span class="n">m_des</span><span class="p">,</span> <span class="n">eta_1</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">engine_deterioration_factor</span><span class="p">),</span> <span class="n">eta_2</span>
+<a id="__codelineno-0-551" name="__codelineno-0-551"></a>    <span class="p">)</span>
+<a id="__codelineno-0-552" name="__codelineno-0-552"></a>    <span class="k">return</span> <span class="n">eta_over_eta_b</span> <span class="o">*</span> <span class="n">eta_b</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2748,7 +2766,7 @@ PSEngineModel.overall_propulsion_efficiency.</p>
 <a id="__codelineno-0-473" name="__codelineno-0-473"></a>    <span class="n">c_t</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-474" name="__codelineno-0-474"></a>    <span class="n">c_t_eta_b</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-475" name="__codelineno-0-475"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-476" name="__codelineno-0-476"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate ratio of propulsion efficiency to maximum propulsion efficiency.</span>
+<a id="__codelineno-0-476" name="__codelineno-0-476"></a><span class="w">    </span><span class="sd">"""Calculate ratio of propulsion efficiency to maximum propulsion efficiency.</span>
 <a id="__codelineno-0-477" name="__codelineno-0-477"></a>
 <a id="__codelineno-0-478" name="__codelineno-0-478"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-479" name="__codelineno-0-479"></a><span class="sd">        mach_num: Mach number.</span>
@@ -2760,7 +2778,7 @@ PSEngineModel.overall_propulsion_efficiency.</p>
 <a id="__codelineno-0-485" name="__codelineno-0-485"></a>
 <a id="__codelineno-0-486" name="__codelineno-0-486"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-487" name="__codelineno-0-487"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 16.</span>
-<a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-488" name="__codelineno-0-488"></a><span class="sd">    """</span>
 <a id="__codelineno-0-489" name="__codelineno-0-489"></a>    <span class="n">c_t_over_c_t_eta_b</span> <span class="o">=</span> <span class="n">c_t</span> <span class="o">/</span> <span class="n">c_t_eta_b</span>
 <a id="__codelineno-0-490" name="__codelineno-0-490"></a>
 <a id="__codelineno-0-491" name="__codelineno-0-491"></a>    <span class="n">sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mach_num</span> <span class="o">&lt;</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.3</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.4</span> <span class="o">-</span> <span class="n">mach_num</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">)</span>
@@ -2850,7 +2868,7 @@ maximum useful operating altitude is deemed reached.</p>
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a>    <span class="o">*</span><span class="p">,</span>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a>    <span class="n">rocd</span><span class="p">:</span> <span class="n">ArrayScalarLike</span> <span class="o">=</span> <span class="n">CEILING_CLIMB_RATE_FPM</span><span class="p">,</span>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate thrust coefficient required to fly at a given climb rate.</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="w">    </span><span class="sd">"""Calculate thrust coefficient required to fly at a given climb rate.</span>
 <a id="__codelineno-0-188" name="__codelineno-0-188"></a>
 <a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="sd">    The thrust balance at constant true airspeed, ``T = D + m g dh/dt / V``,</span>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="sd">    divided by the dynamic pressure times the wing area (with ``L = m g``).</span>
@@ -2868,7 +2886,7 @@ maximum useful operating altitude is deemed reached.</p>
 <a id="__codelineno-0-202" name="__codelineno-0-202"></a>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">        pycontrails ps_operational_limits.required_thrust_coefficient</span>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    """</span>
 <a id="__codelineno-0-206" name="__codelineno-0-206"></a>    <span class="k">return</span> <span class="n">c_drag</span> <span class="o">+</span> <span class="n">c_lift</span> <span class="o">*</span> <span class="p">(</span><span class="n">rocd</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">FPM</span><span class="p">)</span> <span class="o">/</span> <span class="n">true_airspeed</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2933,7 +2951,7 @@ maximum useful operating altitude is deemed reached.</p>
 <a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="n">air_temperature</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-231" name="__codelineno-0-231"></a>    <span class="n">air_pressure</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-232" name="__codelineno-0-232"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-233" name="__codelineno-0-233"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate Reynolds number.</span>
+<a id="__codelineno-0-233" name="__codelineno-0-233"></a><span class="w">    </span><span class="sd">"""Calculate Reynolds number.</span>
 <a id="__codelineno-0-234" name="__codelineno-0-234"></a>
 <a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="sd">    Uses wing reference area square root as characteristic length.</span>
 <a id="__codelineno-0-236" name="__codelineno-0-236"></a>
@@ -2948,7 +2966,7 @@ maximum useful operating altitude is deemed reached.</p>
 <a id="__codelineno-0-245" name="__codelineno-0-245"></a>
 <a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 3.</span>
-<a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">    """</span>
 <a id="__codelineno-0-249" name="__codelineno-0-249"></a>    <span class="n">mu</span> <span class="o">=</span> <span class="n">fluid_dynamic_viscosity</span><span class="p">(</span><span class="n">air_temperature</span><span class="p">)</span>
 <a id="__codelineno-0-250" name="__codelineno-0-250"></a>    <span class="n">L_ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">surface_area</span><span class="p">)</span>
 <a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="n">inv_speed_of_sound_factor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">units</span><span class="o">.</span><span class="n">GAMMA</span> <span class="o">/</span> <span class="p">(</span><span class="n">units</span><span class="o">.</span><span class="n">R_AIR</span> <span class="o">*</span> <span class="n">air_temperature</span><span class="p">))</span>
@@ -2994,7 +3012,7 @@ maximum useful operating altitude is deemed reached.</p>
 <span class="normal"><a href="#__codelineno-0-265">265</a></span>
 <span class="normal"><a href="#__codelineno-0-266">266</a></span>
 <span class="normal"><a href="#__codelineno-0-267">267</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="k">def</span><span class="w"> </span><span class="nf">skin_friction_coefficient</span><span class="p">(</span><span class="n">rn</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate aircraft skin friction coefficient.</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="w">    </span><span class="sd">"""Calculate aircraft skin friction coefficient.</span>
 <a id="__codelineno-0-257" name="__codelineno-0-257"></a>
 <a id="__codelineno-0-258" name="__codelineno-0-258"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">        rn: Reynolds number.</span>
@@ -3004,7 +3022,7 @@ maximum useful operating altitude is deemed reached.</p>
 <a id="__codelineno-0-263" name="__codelineno-0-263"></a>
 <a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 4.</span>
-<a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">    """</span>
 <a id="__codelineno-0-267" name="__codelineno-0-267"></a>    <span class="k">return</span> <span class="mf">0.0269</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">rn</span><span class="p">,</span> <span class="mf">0.14</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3061,7 +3079,7 @@ maximum useful operating altitude is deemed reached.</p>
 <a id="__codelineno-0-430" name="__codelineno-0-430"></a>    <span class="n">m_des</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-431" name="__codelineno-0-431"></a>    <span class="n">c_t_des</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-432" name="__codelineno-0-432"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-433" name="__codelineno-0-433"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate thrust coefficient at maximum overall propulsion efficiency.</span>
+<a id="__codelineno-0-433" name="__codelineno-0-433"></a><span class="w">    </span><span class="sd">"""Calculate thrust coefficient at maximum overall propulsion efficiency.</span>
 <a id="__codelineno-0-434" name="__codelineno-0-434"></a>
 <a id="__codelineno-0-435" name="__codelineno-0-435"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-436" name="__codelineno-0-436"></a><span class="sd">        mach_num: Mach number.</span>
@@ -3073,7 +3091,7 @@ maximum useful operating altitude is deemed reached.</p>
 <a id="__codelineno-0-442" name="__codelineno-0-442"></a>
 <a id="__codelineno-0-443" name="__codelineno-0-443"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-444" name="__codelineno-0-444"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 17.</span>
-<a id="__codelineno-0-445" name="__codelineno-0-445"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-445" name="__codelineno-0-445"></a><span class="sd">    """</span>
 <a id="__codelineno-0-446" name="__codelineno-0-446"></a>    <span class="n">m_over_m_des</span> <span class="o">=</span> <span class="n">mach_num</span> <span class="o">/</span> <span class="n">m_des</span>
 <a id="__codelineno-0-447" name="__codelineno-0-447"></a>    <span class="n">h_2</span> <span class="o">=</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.55</span> <span class="o">*</span> <span class="n">mach_num</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.55</span> <span class="o">*</span> <span class="n">m_des</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">m_over_m_des</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 <a id="__codelineno-0-448" name="__codelineno-0-448"></a>    <span class="k">return</span> <span class="n">h_2</span> <span class="o">*</span> <span class="n">c_t_des</span>
@@ -3165,7 +3183,7 @@ maximum useful operating altitude is deemed reached.</p>
 <a id="__codelineno-0-342" name="__codelineno-0-342"></a>    <span class="n">j_3</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-343" name="__codelineno-0-343"></a>    <span class="n">x_ref</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <a id="__codelineno-0-344" name="__codelineno-0-344"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-345" name="__codelineno-0-345"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate wave drag coefficient.</span>
+<a id="__codelineno-0-345" name="__codelineno-0-345"></a><span class="w">    </span><span class="sd">"""Calculate wave drag coefficient.</span>
 <a id="__codelineno-0-346" name="__codelineno-0-346"></a>
 <a id="__codelineno-0-347" name="__codelineno-0-347"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-348" name="__codelineno-0-348"></a><span class="sd">        mach_num: Mach number.</span>
@@ -3182,7 +3200,7 @@ maximum useful operating altitude is deemed reached.</p>
 <a id="__codelineno-0-359" name="__codelineno-0-359"></a>
 <a id="__codelineno-0-360" name="__codelineno-0-360"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-361" name="__codelineno-0-361"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 9-11.</span>
-<a id="__codelineno-0-362" name="__codelineno-0-362"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-362" name="__codelineno-0-362"></a><span class="sd">    """</span>
 <a id="__codelineno-0-363" name="__codelineno-0-363"></a>    <span class="n">m_cc</span> <span class="o">=</span> <span class="n">wing_constant</span> <span class="o">-</span> <span class="n">MCC_CL_CORRECTION_FACTOR</span> <span class="o">*</span> <span class="p">(</span><span class="n">c_lift</span> <span class="o">/</span> <span class="p">(</span><span class="n">cos_sweep</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
 <a id="__codelineno-0-364" name="__codelineno-0-364"></a>    <span class="n">x</span> <span class="o">=</span> <span class="n">mach_num</span> <span class="o">*</span> <span class="n">cos_sweep</span> <span class="o">/</span> <span class="n">m_cc</span>
 <a id="__codelineno-0-365" name="__codelineno-0-365"></a>
@@ -3242,7 +3260,7 @@ maximum useful operating altitude is deemed reached.</p>
 <span class="normal"><a href="#__codelineno-0-284">284</a></span>
 <span class="normal"><a href="#__codelineno-0-285">285</a></span>
 <span class="normal"><a href="#__codelineno-0-286">286</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="k">def</span><span class="w"> </span><span class="nf">zero_lift_drag_coefficient</span><span class="p">(</span><span class="n">c_f</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span> <span class="n">psi_0</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate zero-lift drag coefficient.</span>
+<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="w">    </span><span class="sd">"""Calculate zero-lift drag coefficient.</span>
 <a id="__codelineno-0-275" name="__codelineno-0-275"></a>
 <a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="sd">        c_f: Skin friction coefficient.</span>
@@ -3253,7 +3271,7 @@ maximum useful operating altitude is deemed reached.</p>
 <a id="__codelineno-0-282" name="__codelineno-0-282"></a>
 <a id="__codelineno-0-283" name="__codelineno-0-283"></a><span class="sd">    References:</span>
 <a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">        Poll &amp; Schumann (2021), Eq. 5.</span>
-<a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="sd">    """</span>
 <a id="__codelineno-0-286" name="__codelineno-0-286"></a>    <span class="k">return</span> <span class="n">c_f</span> <span class="o">*</span> <span class="n">psi_0</span>
 </code></pre></div></td></tr></table></div>
             </details>

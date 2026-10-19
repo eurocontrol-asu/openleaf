@@ -1538,10 +1538,10 @@ synonym lookup, filesystem fallback, and error reporting.</p>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a>    <span class="n">data_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
 <a id="__codelineno-0-196" name="__codelineno-0-196"></a>    <span class="n">synonym_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-197" name="__codelineno-0-197"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve ICAO code to BADA4 XML file path.</span>
+<a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="w">    </span><span class="sd">"""Resolve ICAO code to BADA4 XML file path.</span>
 <a id="__codelineno-0-199" name="__codelineno-0-199"></a>
 <a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">        icao: ICAO aircraft type code (e.g., &#39;A320&#39;).</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">        icao: ICAO aircraft type code (e.g., 'A320').</span>
 <a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">        data_path: Path to BADA4 data directory.</span>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">        synonym_file: Path to SYNONYM.BD4 file. If None, looks for it in data_path.</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a>
@@ -1549,12 +1549,12 @@ synonym lookup, filesystem fallback, and error reporting.</p>
 <a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">        Path to the XML file for this aircraft.</span>
 <a id="__codelineno-0-207" name="__codelineno-0-207"></a>
 <a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">        FileNotFoundError: If aircraft not found in synonyms or XML file doesn&#39;t exist.</span>
-<a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">        FileNotFoundError: If aircraft not found in synonyms or XML file doesn't exist.</span>
+<a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    """</span>
 <a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="n">icao</span> <span class="o">=</span> <span class="n">icao</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 <a id="__codelineno-0-212" name="__codelineno-0-212"></a>
 <a id="__codelineno-0-213" name="__codelineno-0-213"></a>    <span class="k">if</span> <span class="n">synonym_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-214" name="__codelineno-0-214"></a>        <span class="n">synonym_file</span> <span class="o">=</span> <span class="n">data_path</span> <span class="o">/</span> <span class="s2">&quot;SYNONYM.BD4&quot;</span>
+<a id="__codelineno-0-214" name="__codelineno-0-214"></a>        <span class="n">synonym_file</span> <span class="o">=</span> <span class="n">data_path</span> <span class="o">/</span> <span class="s2">"SYNONYM.BD4"</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a>
 <a id="__codelineno-0-216" name="__codelineno-0-216"></a>    <span class="k">if</span> <span class="n">synonym_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 <a id="__codelineno-0-217" name="__codelineno-0-217"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">_resolve_via_synonyms_bada4</span><span class="p">(</span><span class="n">icao</span><span class="p">,</span> <span class="n">_get_synonyms</span><span class="p">(</span><span class="n">synonym_file</span><span class="p">),</span> <span class="n">data_path</span><span class="p">)</span>
@@ -1565,7 +1565,7 @@ synonym lookup, filesystem fallback, and error reporting.</p>
 <a id="__codelineno-0-222" name="__codelineno-0-222"></a>    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-223" name="__codelineno-0-223"></a>        <span class="k">return</span> <span class="n">result</span>
 <a id="__codelineno-0-224" name="__codelineno-0-224"></a>
-<a id="__codelineno-0-225" name="__codelineno-0-225"></a>    <span class="k">raise</span> <span class="n">build_not_found_error</span><span class="p">(</span><span class="n">icao</span><span class="p">,</span> <span class="s2">&quot;BADA4&quot;</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_file</span><span class="p">,</span> <span class="n">_get_synonyms</span><span class="p">,</span> <span class="s2">&quot;*.xml&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-225" name="__codelineno-0-225"></a>    <span class="k">raise</span> <span class="n">build_not_found_error</span><span class="p">(</span><span class="n">icao</span><span class="p">,</span> <span class="s2">"BADA4"</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_file</span><span class="p">,</span> <span class="n">_get_synonyms</span><span class="p">,</span> <span class="s2">"*.xml"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -1642,10 +1642,10 @@ synonym lookup, filesystem fallback, and error reporting.</p>
 <a id="__codelineno-0-175" name="__codelineno-0-175"></a>    <span class="n">data_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
 <a id="__codelineno-0-176" name="__codelineno-0-176"></a>    <span class="n">synonym_file</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve ICAO code to BADA3 OPF file path.</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="w">    </span><span class="sd">"""Resolve ICAO code to BADA3 OPF file path.</span>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a>
 <a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">        icao: ICAO aircraft type code (e.g., &#39;A320&#39;).</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">        icao: ICAO aircraft type code (e.g., 'A320').</span>
 <a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">        data_path: Path to BADA3 data directory.</span>
 <a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">        synonym_file: Path to SYNONYM.NEW file. If None, looks for it in data_path.</span>
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a>
@@ -1653,12 +1653,12 @@ synonym lookup, filesystem fallback, and error reporting.</p>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="sd">        Path to the OPF file for this aircraft.</span>
 <a id="__codelineno-0-187" name="__codelineno-0-187"></a>
 <a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="sd">    Raises:</span>
-<a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="sd">        FileNotFoundError: If aircraft not found in synonyms or OPF file doesn&#39;t exist.</span>
-<a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="sd">        FileNotFoundError: If aircraft not found in synonyms or OPF file doesn't exist.</span>
+<a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="sd">    """</span>
 <a id="__codelineno-0-191" name="__codelineno-0-191"></a>    <span class="n">icao</span> <span class="o">=</span> <span class="n">icao</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a>
 <a id="__codelineno-0-193" name="__codelineno-0-193"></a>    <span class="k">if</span> <span class="n">synonym_file</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-194" name="__codelineno-0-194"></a>        <span class="n">synonym_file</span> <span class="o">=</span> <span class="n">data_path</span> <span class="o">/</span> <span class="s2">&quot;SYNONYM.NEW&quot;</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a>        <span class="n">synonym_file</span> <span class="o">=</span> <span class="n">data_path</span> <span class="o">/</span> <span class="s2">"SYNONYM.NEW"</span>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a>
 <a id="__codelineno-0-196" name="__codelineno-0-196"></a>    <span class="k">if</span> <span class="n">synonym_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 <a id="__codelineno-0-197" name="__codelineno-0-197"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">_resolve_via_synonyms_bada3</span><span class="p">(</span><span class="n">icao</span><span class="p">,</span> <span class="n">_get_synonyms</span><span class="p">(</span><span class="n">synonym_file</span><span class="p">),</span> <span class="n">data_path</span><span class="p">)</span>
@@ -1669,7 +1669,7 @@ synonym lookup, filesystem fallback, and error reporting.</p>
 <a id="__codelineno-0-202" name="__codelineno-0-202"></a>    <span class="k">if</span> <span class="n">result</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a>        <span class="k">return</span> <span class="n">result</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a>    <span class="k">raise</span> <span class="n">build_not_found_error</span><span class="p">(</span><span class="n">icao</span><span class="p">,</span> <span class="s2">&quot;BADA3&quot;</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_file</span><span class="p">,</span> <span class="n">_get_synonyms</span><span class="p">,</span> <span class="s2">&quot;*.OPF&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a>    <span class="k">raise</span> <span class="n">build_not_found_error</span><span class="p">(</span><span class="n">icao</span><span class="p">,</span> <span class="s2">"BADA3"</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_file</span><span class="p">,</span> <span class="n">_get_synonyms</span><span class="p">,</span> <span class="s2">"*.OPF"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>

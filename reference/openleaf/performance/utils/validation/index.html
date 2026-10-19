@@ -1322,13 +1322,13 @@ messages and optional bounds checking.</p>
 <p>Usage:
     from openleaf.performance.utils.validation import get_required, get_optional, validate_range</p>
 <div class="highlight"><span class="filename">Text Only</span><pre><span></span><code># Get required field with helpful error
-cl = get_required(data, &quot;lift_coef&quot;, method=&quot;drag_coef&quot;)
+cl = get_required(data, "lift_coef", method="drag_coef")
 
 # Get optional field with default
-config = get_optional(data, &quot;aerodynamic_configuration&quot;, default=&quot;clean&quot;)
+config = get_optional(data, "aerodynamic_configuration", default="clean")
 
 # Validate value is in range
-validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
+validate_range(mach, "mach_number", min_value=0.0, max_value=1.0)
 </code></pre></div>
 
 
@@ -1398,7 +1398,7 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-78" name="__codelineno-0-78"></a>    <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="n">default</span><span class="p">:</span> <span class="n">T</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span> <span class="o">|</span> <span class="n">T</span><span class="p">:</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an optional field from KeyedData with default value.</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="w">    </span><span class="sd">"""Get an optional field from KeyedData with default value.</span>
 <a id="__codelineno-0-82" name="__codelineno-0-82"></a>
 <a id="__codelineno-0-83" name="__codelineno-0-83"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">        data: KeyedData dictionary or similar object.</span>
@@ -1409,8 +1409,8 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-89" name="__codelineno-0-89"></a><span class="sd">        The field value or default.</span>
 <a id="__codelineno-0-90" name="__codelineno-0-90"></a>
 <a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="sd">        &gt;&gt;&gt; config = get_optional(data, &quot;aerodynamic_configuration&quot;, default=&quot;clean&quot;)</span>
-<a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="sd">        &gt;&gt;&gt; config = get_optional(data, "aerodynamic_configuration", default="clean")</span>
+<a id="__codelineno-0-93" name="__codelineno-0-93"></a><span class="sd">    """</span>
 <a id="__codelineno-0-94" name="__codelineno-0-94"></a>    <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">,</span> <span class="n">default</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1475,7 +1475,7 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-49" name="__codelineno-0-49"></a>    <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a required field from KeyedData with helpful error message.</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="w">    </span><span class="sd">"""Get a required field from KeyedData with helpful error message.</span>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        data: KeyedData dictionary or similar object.</span>
@@ -1489,8 +1489,8 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="sd">        MissingFieldError: If the field is not present in data.</span>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">        &gt;&gt;&gt; cl = get_required(data, &quot;lift_coef&quot;, method=&quot;drag_coef&quot;)</span>
-<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">        &gt;&gt;&gt; cl = get_required(data, "lift_coef", method="drag_coef")</span>
+<a id="__codelineno-0-67" name="__codelineno-0-67"></a><span class="sd">    """</span>
 <a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-69" name="__codelineno-0-69"></a>        <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
 <a id="__codelineno-0-70" name="__codelineno-0-70"></a>    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -1570,7 +1570,7 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a>    <span class="n">fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a>    <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Require at least one of the specified fields.</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="w">    </span><span class="sd">"""Require at least one of the specified fields.</span>
 <a id="__codelineno-0-188" name="__codelineno-0-188"></a>
 <a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="sd">        data: KeyedData dictionary or similar object.</span>
@@ -1584,8 +1584,8 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">        MissingFieldError: If none of the fields are present.</span>
 <a id="__codelineno-0-199" name="__codelineno-0-199"></a>
 <a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">        &gt;&gt;&gt; field, value = require_one_of(data, [&quot;altitude&quot;, &quot;air_pressure_ratio&quot;])</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a><span class="sd">        &gt;&gt;&gt; field, value = require_one_of(data, ["altitude", "air_pressure_ratio"])</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    """</span>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a>    <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">:</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a>        <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-205" name="__codelineno-0-205"></a>            <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">field</span><span class="p">]</span>
@@ -1594,13 +1594,13 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-208" name="__codelineno-0-208"></a>            <span class="k">continue</span>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a>    <span class="c1"># None found - raise error with first field name</span>
-<a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="n">fields_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">&#39;&quot;</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">)</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="n">fields_str</span> <span class="o">=</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">f</span><span class="si">}</span><span class="s2">'"</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fields</span><span class="p">)</span>
 <a id="__codelineno-0-212" name="__codelineno-0-212"></a>    <span class="k">raise</span> <span class="n">MissingFieldError</span><span class="p">(</span>
 <a id="__codelineno-0-213" name="__codelineno-0-213"></a>        <span class="n">fields</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a>        <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
-<a id="__codelineno-0-215" name="__codelineno-0-215"></a>        <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;At least one of </span><span class="si">{</span><span class="n">fields_str</span><span class="si">}</span><span class="s2"> required (needed by </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">)&quot;</span>
+<a id="__codelineno-0-215" name="__codelineno-0-215"></a>        <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">"At least one of </span><span class="si">{</span><span class="n">fields_str</span><span class="si">}</span><span class="s2"> required (needed by </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s2">)"</span>
 <a id="__codelineno-0-216" name="__codelineno-0-216"></a>        <span class="k">if</span> <span class="n">method</span>
-<a id="__codelineno-0-217" name="__codelineno-0-217"></a>        <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;At least one of </span><span class="si">{</span><span class="n">fields_str</span><span class="si">}</span><span class="s2"> required&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a>        <span class="k">else</span> <span class="sa">f</span><span class="s2">"At least one of </span><span class="si">{</span><span class="n">fields_str</span><span class="si">}</span><span class="s2"> required"</span><span class="p">,</span>
 <a id="__codelineno-0-218" name="__codelineno-0-218"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1667,7 +1667,7 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="n">allow_zero</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="n">raise_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate that a value is positive.</span>
+<a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="w">    </span><span class="sd">"""Validate that a value is positive.</span>
 <a id="__codelineno-0-162" name="__codelineno-0-162"></a>
 <a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="sd">        value: Value to validate (scalar or array).</span>
@@ -1682,8 +1682,8 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">        ValueRangeError: If value is not positive and raise_error=True.</span>
 <a id="__codelineno-0-174" name="__codelineno-0-174"></a>
 <a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">        &gt;&gt;&gt; validate_positive(mass, &quot;aircraft_mass&quot;)</span>
-<a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">        &gt;&gt;&gt; validate_positive(mass, "aircraft_mass")</span>
+<a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    """</span>
 <a id="__codelineno-0-178" name="__codelineno-0-178"></a>    <span class="n">min_value</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">allow_zero</span> <span class="k">else</span> <span class="mf">1e-10</span>  <span class="c1"># Tiny positive number</span>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a>    <span class="k">return</span> <span class="n">validate_range</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">min_value</span><span class="o">=</span><span class="n">min_value</span><span class="p">,</span> <span class="n">raise_error</span><span class="o">=</span><span class="n">raise_error</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1783,7 +1783,7 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a>    <span class="o">*</span><span class="p">,</span>
 <a id="__codelineno-0-103" name="__codelineno-0-103"></a>    <span class="n">raise_error</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate that a value is within the specified range.</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="w">    </span><span class="sd">"""Validate that a value is within the specified range.</span>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a>
 <a id="__codelineno-0-107" name="__codelineno-0-107"></a><span class="sd">    For array inputs, checks if any values are outside the range.</span>
 <a id="__codelineno-0-108" name="__codelineno-0-108"></a>
@@ -1801,8 +1801,8 @@ validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a><span class="sd">        ValueRangeError: If value is outside range and raise_error=True.</span>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a>
 <a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-123" name="__codelineno-0-123"></a><span class="sd">        &gt;&gt;&gt; validate_range(mach, &quot;mach_number&quot;, min_value=0.0, max_value=1.0)</span>
-<a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-123" name="__codelineno-0-123"></a><span class="sd">        &gt;&gt;&gt; validate_range(mach, "mach_number", min_value=0.0, max_value=1.0)</span>
+<a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="sd">    """</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="kn">import</span><span class="w"> </span><span class="nn">openleaf.performance.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="c1"># Convert to array for consistent handling</span>

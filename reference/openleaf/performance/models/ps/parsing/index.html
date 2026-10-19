@@ -1417,7 +1417,7 @@ No defaults are invented - if a parameter is missing, an error is raised.</p>
 <span class="normal"><a href="#__codelineno-0-117">117</a></span>
 <span class="normal"><a href="#__codelineno-0-118">118</a></span>
 <span class="normal"><a href="#__codelineno-0-119">119</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-30" name="__codelineno-0-30"></a><span class="k">def</span><span class="w"> </span><span class="nf">load_from_pycontrails</span><span class="p">(</span><span class="n">aircraft_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PSData</span><span class="p">:</span>
-<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load PS data from pycontrails.</span>
+<a id="__codelineno-0-31" name="__codelineno-0-31"></a><span class="w">    </span><span class="sd">"""Load PS data from pycontrails.</span>
 <a id="__codelineno-0-32" name="__codelineno-0-32"></a>
 <a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="sd">    All aircraft parameters come directly from the pycontrails database.</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a><span class="sd">    No defaults are invented - if a parameter is missing, an error is raised.</span>
@@ -1432,13 +1432,13 @@ No defaults are invented - if a parameter is missing, an error is raised.</p>
 <a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">        ImportError: If pycontrails is not installed.</span>
 <a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="sd">        KeyError: If aircraft not found.</span>
 <a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">        AttributeError: If required parameter is missing from pycontrails.</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">    """</span>
 <a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">pycontrails.models.ps_model.ps_aircraft_params</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_aircraft_engine_params</span>
 <a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="kn">from</span><span class="w"> </span><span class="nn">pycontrails.models.ps_model.ps_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_aircraft_synonym_dict_ps</span>
 <a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="k">except</span> <span class="ne">ImportError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a>            <span class="s2">&quot;pycontrails is required for PSModel. Install with: pip install pycontrails&quot;</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>            <span class="s2">"pycontrails is required for PSModel. Install with: pip install pycontrails"</span>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a>        <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">aircraft_engine_params</span> <span class="o">=</span> <span class="n">load_aircraft_engine_params</span><span class="p">()</span>
@@ -1449,8 +1449,8 @@ No defaults are invented - if a parameter is missing, an error is raised.</p>
 <a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="k">if</span> <span class="n">atyp_ps</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">aircraft_engine_params</span><span class="p">:</span>
 <a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="n">available</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">aircraft_engine_params</span><span class="o">.</span><span class="n">keys</span><span class="p">())[:</span><span class="mi">20</span><span class="p">]</span>
 <a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="sa">f</span><span class="s2">&quot;Aircraft &#39;</span><span class="si">{</span><span class="n">aircraft_type</span><span class="si">}</span><span class="s2">&#39; not found in pycontrails database.</span><span class="se">\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="sa">f</span><span class="s2">&quot;Available: </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">available</span><span class="p">)</span><span class="si">}</span><span class="s2">, ...&quot;</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a>            <span class="sa">f</span><span class="s2">"Aircraft '</span><span class="si">{</span><span class="n">aircraft_type</span><span class="si">}</span><span class="s2">' not found in pycontrails database.</span><span class="se">\n</span><span class="s2">"</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a>            <span class="sa">f</span><span class="s2">"Available: </span><span class="si">{</span><span class="s1">', '</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">available</span><span class="p">)</span><span class="si">}</span><span class="s2">, ..."</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="p">)</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="n">params</span> <span class="o">=</span> <span class="n">aircraft_engine_params</span><span class="p">[</span><span class="n">atyp_ps</span><span class="p">]</span>
@@ -1462,11 +1462,11 @@ No defaults are invented - if a parameter is missing, an error is raised.</p>
 <a id="__codelineno-0-73" name="__codelineno-0-73"></a>    <span class="n">aircraft</span> <span class="o">=</span> <span class="n">PSAircraftData</span><span class="p">(</span>
 <a id="__codelineno-0-74" name="__codelineno-0-74"></a>        <span class="n">model</span><span class="o">=</span><span class="n">aircraft_type</span><span class="p">,</span>
 <a id="__codelineno-0-75" name="__codelineno-0-75"></a>        <span class="n">engine_type</span><span class="o">=</span><span class="n">EngineType</span><span class="o">.</span><span class="n">JET</span><span class="p">,</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="n">wtc</span><span class="o">=</span><span class="s2">&quot;M&quot;</span><span class="p">,</span>  <span class="c1"># Wake turbulence category - not in pycontrails</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a>        <span class="n">wtc</span><span class="o">=</span><span class="s2">"M"</span><span class="p">,</span>  <span class="c1"># Wake turbulence category - not in pycontrails</span>
 <a id="__codelineno-0-77" name="__codelineno-0-77"></a>        <span class="n">oem</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">amass_oew</span><span class="p">,</span>
 <a id="__codelineno-0-78" name="__codelineno-0-78"></a>        <span class="n">mtom</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">amass_mtow</span><span class="p">,</span>
 <a id="__codelineno-0-79" name="__codelineno-0-79"></a>        <span class="n">mpl</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">amass_mpl</span><span class="p">,</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="n">vmo</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s2">&quot;inf&quot;</span><span class="p">),</span>  <span class="c1"># Not in pycontrails - PS model uses MMO at cruise</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="n">vmo</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">),</span>  <span class="c1"># Not in pycontrails - PS model uses MMO at cruise</span>
 <a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="n">mmo</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">max_mach_num</span><span class="p">,</span>
 <a id="__codelineno-0-82" name="__codelineno-0-82"></a>        <span class="n">hmo</span><span class="o">=</span><span class="n">params</span><span class="o">.</span><span class="n">fl_max</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">,</span>  <span class="c1"># Convert FL to feet</span>
 <a id="__codelineno-0-83" name="__codelineno-0-83"></a>    <span class="p">)</span>

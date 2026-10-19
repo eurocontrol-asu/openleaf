@@ -1439,7 +1439,7 @@ else:
 <span class="normal"><a href="#__codelineno-0-68">68</a></span>
 <span class="normal"><a href="#__codelineno-0-69">69</a></span>
 <span class="normal"><a href="#__codelineno-0-70">70</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="k">class</span><span class="w"> </span><span class="nc">Backend</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Supported array backends with lazy availability checking.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="w">    </span><span class="sd">"""Supported array backends with lazy availability checking."""</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="n">NUMPY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="n">CASADI</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
@@ -1447,17 +1447,17 @@ else:
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>
 <a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if this backend is installed.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-59" name="__codelineno-0-59"></a><span class="w">        </span><span class="sd">"""Check if this backend is installed."""</span>
 <a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="k">return</span> <span class="n">_check_available</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 <a id="__codelineno-0-61" name="__codelineno-0-61"></a>
 <a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="nd">@available</span><span class="o">.</span><span class="n">setter</span>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">available</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Override availability (useful for testing).&quot;&quot;&quot;</span>
+<a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="w">        </span><span class="sd">"""Override availability (useful for testing)."""</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="n">_BACKEND_AVAILABLE</span><span class="p">[</span><span class="bp">self</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-68" name="__codelineno-0-68"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">module</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the backend module (imports lazily on first access).&quot;&quot;&quot;</span>
+<a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="w">        </span><span class="sd">"""Get the backend module (imports lazily on first access)."""</span>
 <a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="k">return</span> <span class="n">_get_module</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -1607,7 +1607,7 @@ namespace for NumPy, PyTorch, CuPy, or JAX arrays.</p>
 <span class="normal"><a href="#__codelineno-0-152">152</a></span>
 <span class="normal"><a href="#__codelineno-0-153">153</a></span>
 <span class="normal"><a href="#__codelineno-0-154">154</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_array_namespace</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-<a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the Array API namespace for the given arrays.</span>
+<a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="w">    </span><span class="sd">"""Get the Array API namespace for the given arrays.</span>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a>
 <a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">    Uses array-api-compat to automatically detect and return the correct</span>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="sd">    namespace for NumPy, PyTorch, CuPy, or JAX arrays.</span>
@@ -1628,7 +1628,7 @@ namespace for NumPy, PyTorch, CuPy, or JAX arrays.</p>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">        &gt;&gt;&gt; xp = get_array_namespace(x)</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">        &gt;&gt;&gt; xp.sqrt(x)</span>
 <a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">        array([1.        , 1.41421356, 1.73205081])</span>
-<a id="__codelineno-0-130" name="__codelineno-0-130"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-130" name="__codelineno-0-130"></a><span class="sd">    """</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>    <span class="c1"># Filter out Python scalars and non-array types (e.g., Enums)</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a>    <span class="c1"># array_namespace requires at least one proper array type</span>
 <a id="__codelineno-0-133" name="__codelineno-0-133"></a>    <span class="n">non_scalars</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1709,7 +1709,7 @@ namespace for NumPy, PyTorch, CuPy, or JAX arrays.</p>
 <span class="normal"><a href="#__codelineno-0-182">182</a></span>
 <span class="normal"><a href="#__codelineno-0-183">183</a></span>
 <span class="normal"><a href="#__codelineno-0-184">184</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_backend</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Backend</span><span class="p">:</span>
-<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Detect which backend an object belongs to.</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="w">    </span><span class="sd">"""Detect which backend an object belongs to.</span>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="sd">        obj: Array-like object to check.</span>
@@ -1719,7 +1719,7 @@ namespace for NumPy, PyTorch, CuPy, or JAX arrays.</p>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">    Note:</span>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">        Returns NUMPY for scalars and unknown types (safest default).</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    """</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a>    <span class="n">obj_type</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 <a id="__codelineno-0-170" name="__codelineno-0-170"></a>
 <a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="c1"># Check CasADi first (symbolic types need special handling)</span>
@@ -1808,7 +1808,7 @@ CasADi type.</p>
 <span class="normal"><a href="#__codelineno-0-271">271</a></span>
 <span class="normal"><a href="#__codelineno-0-272">272</a></span>
 <span class="normal"><a href="#__codelineno-0-273">273</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-234" name="__codelineno-0-234"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_casadi_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is or contains a CasADi data type.</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="w">    </span><span class="sd">"""Check if an object is or contains a CasADi data type.</span>
 <a id="__codelineno-0-236" name="__codelineno-0-236"></a>
 <a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="sd">    This is the main dispatch check - returns True if the object is a CasADi</span>
 <a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">    type (MX, DM, SX) or, if recursive=True, if any nested element is a</span>
@@ -1822,7 +1822,7 @@ CasADi type.</p>
 <a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">        True if the object is (or contains) a CasADi type, False otherwise.</span>
 <a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">        Always returns False if CasADi is not installed.</span>
-<a id="__codelineno-0-249" name="__codelineno-0-249"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a><span class="sd">    """</span>
 <a id="__codelineno-0-250" name="__codelineno-0-250"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">Backend</span><span class="o">.</span><span class="n">CASADI</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
 <a id="__codelineno-0-251" name="__codelineno-0-251"></a>        <span class="k">return</span> <span class="kc">False</span>
 <a id="__codelineno-0-252" name="__codelineno-0-252"></a>
@@ -1831,7 +1831,7 @@ CasADi type.</p>
 <a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 <a id="__codelineno-0-256" name="__codelineno-0-256"></a>
 <a id="__codelineno-0-257" name="__codelineno-0-257"></a>    <span class="c1"># NumPy arrays cannot contain CasADi types (unless object dtype)</span>
-<a id="__codelineno-0-258" name="__codelineno-0-258"></a>    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s2">&quot;O&quot;</span><span class="p">:</span>
+<a id="__codelineno-0-258" name="__codelineno-0-258"></a>    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s2">"O"</span><span class="p">:</span>
 <a id="__codelineno-0-259" name="__codelineno-0-259"></a>        <span class="k">return</span> <span class="kc">False</span>
 <a id="__codelineno-0-260" name="__codelineno-0-260"></a>
 <a id="__codelineno-0-261" name="__codelineno-0-261"></a>    <span class="c1"># Skip Python scalar types</span>
@@ -1912,7 +1912,7 @@ CasADi type.</p>
 <span class="normal"><a href="#__codelineno-0-309">309</a></span>
 <span class="normal"><a href="#__codelineno-0-310">310</a></span>
 <span class="normal"><a href="#__codelineno-0-311">311</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_torch_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is or contains a PyTorch tensor.</span>
+<a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="w">    </span><span class="sd">"""Check if an object is or contains a PyTorch tensor.</span>
 <a id="__codelineno-0-278" name="__codelineno-0-278"></a>
 <a id="__codelineno-0-279" name="__codelineno-0-279"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-280" name="__codelineno-0-280"></a><span class="sd">        obj: The object to evaluate.</span>
@@ -1922,7 +1922,7 @@ CasADi type.</p>
 <a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="sd">        True if the object is (or contains) a PyTorch tensor, False otherwise.</span>
 <a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="sd">        Always returns False if PyTorch is not installed.</span>
-<a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="sd">    """</span>
 <a id="__codelineno-0-288" name="__codelineno-0-288"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">Backend</span><span class="o">.</span><span class="n">TORCH</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
 <a id="__codelineno-0-289" name="__codelineno-0-289"></a>        <span class="k">return</span> <span class="kc">False</span>
 <a id="__codelineno-0-290" name="__codelineno-0-290"></a>
@@ -1957,7 +1957,7 @@ CasADi type.</p>
 
 
 <h4 id="openleaf.performance.numpy.backends.require_backend" class="doc doc-heading">
-            <code class="highlight language-python"><span class="n">require_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="s1">&#39;This feature&#39;</span><span class="p">)</span></code>
+            <code class="highlight language-python"><span class="n">require_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="s1">'This feature'</span><span class="p">)</span></code>
 
 </h4>
 
@@ -1990,8 +1990,8 @@ CasADi type.</p>
 <span class="normal"><a href="#__codelineno-0-200">200</a></span>
 <span class="normal"><a href="#__codelineno-0-201">201</a></span>
 <span class="normal"><a href="#__codelineno-0-202">202</a></span>
-<span class="normal"><a href="#__codelineno-0-203">203</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="k">def</span><span class="w"> </span><span class="nf">require_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">:</span> <span class="n">Backend</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;This feature&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raise ImportError if a backend is not available.</span>
+<span class="normal"><a href="#__codelineno-0-203">203</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="k">def</span><span class="w"> </span><span class="nf">require_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">:</span> <span class="n">Backend</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"This feature"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="w">    </span><span class="sd">"""Raise ImportError if a backend is not available.</span>
 <a id="__codelineno-0-189" name="__codelineno-0-189"></a>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="sd">        backend: The required backend.</span>
@@ -1999,13 +1999,13 @@ CasADi type.</p>
 <a id="__codelineno-0-193" name="__codelineno-0-193"></a>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">        ImportError: If the backend is not installed.</span>
-<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">    """</span>
 <a id="__codelineno-0-197" name="__codelineno-0-197"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">backend</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
 <a id="__codelineno-0-198" name="__codelineno-0-198"></a>        <span class="n">install_name</span> <span class="o">=</span> <span class="n">_IMPORT_NAMES</span><span class="p">[</span><span class="n">backend</span><span class="p">]</span>
 <a id="__codelineno-0-199" name="__codelineno-0-199"></a>        <span class="n">extras_name</span> <span class="o">=</span> <span class="n">install_name</span>  <span class="c1"># Same for our extras</span>
 <a id="__codelineno-0-200" name="__codelineno-0-200"></a>        <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span>
-<a id="__codelineno-0-201" name="__codelineno-0-201"></a>            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2"> requires </span><span class="si">{</span><span class="n">install_name</span><span class="si">}</span><span class="s2">. &quot;</span>
-<a id="__codelineno-0-202" name="__codelineno-0-202"></a>            <span class="sa">f</span><span class="s2">&quot;Install with: pip install openleaf-performance[</span><span class="si">{</span><span class="n">extras_name</span><span class="si">}</span><span class="s2">]&quot;</span>
+<a id="__codelineno-0-201" name="__codelineno-0-201"></a>            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2"> requires </span><span class="si">{</span><span class="n">install_name</span><span class="si">}</span><span class="s2">. "</span>
+<a id="__codelineno-0-202" name="__codelineno-0-202"></a>            <span class="sa">f</span><span class="s2">"Install with: pip install openleaf-performance[</span><span class="si">{</span><span class="n">extras_name</span><span class="si">}</span><span class="s2">]"</span>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a>        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>

@@ -1445,12 +1445,12 @@ openleaf.performance.config_path()      # Show config file location
 openleaf.performance.show_config()      # Print current configuration
 
 # Set BADA paths
-openleaf.performance.set_bada3_path(&quot;/path/to/bada3/data&quot;)
-openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
+openleaf.performance.set_bada3_path("/path/to/bada3/data")
+openleaf.performance.set_bada4_path("/path/to/bada4/data")
 
 # Or use environment variables
-# export OPENLEAF_BADA3_PATH=&quot;/path/to/bada3/data&quot;
-# export OPENLEAF_BADA4_PATH=&quot;/path/to/bada4/data&quot;
+# export OPENLEAF_BADA3_PATH="/path/to/bada3/data"
+# export OPENLEAF_BADA4_PATH="/path/to/bada4/data"
 </code></pre></div>
 
 
@@ -1505,7 +1505,7 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-126">126</a></span>
 <span class="normal"><a href="#__codelineno-0-127">127</a></span>
 <span class="normal"><a href="#__codelineno-0-128">128</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="k">class</span><span class="w"> </span><span class="nc">Bada3Settings</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA3 data paths configuration.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="w">    </span><span class="sd">"""BADA3 data paths configuration."""</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a>    <span class="n">synonyms</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1566,7 +1566,7 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-133">133</a></span>
 <span class="normal"><a href="#__codelineno-0-134">134</a></span>
 <span class="normal"><a href="#__codelineno-0-135">135</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-131" name="__codelineno-0-131"></a><span class="k">class</span><span class="w"> </span><span class="nc">Bada4Settings</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-132" name="__codelineno-0-132"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA4 data paths configuration.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-132" name="__codelineno-0-132"></a><span class="w">    </span><span class="sd">"""BADA4 data paths configuration."""</span>
 <a id="__codelineno-0-133" name="__codelineno-0-133"></a>
 <a id="__codelineno-0-134" name="__codelineno-0-134"></a>    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-135" name="__codelineno-0-135"></a>    <span class="n">synonyms</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -1658,17 +1658,17 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-167">167</a></span>
 <span class="normal"><a href="#__codelineno-0-168">168</a></span>
 <span class="normal"><a href="#__codelineno-0-169">169</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-138" name="__codelineno-0-138"></a><span class="k">class</span><span class="w"> </span><span class="nc">OpenLeafSettings</span><span class="p">(</span><span class="n">BaseSettings</span><span class="p">):</span>
-<a id="__codelineno-0-139" name="__codelineno-0-139"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;OpenLeaf configuration.</span>
+<a id="__codelineno-0-139" name="__codelineno-0-139"></a><span class="w">    </span><span class="sd">"""OpenLeaf configuration.</span>
 <a id="__codelineno-0-140" name="__codelineno-0-140"></a>
 <a id="__codelineno-0-141" name="__codelineno-0-141"></a><span class="sd">    Settings are loaded from (highest to lowest priority):</span>
 <a id="__codelineno-0-142" name="__codelineno-0-142"></a><span class="sd">    1. Environment variables (OPENLEAF_BADA3_PATH, OPENLEAF_BADA4_PATH, etc.)</span>
 <a id="__codelineno-0-143" name="__codelineno-0-143"></a><span class="sd">    2. TOML config file (~/.config/openleaf/settings.toml)</span>
 <a id="__codelineno-0-144" name="__codelineno-0-144"></a><span class="sd">    3. Field defaults (None)</span>
-<a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="sd">    """</span>
 <a id="__codelineno-0-146" name="__codelineno-0-146"></a>
 <a id="__codelineno-0-147" name="__codelineno-0-147"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">SettingsConfigDict</span><span class="p">(</span>
-<a id="__codelineno-0-148" name="__codelineno-0-148"></a>        <span class="n">env_prefix</span><span class="o">=</span><span class="s2">&quot;OPENLEAF_&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-149" name="__codelineno-0-149"></a>        <span class="n">env_nested_delimiter</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-148" name="__codelineno-0-148"></a>        <span class="n">env_prefix</span><span class="o">=</span><span class="s2">"OPENLEAF_"</span><span class="p">,</span>
+<a id="__codelineno-0-149" name="__codelineno-0-149"></a>        <span class="n">env_nested_delimiter</span><span class="o">=</span><span class="s2">"_"</span><span class="p">,</span>
 <a id="__codelineno-0-150" name="__codelineno-0-150"></a>    <span class="p">)</span>
 <a id="__codelineno-0-151" name="__codelineno-0-151"></a>
 <a id="__codelineno-0-152" name="__codelineno-0-152"></a>    <span class="n">bada3</span><span class="p">:</span> <span class="n">Bada3Settings</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">Bada3Settings</span><span class="p">)</span>
@@ -1683,7 +1683,7 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a>        <span class="n">dotenv_settings</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <a id="__codelineno-0-162" name="__codelineno-0-162"></a>        <span class="n">file_secret_settings</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <a id="__codelineno-0-163" name="__codelineno-0-163"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Priority: init &gt; env vars &gt; TOML file.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">        </span><span class="sd">"""Priority: init &gt; env vars &gt; TOML file."""</span>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a>        <span class="n">toml_path</span> <span class="o">=</span> <span class="n">_get_config_path</span><span class="p">()</span>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a>        <span class="n">sources</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">init_settings</span><span class="p">,</span> <span class="n">env_settings</span><span class="p">]</span>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a>        <span class="k">if</span> <span class="n">toml_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -1748,7 +1748,7 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="n">dotenv_settings</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <a id="__codelineno-0-162" name="__codelineno-0-162"></a>    <span class="n">file_secret_settings</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
 <a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Priority: init &gt; env vars &gt; TOML file.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">    </span><span class="sd">"""Priority: init &gt; env vars &gt; TOML file."""</span>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a>    <span class="n">toml_path</span> <span class="o">=</span> <span class="n">_get_config_path</span><span class="p">()</span>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a>    <span class="n">sources</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">init_settings</span><span class="p">,</span> <span class="n">env_settings</span><span class="p">]</span>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a>    <span class="k">if</span> <span class="n">toml_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -1794,11 +1794,11 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-203">203</a></span>
 <span class="normal"><a href="#__codelineno-0-204">204</a></span>
 <span class="normal"><a href="#__codelineno-0-205">205</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="k">def</span><span class="w"> </span><span class="nf">config_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the path to the configuration file.</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="w">    </span><span class="sd">"""Get the path to the configuration file.</span>
 <a id="__codelineno-0-201" name="__codelineno-0-201"></a>
 <a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">        Path to settings.toml file.</span>
-<a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">    """</span>
 <a id="__codelineno-0-205" name="__codelineno-0-205"></a>    <span class="k">return</span> <span class="n">_get_config_path</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1851,28 +1851,28 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-397">397</a></span>
 <span class="normal"><a href="#__codelineno-0-398">398</a></span>
 <span class="normal"><a href="#__codelineno-0-399">399</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-375" name="__codelineno-0-375"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_bada3_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<a id="__codelineno-0-376" name="__codelineno-0-376"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the configured BADA3 data path.</span>
+<a id="__codelineno-0-376" name="__codelineno-0-376"></a><span class="w">    </span><span class="sd">"""Get the configured BADA3 data path.</span>
 <a id="__codelineno-0-377" name="__codelineno-0-377"></a>
 <a id="__codelineno-0-378" name="__codelineno-0-378"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-379" name="__codelineno-0-379"></a><span class="sd">        Path to BADA3 data directory.</span>
 <a id="__codelineno-0-380" name="__codelineno-0-380"></a>
 <a id="__codelineno-0-381" name="__codelineno-0-381"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-382" name="__codelineno-0-382"></a><span class="sd">        ConfigurationError: If BADA3 path is not configured.</span>
-<a id="__codelineno-0-383" name="__codelineno-0-383"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-383" name="__codelineno-0-383"></a><span class="sd">    """</span>
 <a id="__codelineno-0-384" name="__codelineno-0-384"></a>    <span class="n">path_str</span> <span class="o">=</span> <span class="n">_get_settings</span><span class="p">()</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">path</span>
 <a id="__codelineno-0-385" name="__codelineno-0-385"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">path_str</span><span class="p">:</span>
 <a id="__codelineno-0-386" name="__codelineno-0-386"></a>        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
-<a id="__codelineno-0-387" name="__codelineno-0-387"></a>            <span class="s2">&quot;BADA3 data path not configured.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-388" name="__codelineno-0-388"></a>            <span class="s2">&quot;Please set it using:</span><span class="se">\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-389" name="__codelineno-0-389"></a>            <span class="s2">&quot;  &gt;&gt;&gt; import openleaf.performance</span><span class="se">\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-390" name="__codelineno-0-390"></a>            <span class="s2">&quot;  &gt;&gt;&gt; openleaf.performance.set_bada3_path(&#39;/path/to/bada3/data&#39;)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-391" name="__codelineno-0-391"></a>            <span class="s2">&quot;Or set environment variable: OPENLEAF_BADA3_PATH</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-392" name="__codelineno-0-392"></a>            <span class="sa">f</span><span class="s2">&quot;Config file location: </span><span class="si">{</span><span class="n">config_path</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-387" name="__codelineno-0-387"></a>            <span class="s2">"BADA3 data path not configured.</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-388" name="__codelineno-0-388"></a>            <span class="s2">"Please set it using:</span><span class="se">\n</span><span class="s2">"</span>
+<a id="__codelineno-0-389" name="__codelineno-0-389"></a>            <span class="s2">"  &gt;&gt;&gt; import openleaf.performance</span><span class="se">\n</span><span class="s2">"</span>
+<a id="__codelineno-0-390" name="__codelineno-0-390"></a>            <span class="s2">"  &gt;&gt;&gt; openleaf.performance.set_bada3_path('/path/to/bada3/data')</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-391" name="__codelineno-0-391"></a>            <span class="s2">"Or set environment variable: OPENLEAF_BADA3_PATH</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-392" name="__codelineno-0-392"></a>            <span class="sa">f</span><span class="s2">"Config file location: </span><span class="si">{</span><span class="n">config_path</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-393" name="__codelineno-0-393"></a>        <span class="p">)</span>
 <a id="__codelineno-0-394" name="__codelineno-0-394"></a>        <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 <a id="__codelineno-0-395" name="__codelineno-0-395"></a>    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path_str</span><span class="p">)</span>
 <a id="__codelineno-0-396" name="__codelineno-0-396"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-<a id="__codelineno-0-397" name="__codelineno-0-397"></a>        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BADA3 data path does not exist: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-397" name="__codelineno-0-397"></a>        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"BADA3 data path does not exist: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-398" name="__codelineno-0-398"></a>        <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 <a id="__codelineno-0-399" name="__codelineno-0-399"></a>    <span class="k">return</span> <span class="n">path</span>
 </code></pre></div></td></tr></table></div>
@@ -1920,11 +1920,11 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-420">420</a></span>
 <span class="normal"><a href="#__codelineno-0-421">421</a></span>
 <span class="normal"><a href="#__codelineno-0-422">422</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-402" name="__codelineno-0-402"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_bada3_synonyms_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-403" name="__codelineno-0-403"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the path to BADA3 synonyms file.</span>
+<a id="__codelineno-0-403" name="__codelineno-0-403"></a><span class="w">    </span><span class="sd">"""Get the path to BADA3 synonyms file.</span>
 <a id="__codelineno-0-404" name="__codelineno-0-404"></a>
 <a id="__codelineno-0-405" name="__codelineno-0-405"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-406" name="__codelineno-0-406"></a><span class="sd">        Path to SYNONYM.NEW file, or None if not found.</span>
-<a id="__codelineno-0-407" name="__codelineno-0-407"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-407" name="__codelineno-0-407"></a><span class="sd">    """</span>
 <a id="__codelineno-0-408" name="__codelineno-0-408"></a>    <span class="n">s</span> <span class="o">=</span> <span class="n">_get_settings</span><span class="p">()</span>
 <a id="__codelineno-0-409" name="__codelineno-0-409"></a>
 <a id="__codelineno-0-410" name="__codelineno-0-410"></a>    <span class="c1"># Check explicit config first</span>
@@ -1935,7 +1935,7 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <a id="__codelineno-0-415" name="__codelineno-0-415"></a>
 <a id="__codelineno-0-416" name="__codelineno-0-416"></a>    <span class="c1"># Auto-detect in data directory</span>
 <a id="__codelineno-0-417" name="__codelineno-0-417"></a>    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
-<a id="__codelineno-0-418" name="__codelineno-0-418"></a>        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;SYNONYM.NEW&quot;</span>
+<a id="__codelineno-0-418" name="__codelineno-0-418"></a>        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"SYNONYM.NEW"</span>
 <a id="__codelineno-0-419" name="__codelineno-0-419"></a>        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 <a id="__codelineno-0-420" name="__codelineno-0-420"></a>            <span class="k">return</span> <span class="n">path</span>
 <a id="__codelineno-0-421" name="__codelineno-0-421"></a>
@@ -1991,28 +1991,28 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-447">447</a></span>
 <span class="normal"><a href="#__codelineno-0-448">448</a></span>
 <span class="normal"><a href="#__codelineno-0-449">449</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-425" name="__codelineno-0-425"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_bada4_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<a id="__codelineno-0-426" name="__codelineno-0-426"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the configured BADA4 data path.</span>
+<a id="__codelineno-0-426" name="__codelineno-0-426"></a><span class="w">    </span><span class="sd">"""Get the configured BADA4 data path.</span>
 <a id="__codelineno-0-427" name="__codelineno-0-427"></a>
 <a id="__codelineno-0-428" name="__codelineno-0-428"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-429" name="__codelineno-0-429"></a><span class="sd">        Path to BADA4 data directory.</span>
 <a id="__codelineno-0-430" name="__codelineno-0-430"></a>
 <a id="__codelineno-0-431" name="__codelineno-0-431"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-432" name="__codelineno-0-432"></a><span class="sd">        ConfigurationError: If BADA4 path is not configured.</span>
-<a id="__codelineno-0-433" name="__codelineno-0-433"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-433" name="__codelineno-0-433"></a><span class="sd">    """</span>
 <a id="__codelineno-0-434" name="__codelineno-0-434"></a>    <span class="n">path_str</span> <span class="o">=</span> <span class="n">_get_settings</span><span class="p">()</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">path</span>
 <a id="__codelineno-0-435" name="__codelineno-0-435"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">path_str</span><span class="p">:</span>
 <a id="__codelineno-0-436" name="__codelineno-0-436"></a>        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
-<a id="__codelineno-0-437" name="__codelineno-0-437"></a>            <span class="s2">&quot;BADA4 data path not configured.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-438" name="__codelineno-0-438"></a>            <span class="s2">&quot;Please set it using:</span><span class="se">\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-439" name="__codelineno-0-439"></a>            <span class="s2">&quot;  &gt;&gt;&gt; import openleaf.performance</span><span class="se">\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-440" name="__codelineno-0-440"></a>            <span class="s2">&quot;  &gt;&gt;&gt; openleaf.performance.set_bada4_path(&#39;/path/to/bada4/data&#39;)</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-441" name="__codelineno-0-441"></a>            <span class="s2">&quot;Or set environment variable: OPENLEAF_BADA4_PATH</span><span class="se">\n\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-442" name="__codelineno-0-442"></a>            <span class="sa">f</span><span class="s2">&quot;Config file location: </span><span class="si">{</span><span class="n">config_path</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-437" name="__codelineno-0-437"></a>            <span class="s2">"BADA4 data path not configured.</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-438" name="__codelineno-0-438"></a>            <span class="s2">"Please set it using:</span><span class="se">\n</span><span class="s2">"</span>
+<a id="__codelineno-0-439" name="__codelineno-0-439"></a>            <span class="s2">"  &gt;&gt;&gt; import openleaf.performance</span><span class="se">\n</span><span class="s2">"</span>
+<a id="__codelineno-0-440" name="__codelineno-0-440"></a>            <span class="s2">"  &gt;&gt;&gt; openleaf.performance.set_bada4_path('/path/to/bada4/data')</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-441" name="__codelineno-0-441"></a>            <span class="s2">"Or set environment variable: OPENLEAF_BADA4_PATH</span><span class="se">\n\n</span><span class="s2">"</span>
+<a id="__codelineno-0-442" name="__codelineno-0-442"></a>            <span class="sa">f</span><span class="s2">"Config file location: </span><span class="si">{</span><span class="n">config_path</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-443" name="__codelineno-0-443"></a>        <span class="p">)</span>
 <a id="__codelineno-0-444" name="__codelineno-0-444"></a>        <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 <a id="__codelineno-0-445" name="__codelineno-0-445"></a>    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path_str</span><span class="p">)</span>
 <a id="__codelineno-0-446" name="__codelineno-0-446"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-<a id="__codelineno-0-447" name="__codelineno-0-447"></a>        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BADA4 data path does not exist: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-447" name="__codelineno-0-447"></a>        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"BADA4 data path does not exist: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-448" name="__codelineno-0-448"></a>        <span class="k">raise</span> <span class="n">ConfigurationError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 <a id="__codelineno-0-449" name="__codelineno-0-449"></a>    <span class="k">return</span> <span class="n">path</span>
 </code></pre></div></td></tr></table></div>
@@ -2060,11 +2060,11 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-470">470</a></span>
 <span class="normal"><a href="#__codelineno-0-471">471</a></span>
 <span class="normal"><a href="#__codelineno-0-472">472</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-452" name="__codelineno-0-452"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_bada4_synonyms_path</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-453" name="__codelineno-0-453"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the path to BADA4 synonyms file.</span>
+<a id="__codelineno-0-453" name="__codelineno-0-453"></a><span class="w">    </span><span class="sd">"""Get the path to BADA4 synonyms file.</span>
 <a id="__codelineno-0-454" name="__codelineno-0-454"></a>
 <a id="__codelineno-0-455" name="__codelineno-0-455"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-456" name="__codelineno-0-456"></a><span class="sd">        Path to SYNONYM.BD4 file, or None if not found.</span>
-<a id="__codelineno-0-457" name="__codelineno-0-457"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-457" name="__codelineno-0-457"></a><span class="sd">    """</span>
 <a id="__codelineno-0-458" name="__codelineno-0-458"></a>    <span class="n">s</span> <span class="o">=</span> <span class="n">_get_settings</span><span class="p">()</span>
 <a id="__codelineno-0-459" name="__codelineno-0-459"></a>
 <a id="__codelineno-0-460" name="__codelineno-0-460"></a>    <span class="c1"># Check explicit config first</span>
@@ -2075,7 +2075,7 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <a id="__codelineno-0-465" name="__codelineno-0-465"></a>
 <a id="__codelineno-0-466" name="__codelineno-0-466"></a>    <span class="c1"># Auto-detect in data directory</span>
 <a id="__codelineno-0-467" name="__codelineno-0-467"></a>    <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
-<a id="__codelineno-0-468" name="__codelineno-0-468"></a>        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">&quot;SYNONYM.BD4&quot;</span>
+<a id="__codelineno-0-468" name="__codelineno-0-468"></a>        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="o">/</span> <span class="s2">"SYNONYM.BD4"</span>
 <a id="__codelineno-0-469" name="__codelineno-0-469"></a>        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 <a id="__codelineno-0-470" name="__codelineno-0-470"></a>            <span class="k">return</span> <span class="n">path</span>
 <a id="__codelineno-0-471" name="__codelineno-0-471"></a>
@@ -2121,20 +2121,20 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-222">222</a></span>
 <span class="normal"><a href="#__codelineno-0-223">223</a></span>
 <span class="normal"><a href="#__codelineno-0-224">224</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the current configuration as a dictionary.</span>
+<a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="w">    </span><span class="sd">"""Get the current configuration as a dictionary.</span>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a>
 <a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">        Dictionary with current settings.</span>
-<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-213" name="__codelineno-0-213"></a><span class="sd">    """</span>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a>    <span class="n">s</span> <span class="o">=</span> <span class="n">_get_settings</span><span class="p">()</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a>    <span class="k">return</span> <span class="p">{</span>
-<a id="__codelineno-0-216" name="__codelineno-0-216"></a>        <span class="s2">&quot;bada3&quot;</span><span class="p">:</span> <span class="p">{</span>
-<a id="__codelineno-0-217" name="__codelineno-0-217"></a>            <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
-<a id="__codelineno-0-218" name="__codelineno-0-218"></a>            <span class="s2">&quot;synonyms&quot;</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">synonyms</span><span class="p">,</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a>        <span class="s2">"bada3"</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a>            <span class="s2">"path"</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+<a id="__codelineno-0-218" name="__codelineno-0-218"></a>            <span class="s2">"synonyms"</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">synonyms</span><span class="p">,</span>
 <a id="__codelineno-0-219" name="__codelineno-0-219"></a>        <span class="p">},</span>
-<a id="__codelineno-0-220" name="__codelineno-0-220"></a>        <span class="s2">&quot;bada4&quot;</span><span class="p">:</span> <span class="p">{</span>
-<a id="__codelineno-0-221" name="__codelineno-0-221"></a>            <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
-<a id="__codelineno-0-222" name="__codelineno-0-222"></a>            <span class="s2">&quot;synonyms&quot;</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">synonyms</span><span class="p">,</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a>        <span class="s2">"bada4"</span><span class="p">:</span> <span class="p">{</span>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a>            <span class="s2">"path"</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a>            <span class="s2">"synonyms"</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">synonyms</span><span class="p">,</span>
 <a id="__codelineno-0-223" name="__codelineno-0-223"></a>        <span class="p">},</span>
 <a id="__codelineno-0-224" name="__codelineno-0-224"></a>    <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
@@ -2171,15 +2171,15 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-334">334</a></span>
 <span class="normal"><a href="#__codelineno-0-335">335</a></span>
 <span class="normal"><a href="#__codelineno-0-336">336</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-327" name="__codelineno-0-327"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_bada3_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-328" name="__codelineno-0-328"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the BADA3 data directory path.</span>
+<a id="__codelineno-0-328" name="__codelineno-0-328"></a><span class="w">    </span><span class="sd">"""Set the BADA3 data directory path.</span>
 <a id="__codelineno-0-329" name="__codelineno-0-329"></a>
 <a id="__codelineno-0-330" name="__codelineno-0-330"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-331" name="__codelineno-0-331"></a><span class="sd">        path: Directory containing BADA3 *.OPF files.</span>
-<a id="__codelineno-0-332" name="__codelineno-0-332"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-332" name="__codelineno-0-332"></a><span class="sd">    """</span>
 <a id="__codelineno-0-333" name="__codelineno-0-333"></a>    <span class="n">resolved_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
-<a id="__codelineno-0-334" name="__codelineno-0-334"></a>    <span class="n">_update_config_file</span><span class="p">(</span><span class="s2">&quot;bada3&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="n">resolved_path</span><span class="p">)</span>
-<a id="__codelineno-0-335" name="__codelineno-0-335"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;BADA3 path configured&quot;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">resolved_path</span><span class="p">)</span>
-<a id="__codelineno-0-336" name="__codelineno-0-336"></a>    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[green]✓[/green] BADA3 path set to: </span><span class="si">{</span><span class="n">resolved_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-334" name="__codelineno-0-334"></a>    <span class="n">_update_config_file</span><span class="p">(</span><span class="s2">"bada3"</span><span class="p">,</span> <span class="s2">"path"</span><span class="p">,</span> <span class="n">resolved_path</span><span class="p">)</span>
+<a id="__codelineno-0-335" name="__codelineno-0-335"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"BADA3 path configured"</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">resolved_path</span><span class="p">)</span>
+<a id="__codelineno-0-336" name="__codelineno-0-336"></a>    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[green]✓[/green] BADA3 path set to: </span><span class="si">{</span><span class="n">resolved_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2214,15 +2214,15 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-346">346</a></span>
 <span class="normal"><a href="#__codelineno-0-347">347</a></span>
 <span class="normal"><a href="#__codelineno-0-348">348</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-339" name="__codelineno-0-339"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_bada3_synonyms</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-340" name="__codelineno-0-340"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the BADA3 synonym file path.</span>
+<a id="__codelineno-0-340" name="__codelineno-0-340"></a><span class="w">    </span><span class="sd">"""Set the BADA3 synonym file path.</span>
 <a id="__codelineno-0-341" name="__codelineno-0-341"></a>
 <a id="__codelineno-0-342" name="__codelineno-0-342"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-343" name="__codelineno-0-343"></a><span class="sd">        path: Path to SYNONYM.NEW file.</span>
-<a id="__codelineno-0-344" name="__codelineno-0-344"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-344" name="__codelineno-0-344"></a><span class="sd">    """</span>
 <a id="__codelineno-0-345" name="__codelineno-0-345"></a>    <span class="n">resolved_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
-<a id="__codelineno-0-346" name="__codelineno-0-346"></a>    <span class="n">_update_config_file</span><span class="p">(</span><span class="s2">&quot;bada3&quot;</span><span class="p">,</span> <span class="s2">&quot;synonyms&quot;</span><span class="p">,</span> <span class="n">resolved_path</span><span class="p">)</span>
-<a id="__codelineno-0-347" name="__codelineno-0-347"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;BADA3 synonyms configured&quot;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">resolved_path</span><span class="p">)</span>
-<a id="__codelineno-0-348" name="__codelineno-0-348"></a>    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[green]✓[/green] BADA3 synonyms set to: </span><span class="si">{</span><span class="n">resolved_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-346" name="__codelineno-0-346"></a>    <span class="n">_update_config_file</span><span class="p">(</span><span class="s2">"bada3"</span><span class="p">,</span> <span class="s2">"synonyms"</span><span class="p">,</span> <span class="n">resolved_path</span><span class="p">)</span>
+<a id="__codelineno-0-347" name="__codelineno-0-347"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"BADA3 synonyms configured"</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">resolved_path</span><span class="p">)</span>
+<a id="__codelineno-0-348" name="__codelineno-0-348"></a>    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[green]✓[/green] BADA3 synonyms set to: </span><span class="si">{</span><span class="n">resolved_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2257,15 +2257,15 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-358">358</a></span>
 <span class="normal"><a href="#__codelineno-0-359">359</a></span>
 <span class="normal"><a href="#__codelineno-0-360">360</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-351" name="__codelineno-0-351"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_bada4_path</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-352" name="__codelineno-0-352"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the BADA4 data directory path.</span>
+<a id="__codelineno-0-352" name="__codelineno-0-352"></a><span class="w">    </span><span class="sd">"""Set the BADA4 data directory path.</span>
 <a id="__codelineno-0-353" name="__codelineno-0-353"></a>
 <a id="__codelineno-0-354" name="__codelineno-0-354"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-355" name="__codelineno-0-355"></a><span class="sd">        path: Directory containing BADA4 aircraft folders.</span>
-<a id="__codelineno-0-356" name="__codelineno-0-356"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-356" name="__codelineno-0-356"></a><span class="sd">    """</span>
 <a id="__codelineno-0-357" name="__codelineno-0-357"></a>    <span class="n">resolved_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
-<a id="__codelineno-0-358" name="__codelineno-0-358"></a>    <span class="n">_update_config_file</span><span class="p">(</span><span class="s2">&quot;bada4&quot;</span><span class="p">,</span> <span class="s2">&quot;path&quot;</span><span class="p">,</span> <span class="n">resolved_path</span><span class="p">)</span>
-<a id="__codelineno-0-359" name="__codelineno-0-359"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;BADA4 path configured&quot;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">resolved_path</span><span class="p">)</span>
-<a id="__codelineno-0-360" name="__codelineno-0-360"></a>    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[green]✓[/green] BADA4 path set to: </span><span class="si">{</span><span class="n">resolved_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-358" name="__codelineno-0-358"></a>    <span class="n">_update_config_file</span><span class="p">(</span><span class="s2">"bada4"</span><span class="p">,</span> <span class="s2">"path"</span><span class="p">,</span> <span class="n">resolved_path</span><span class="p">)</span>
+<a id="__codelineno-0-359" name="__codelineno-0-359"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"BADA4 path configured"</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">resolved_path</span><span class="p">)</span>
+<a id="__codelineno-0-360" name="__codelineno-0-360"></a>    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[green]✓[/green] BADA4 path set to: </span><span class="si">{</span><span class="n">resolved_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2300,15 +2300,15 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-370">370</a></span>
 <span class="normal"><a href="#__codelineno-0-371">371</a></span>
 <span class="normal"><a href="#__codelineno-0-372">372</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-363" name="__codelineno-0-363"></a><span class="k">def</span><span class="w"> </span><span class="nf">set_bada4_synonyms</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-364" name="__codelineno-0-364"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the BADA4 synonym file path.</span>
+<a id="__codelineno-0-364" name="__codelineno-0-364"></a><span class="w">    </span><span class="sd">"""Set the BADA4 synonym file path.</span>
 <a id="__codelineno-0-365" name="__codelineno-0-365"></a>
 <a id="__codelineno-0-366" name="__codelineno-0-366"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-367" name="__codelineno-0-367"></a><span class="sd">        path: Path to SYNONYM.BD4 file.</span>
-<a id="__codelineno-0-368" name="__codelineno-0-368"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-368" name="__codelineno-0-368"></a><span class="sd">    """</span>
 <a id="__codelineno-0-369" name="__codelineno-0-369"></a>    <span class="n">resolved_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
-<a id="__codelineno-0-370" name="__codelineno-0-370"></a>    <span class="n">_update_config_file</span><span class="p">(</span><span class="s2">&quot;bada4&quot;</span><span class="p">,</span> <span class="s2">&quot;synonyms&quot;</span><span class="p">,</span> <span class="n">resolved_path</span><span class="p">)</span>
-<a id="__codelineno-0-371" name="__codelineno-0-371"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;BADA4 synonyms configured&quot;</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">resolved_path</span><span class="p">)</span>
-<a id="__codelineno-0-372" name="__codelineno-0-372"></a>    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[green]✓[/green] BADA4 synonyms set to: </span><span class="si">{</span><span class="n">resolved_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-370" name="__codelineno-0-370"></a>    <span class="n">_update_config_file</span><span class="p">(</span><span class="s2">"bada4"</span><span class="p">,</span> <span class="s2">"synonyms"</span><span class="p">,</span> <span class="n">resolved_path</span><span class="p">)</span>
+<a id="__codelineno-0-371" name="__codelineno-0-371"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"BADA4 synonyms configured"</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">resolved_path</span><span class="p">)</span>
+<a id="__codelineno-0-372" name="__codelineno-0-372"></a>    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"[green]✓[/green] BADA4 synonyms set to: </span><span class="si">{</span><span class="n">resolved_path</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2364,35 +2364,35 @@ openleaf.performance.set_bada4_path(&quot;/path/to/bada4/data&quot;)
 <span class="normal"><a href="#__codelineno-0-257">257</a></span>
 <span class="normal"><a href="#__codelineno-0-258">258</a></span>
 <span class="normal"><a href="#__codelineno-0-259">259</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="k">def</span><span class="w"> </span><span class="nf">show_config</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the current configuration using Rich.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-228" name="__codelineno-0-228"></a><span class="w">    </span><span class="sd">"""Print the current configuration using Rich."""</span>
 <a id="__codelineno-0-229" name="__codelineno-0-229"></a>    <span class="n">s</span> <span class="o">=</span> <span class="n">_get_settings</span><span class="p">()</span>
-<a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;OpenLeaf Configuration&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-231" name="__codelineno-0-231"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Setting&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;cyan&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-232" name="__codelineno-0-232"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Value&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;green&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-230" name="__codelineno-0-230"></a>    <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"OpenLeaf Configuration"</span><span class="p">)</span>
+<a id="__codelineno-0-231" name="__codelineno-0-231"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">"Setting"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"cyan"</span><span class="p">)</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">"Value"</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">"green"</span><span class="p">)</span>
 <a id="__codelineno-0-233" name="__codelineno-0-233"></a>
-<a id="__codelineno-0-234" name="__codelineno-0-234"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">&quot;Config file&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">config_path</span><span class="p">()))</span>
-<a id="__codelineno-0-235" name="__codelineno-0-235"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-234" name="__codelineno-0-234"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">"Config file"</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">config_path</span><span class="p">()))</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 <a id="__codelineno-0-236" name="__codelineno-0-236"></a>
 <a id="__codelineno-0-237" name="__codelineno-0-237"></a>    <span class="c1"># BADA3</span>
-<a id="__codelineno-0-238" name="__codelineno-0-238"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">&quot;[bold]BADA3[/bold]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-238" name="__codelineno-0-238"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">"[bold]BADA3[/bold]"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 <a id="__codelineno-0-239" name="__codelineno-0-239"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span>
-<a id="__codelineno-0-240" name="__codelineno-0-240"></a>        <span class="s2">&quot;  path&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-241" name="__codelineno-0-241"></a>        <span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">path</span> <span class="ow">or</span> <span class="s2">&quot;[dim](not set)[/dim]&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a>        <span class="s2">"  path"</span><span class="p">,</span>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a>        <span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">path</span> <span class="ow">or</span> <span class="s2">"[dim](not set)[/dim]"</span><span class="p">,</span>
 <a id="__codelineno-0-242" name="__codelineno-0-242"></a>    <span class="p">)</span>
 <a id="__codelineno-0-243" name="__codelineno-0-243"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span>
-<a id="__codelineno-0-244" name="__codelineno-0-244"></a>        <span class="s2">&quot;  synonyms&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-245" name="__codelineno-0-245"></a>        <span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">synonyms</span> <span class="ow">or</span> <span class="s2">&quot;[dim](auto-detect)[/dim]&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a>        <span class="s2">"  synonyms"</span><span class="p">,</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a>        <span class="n">s</span><span class="o">.</span><span class="n">bada3</span><span class="o">.</span><span class="n">synonyms</span> <span class="ow">or</span> <span class="s2">"[dim](auto-detect)[/dim]"</span><span class="p">,</span>
 <a id="__codelineno-0-246" name="__codelineno-0-246"></a>    <span class="p">)</span>
 <a id="__codelineno-0-247" name="__codelineno-0-247"></a>
 <a id="__codelineno-0-248" name="__codelineno-0-248"></a>    <span class="c1"># BADA4</span>
-<a id="__codelineno-0-249" name="__codelineno-0-249"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">&quot;[bold]BADA4[/bold]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">"[bold]BADA4[/bold]"</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span>
 <a id="__codelineno-0-250" name="__codelineno-0-250"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span>
-<a id="__codelineno-0-251" name="__codelineno-0-251"></a>        <span class="s2">&quot;  path&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a>        <span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">path</span> <span class="ow">or</span> <span class="s2">&quot;[dim](not set)[/dim]&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-251" name="__codelineno-0-251"></a>        <span class="s2">"  path"</span><span class="p">,</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a>        <span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">path</span> <span class="ow">or</span> <span class="s2">"[dim](not set)[/dim]"</span><span class="p">,</span>
 <a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="p">)</span>
 <a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span>
-<a id="__codelineno-0-255" name="__codelineno-0-255"></a>        <span class="s2">&quot;  synonyms&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a>        <span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">synonyms</span> <span class="ow">or</span> <span class="s2">&quot;[dim](auto-detect)[/dim]&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a>        <span class="s2">"  synonyms"</span><span class="p">,</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a>        <span class="n">s</span><span class="o">.</span><span class="n">bada4</span><span class="o">.</span><span class="n">synonyms</span> <span class="ow">or</span> <span class="s2">"[dim](auto-detect)[/dim]"</span><span class="p">,</span>
 <a id="__codelineno-0-257" name="__codelineno-0-257"></a>    <span class="p">)</span>
 <a id="__codelineno-0-258" name="__codelineno-0-258"></a>
 <a id="__codelineno-0-259" name="__codelineno-0-259"></a>    <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>

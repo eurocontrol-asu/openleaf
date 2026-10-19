@@ -1392,7 +1392,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <span class="normal"><a href="#__codelineno-0-137">137</a></span>
 <span class="normal"><a href="#__codelineno-0-138">138</a></span>
 <span class="normal"><a href="#__codelineno-0-139">139</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-121" name="__codelineno-0-121"></a><span class="k">def</span><span class="w"> </span><span class="nf">abs</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate absolute value element-wise.</span>
+<a id="__codelineno-0-122" name="__codelineno-0-122"></a><span class="w">    </span><span class="sd">"""Calculate absolute value element-wise.</span>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="sd">        x: Input array or scalar.</span>
@@ -1402,7 +1402,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-129" name="__codelineno-0-129"></a>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a><span class="sd">    See Also:</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a><span class="sd">        https://numpy.org/doc/stable/reference/generated/numpy.abs.html</span>
-<a id="__codelineno-0-132" name="__codelineno-0-132"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-132" name="__codelineno-0-132"></a><span class="sd">    """</span>
 <a id="__codelineno-0-133" name="__codelineno-0-133"></a>    <span class="k">if</span> <span class="n">is_casadi_type</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <a id="__codelineno-0-134" name="__codelineno-0-134"></a>        <span class="n">ca</span> <span class="o">=</span> <span class="n">_get_casadi</span><span class="p">()</span>
 <a id="__codelineno-0-135" name="__codelineno-0-135"></a>        <span class="k">return</span> <span class="n">ca</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -1462,7 +1462,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <span class="normal"><a href="#__codelineno-0-211">211</a></span>
 <span class="normal"><a href="#__codelineno-0-212">212</a></span>
 <span class="normal"><a href="#__codelineno-0-213">213</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="k">def</span><span class="w"> </span><span class="nf">cbrt</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the cube root element-wise.</span>
+<a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="w">    </span><span class="sd">"""Calculate the cube root element-wise.</span>
 <a id="__codelineno-0-193" name="__codelineno-0-193"></a>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">    Works with both positive and negative inputs.</span>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a>
@@ -1474,14 +1474,14 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-201" name="__codelineno-0-201"></a>
 <a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="sd">    See Also:</span>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="sd">        https://numpy.org/doc/stable/reference/generated/numpy.cbrt.html</span>
-<a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">    """</span>
 <a id="__codelineno-0-205" name="__codelineno-0-205"></a>    <span class="k">if</span> <span class="n">is_casadi_type</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <a id="__codelineno-0-206" name="__codelineno-0-206"></a>        <span class="n">ca</span> <span class="o">=</span> <span class="n">_get_casadi</span><span class="p">()</span>
-<a id="__codelineno-0-207" name="__codelineno-0-207"></a>        <span class="c1"># CasADi pow doesn&#39;t handle negative bases with fractional exponents</span>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a>        <span class="c1"># CasADi pow doesn't handle negative bases with fractional exponents</span>
 <a id="__codelineno-0-208" name="__codelineno-0-208"></a>        <span class="c1"># Use: cbrt(x) = sign(x) * |x|^(1/3)</span>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>        <span class="k">return</span> <span class="n">ca</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">ca</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)</span>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a>
-<a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="c1"># Array API doesn&#39;t have cbrt; use sign * |x|^(1/3) for all backends</span>
+<a id="__codelineno-0-211" name="__codelineno-0-211"></a>    <span class="c1"># Array API doesn't have cbrt; use sign * |x|^(1/3) for all backends</span>
 <a id="__codelineno-0-212" name="__codelineno-0-212"></a>    <span class="n">xp</span> <span class="o">=</span> <span class="n">get_array_namespace</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <a id="__codelineno-0-213" name="__codelineno-0-213"></a>    <span class="k">return</span> <span class="n">xp</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="n">xp</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="n">xp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">3.0</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1553,7 +1553,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <span class="normal"><a href="#__codelineno-0-116">116</a></span>
 <span class="normal"><a href="#__codelineno-0-117">117</a></span>
 <span class="normal"><a href="#__codelineno-0-118">118</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="k">def</span><span class="w"> </span><span class="nf">mean</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute the arithmetic mean along the specified axis.</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="w">    </span><span class="sd">"""Compute the arithmetic mean along the specified axis.</span>
 <a id="__codelineno-0-83" name="__codelineno-0-83"></a>
 <a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">        x: Input array.</span>
@@ -1567,7 +1567,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-93" name="__codelineno-0-93"></a>
 <a id="__codelineno-0-94" name="__codelineno-0-94"></a><span class="sd">    See Also:</span>
 <a id="__codelineno-0-95" name="__codelineno-0-95"></a><span class="sd">        https://numpy.org/doc/stable/reference/generated/numpy.mean.html</span>
-<a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="sd">    """</span>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a>    <span class="k">if</span> <span class="n">is_casadi_type</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>        <span class="c1"># Handle negative axis indexing for CasADi types (max 2D)</span>
 <a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -1584,7 +1584,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a>            <span class="c1"># is the identity — reduce along axis=0 again (cf. sum(axis=None)).</span>
 <a id="__codelineno-0-111" name="__codelineno-0-111"></a>            <span class="k">return</span> <span class="n">mean</span><span class="p">(</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-113" name="__codelineno-0-113"></a>            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;CasADi types can only be up to 2D, so axis must be None, 0, 1, -1, or -2.&quot;</span>
+<a id="__codelineno-0-113" name="__codelineno-0-113"></a>            <span class="n">msg</span> <span class="o">=</span> <span class="s2">"CasADi types can only be up to 2D, so axis must be None, 0, 1, -1, or -2."</span>
 <a id="__codelineno-0-114" name="__codelineno-0-114"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 <a id="__codelineno-0-115" name="__codelineno-0-115"></a>
 <a id="__codelineno-0-116" name="__codelineno-0-116"></a>    <span class="c1"># Use Array API for NumPy/PyTorch/CuPy/JAX</span>
@@ -1650,7 +1650,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <span class="normal"><a href="#__codelineno-0-165">165</a></span>
 <span class="normal"><a href="#__codelineno-0-166">166</a></span>
 <span class="normal"><a href="#__codelineno-0-167">167</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-142" name="__codelineno-0-142"></a><span class="k">def</span><span class="w"> </span><span class="nf">prod</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-143" name="__codelineno-0-143"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the product of array elements over a given axis.</span>
+<a id="__codelineno-0-143" name="__codelineno-0-143"></a><span class="w">    </span><span class="sd">"""Return the product of array elements over a given axis.</span>
 <a id="__codelineno-0-144" name="__codelineno-0-144"></a>
 <a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">        x: Input array.</span>
@@ -1667,7 +1667,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-157" name="__codelineno-0-157"></a>
 <a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="sd">    See Also:</span>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a><span class="sd">        https://numpy.org/doc/stable/reference/generated/numpy.prod.html</span>
-<a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">    """</span>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="k">if</span> <span class="n">is_casadi_type</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <a id="__codelineno-0-162" name="__codelineno-0-162"></a>        <span class="n">ca</span> <span class="o">=</span> <span class="n">_get_casadi</span><span class="p">()</span>
 <a id="__codelineno-0-163" name="__codelineno-0-163"></a>        <span class="k">return</span> <span class="n">ca</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">ca</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">))</span>
@@ -1722,7 +1722,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <span class="normal"><a href="#__codelineno-0-186">186</a></span>
 <span class="normal"><a href="#__codelineno-0-187">187</a></span>
 <span class="normal"><a href="#__codelineno-0-188">188</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="k">def</span><span class="w"> </span><span class="nf">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the non-negative square-root element-wise.</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="w">    </span><span class="sd">"""Calculate the non-negative square-root element-wise.</span>
 <a id="__codelineno-0-172" name="__codelineno-0-172"></a>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">        x: Input array or scalar (must be non-negative).</span>
@@ -1732,7 +1732,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-178" name="__codelineno-0-178"></a>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a><span class="sd">    See Also:</span>
 <a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">        https://numpy.org/doc/stable/reference/generated/numpy.sqrt.html</span>
-<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">    """</span>
 <a id="__codelineno-0-182" name="__codelineno-0-182"></a>    <span class="k">if</span> <span class="n">is_casadi_type</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <a id="__codelineno-0-183" name="__codelineno-0-183"></a>        <span class="n">ca</span> <span class="o">=</span> <span class="n">_get_casadi</span><span class="p">()</span>
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a>        <span class="k">return</span> <span class="n">ca</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -1808,7 +1808,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <span class="normal"><a href="#__codelineno-0-76">76</a></span>
 <span class="normal"><a href="#__codelineno-0-77">77</a></span>
 <span class="normal"><a href="#__codelineno-0-78">78</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="k">def</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Sum of array elements over a given axis.</span>
+<a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="w">    </span><span class="sd">"""Sum of array elements over a given axis.</span>
 <a id="__codelineno-0-44" name="__codelineno-0-44"></a>
 <a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">        x: Input array.</span>
@@ -1822,7 +1822,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">    See Also:</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">        https://numpy.org/doc/stable/reference/generated/numpy.sum.html</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">    """</span>
 <a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="k">if</span> <span class="n">is_casadi_type</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>        <span class="n">ca</span> <span class="o">=</span> <span class="n">_get_casadi</span><span class="p">()</span>
 <a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="c1"># Handle negative axis indexing for CasADi types (max 2D)</span>
@@ -1838,7 +1838,7 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="k">elif</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-71" name="__codelineno-0-71"></a>            <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <a id="__codelineno-0-72" name="__codelineno-0-72"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a>            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;CasADi types can only be up to 2D, so axis must be None, 0, 1, -1, or -2.&quot;</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a>            <span class="n">msg</span> <span class="o">=</span> <span class="s2">"CasADi types can only be up to 2D, so axis must be None, 0, 1, -1, or -2."</span>
 <a id="__codelineno-0-74" name="__codelineno-0-74"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 <a id="__codelineno-0-75" name="__codelineno-0-75"></a>
 <a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="c1"># Use Array API for NumPy/PyTorch/CuPy/JAX</span>

@@ -1637,7 +1637,7 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <span class="normal"><a href="#__codelineno-0-246">246</a></span>
 <span class="normal"><a href="#__codelineno-0-247">247</a></span>
 <span class="normal"><a href="#__codelineno-0-248">248</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-202" name="__codelineno-0-202"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4ARPMConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Airline Procedure Model (ARPM) configuration - Section 8 / Appendix B.</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="w">    </span><span class="sd">"""Airline Procedure Model (ARPM) configuration - Section 8 / Appendix B.</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a>
 <a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">    Defines altitude thresholds for configuration changes, minimum</span>
 <a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">    speed coefficients, and high-lift/landing-gear mapping per configuration.</span>
@@ -1651,9 +1651,9 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">        cvmin: Minimum speed coefficient for other configurations [-].</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">        hlid_map: Mapping from AerodynamicConfig to HLid (from AeroConfSchedule).</span>
 <a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">        lg_map: Mapping from AerodynamicConfig to LandingGearPosition (UP/DOWN).</span>
-<a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">    """</span>
 <a id="__codelineno-0-218" name="__codelineno-0-218"></a>
-<a id="__codelineno-0-219" name="__codelineno-0-219"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-219" name="__codelineno-0-219"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">)</span>
 <a id="__codelineno-0-220" name="__codelineno-0-220"></a>
 <a id="__codelineno-0-221" name="__codelineno-0-221"></a>    <span class="n">hmax_to</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">HMAX_TO_DEFAULT</span>
 <a id="__codelineno-0-222" name="__codelineno-0-222"></a>    <span class="n">hmax_ic</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">HMAX_IC_DEFAULT</span>
@@ -1669,7 +1669,7 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <a id="__codelineno-0-232" name="__codelineno-0-232"></a>        <span class="n">vs</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span>
 <a id="__codelineno-0-233" name="__codelineno-0-233"></a>        <span class="n">config</span><span class="p">:</span> <span class="n">AerodynamicConfig</span><span class="p">,</span>
 <a id="__codelineno-0-234" name="__codelineno-0-234"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">:</span>
-<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate minimum operational speed for configuration (Eq. B.5-1).</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="w">        </span><span class="sd">"""Calculate minimum operational speed for configuration (Eq. B.5-1).</span>
 <a id="__codelineno-0-236" name="__codelineno-0-236"></a>
 <a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">            vs: Stall speed in CAS [kt].</span>
@@ -1677,7 +1677,7 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <a id="__codelineno-0-240" name="__codelineno-0-240"></a>
 <a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-242" name="__codelineno-0-242"></a><span class="sd">            Minimum operational speed in CAS [kt].</span>
-<a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="sd">        """</span>
 <a id="__codelineno-0-244" name="__codelineno-0-244"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
 <a id="__codelineno-0-245" name="__codelineno-0-245"></a>            <span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">TO</span><span class="p">),</span>
 <a id="__codelineno-0-246" name="__codelineno-0-246"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">cvmin_to</span> <span class="o">*</span> <span class="n">vs</span><span class="p">,</span>
@@ -1743,7 +1743,7 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <a id="__codelineno-0-232" name="__codelineno-0-232"></a>    <span class="n">vs</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">,</span>
 <a id="__codelineno-0-233" name="__codelineno-0-233"></a>    <span class="n">config</span><span class="p">:</span> <span class="n">AerodynamicConfig</span><span class="p">,</span>
 <a id="__codelineno-0-234" name="__codelineno-0-234"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">npt</span><span class="o">.</span><span class="n">ArrayLike</span><span class="p">:</span>
-<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate minimum operational speed for configuration (Eq. B.5-1).</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="w">    </span><span class="sd">"""Calculate minimum operational speed for configuration (Eq. B.5-1).</span>
 <a id="__codelineno-0-236" name="__codelineno-0-236"></a>
 <a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">        vs: Stall speed in CAS [kt].</span>
@@ -1751,7 +1751,7 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <a id="__codelineno-0-240" name="__codelineno-0-240"></a>
 <a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-242" name="__codelineno-0-242"></a><span class="sd">        Minimum operational speed in CAS [kt].</span>
-<a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="sd">    """</span>
 <a id="__codelineno-0-244" name="__codelineno-0-244"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
 <a id="__codelineno-0-245" name="__codelineno-0-245"></a>        <span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">TO</span><span class="p">),</span>
 <a id="__codelineno-0-246" name="__codelineno-0-246"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">cvmin_to</span> <span class="o">*</span> <span class="n">vs</span><span class="p">,</span>
@@ -1827,7 +1827,7 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <span class="normal"><a href="#__codelineno-0-401">401</a></span>
 <span class="normal"><a href="#__codelineno-0-402">402</a></span>
 <span class="normal"><a href="#__codelineno-0-403">403</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-384" name="__codelineno-0-384"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4AerodynamicsData</span><span class="p">(</span><span class="n">AerodynamicsData</span><span class="p">):</span>
-<a id="__codelineno-0-385" name="__codelineno-0-385"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA4 aerodynamic data.</span>
+<a id="__codelineno-0-385" name="__codelineno-0-385"></a><span class="w">    </span><span class="sd">"""BADA4 aerodynamic data.</span>
 <a id="__codelineno-0-386" name="__codelineno-0-386"></a>
 <a id="__codelineno-0-387" name="__codelineno-0-387"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-388" name="__codelineno-0-388"></a><span class="sd">        surface_area: Wing reference area in m².</span>
@@ -1835,11 +1835,11 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <a id="__codelineno-0-390" name="__codelineno-0-390"></a><span class="sd">        scalar: Scaling factor for drag coefficients.</span>
 <a id="__codelineno-0-391" name="__codelineno-0-391"></a><span class="sd">        d_clean: Drag coefficients for clean configuration (HLid=0, LG=UP).</span>
 <a id="__codelineno-0-392" name="__codelineno-0-392"></a><span class="sd">        d_nonclean: Drag coefficients by (hlid, lg) tuple.</span>
-<a id="__codelineno-0-393" name="__codelineno-0-393"></a><span class="sd">            Keys are (hlid_str, lg_pos) where hlid_str is &quot;0&quot;,&quot;1&quot;,&quot;2&quot;,... and</span>
+<a id="__codelineno-0-393" name="__codelineno-0-393"></a><span class="sd">            Keys are (hlid_str, lg_pos) where hlid_str is "0","1","2",... and</span>
 <a id="__codelineno-0-394" name="__codelineno-0-394"></a><span class="sd">            lg_pos is LandingGearPosition.UP or LandingGearPosition.DOWN.</span>
-<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="sd">    """</span>
 <a id="__codelineno-0-396" name="__codelineno-0-396"></a>
-<a id="__codelineno-0-397" name="__codelineno-0-397"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-397" name="__codelineno-0-397"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-0-398" name="__codelineno-0-398"></a>
 <a id="__codelineno-0-399" name="__codelineno-0-399"></a>    <span class="n">mach_max</span><span class="p">:</span> <span class="nb">float</span>
 <a id="__codelineno-0-400" name="__codelineno-0-400"></a>    <span class="n">scalar</span><span class="p">:</span> <span class="nb">float</span>
@@ -1931,7 +1931,7 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <span class="normal"><a href="#__codelineno-0-427">427</a></span>
 <span class="normal"><a href="#__codelineno-0-428">428</a></span>
 <span class="normal"><a href="#__codelineno-0-429">429</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-406" name="__codelineno-0-406"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4AircraftData</span><span class="p">(</span><span class="n">AircraftData</span><span class="p">):</span>
-<a id="__codelineno-0-407" name="__codelineno-0-407"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA4 aircraft data.</span>
+<a id="__codelineno-0-407" name="__codelineno-0-407"></a><span class="w">    </span><span class="sd">"""BADA4 aircraft data.</span>
 <a id="__codelineno-0-408" name="__codelineno-0-408"></a>
 <a id="__codelineno-0-409" name="__codelineno-0-409"></a><span class="sd">    Extends the base aircraft data with BADA4-specific parameters.</span>
 <a id="__codelineno-0-410" name="__codelineno-0-410"></a>
@@ -1943,9 +1943,9 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <a id="__codelineno-0-416" name="__codelineno-0-416"></a><span class="sd">        oem: Operating empty mass [kg].</span>
 <a id="__codelineno-0-417" name="__codelineno-0-417"></a><span class="sd">        mtom: Maximum takeoff mass [kg].</span>
 <a id="__codelineno-0-418" name="__codelineno-0-418"></a><span class="sd">        mpl: Maximum payload [kg].</span>
-<a id="__codelineno-0-419" name="__codelineno-0-419"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-419" name="__codelineno-0-419"></a><span class="sd">    """</span>
 <a id="__codelineno-0-420" name="__codelineno-0-420"></a>
-<a id="__codelineno-0-421" name="__codelineno-0-421"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-421" name="__codelineno-0-421"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">)</span>
 <a id="__codelineno-0-422" name="__codelineno-0-422"></a>
 <a id="__codelineno-0-423" name="__codelineno-0-423"></a>    <span class="n">vmo</span><span class="p">:</span> <span class="nb">float</span>
 <a id="__codelineno-0-424" name="__codelineno-0-424"></a>    <span class="n">mmo</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span>
@@ -2043,7 +2043,7 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <span class="normal"><a href="#__codelineno-0-159">159</a></span>
 <span class="normal"><a href="#__codelineno-0-160">160</a></span>
 <span class="normal"><a href="#__codelineno-0-161">161</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-134" name="__codelineno-0-134"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4BuffetLimitsData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-135" name="__codelineno-0-135"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Buffet Limitations Model (BLM) data - Section 6.3.</span>
+<a id="__codelineno-0-135" name="__codelineno-0-135"></a><span class="w">    </span><span class="sd">"""Buffet Limitations Model (BLM) data - Section 6.3.</span>
 <a id="__codelineno-0-136" name="__codelineno-0-136"></a>
 <a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="sd">    Pure data container for buffet limits.</span>
 <a id="__codelineno-0-138" name="__codelineno-0-138"></a>
@@ -2055,9 +2055,9 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <a id="__codelineno-0-144" name="__codelineno-0-144"></a><span class="sd">        cl_max_nonclean: Dict mapping (HL, LG) to constant CL_max values.</span>
 <a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="sd">            Keys are (hlid_str, lg_pos) where lg_pos is LandingGearPosition enum.</span>
 <a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">        cl_max_config: Dict mapping AerodynamicConfig to CL_max values.</span>
-<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">    """</span>
 <a id="__codelineno-0-148" name="__codelineno-0-148"></a>
-<a id="__codelineno-0-149" name="__codelineno-0-149"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-149" name="__codelineno-0-149"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-0-150" name="__codelineno-0-150"></a>
 <a id="__codelineno-0-151" name="__codelineno-0-151"></a>    <span class="n">bf</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-152" name="__codelineno-0-152"></a>    <span class="n">mach_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -2068,7 +2068,7 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <a id="__codelineno-0-157" name="__codelineno-0-157"></a>
 <a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">has_clean_model</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if clean CL_max model is available.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="w">        </span><span class="sd">"""Check if clean CL_max model is available."""</span>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bf</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bf</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">5</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2170,7 +2170,7 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <span class="normal"><a href="#__codelineno-0-449">449</a></span>
 <span class="normal"><a href="#__codelineno-0-450">450</a></span>
 <span class="normal"><a href="#__codelineno-0-451">451</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-432" name="__codelineno-0-432"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4Data</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-433" name="__codelineno-0-433"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Container for complete BADA4 aircraft data.</span>
+<a id="__codelineno-0-433" name="__codelineno-0-433"></a><span class="w">    </span><span class="sd">"""Container for complete BADA4 aircraft data.</span>
 <a id="__codelineno-0-434" name="__codelineno-0-434"></a>
 <a id="__codelineno-0-435" name="__codelineno-0-435"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-436" name="__codelineno-0-436"></a><span class="sd">        aircraft: Aircraft specifications and performance limits.</span>
@@ -2178,9 +2178,9 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <a id="__codelineno-0-438" name="__codelineno-0-438"></a><span class="sd">        engine: Engine thrust and fuel flow coefficients.</span>
 <a id="__codelineno-0-439" name="__codelineno-0-439"></a><span class="sd">        limits: Aircraft limitations (ALM), optional. Type is BADA4Limits from limits.py.</span>
 <a id="__codelineno-0-440" name="__codelineno-0-440"></a><span class="sd">        arpm: Airline procedure model configuration, optional.</span>
-<a id="__codelineno-0-441" name="__codelineno-0-441"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-441" name="__codelineno-0-441"></a><span class="sd">    """</span>
 <a id="__codelineno-0-442" name="__codelineno-0-442"></a>
-<a id="__codelineno-0-443" name="__codelineno-0-443"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-443" name="__codelineno-0-443"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-0-444" name="__codelineno-0-444"></a>
 <a id="__codelineno-0-445" name="__codelineno-0-445"></a>    <span class="n">aircraft</span><span class="p">:</span> <span class="n">BADA4AircraftData</span>
 <a id="__codelineno-0-446" name="__codelineno-0-446"></a>    <span class="n">aero</span><span class="p">:</span> <span class="n">BADA4AerodynamicsData</span>
@@ -2259,15 +2259,15 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <span class="normal"><a href="#__codelineno-0-267">267</a></span>
 <span class="normal"><a href="#__codelineno-0-268">268</a></span>
 <span class="normal"><a href="#__codelineno-0-269">269</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4EngineData</span><span class="p">(</span><span class="n">EngineData</span><span class="p">):</span>
-<a id="__codelineno-0-257" name="__codelineno-0-257"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA4 base engine data common to all engine types.</span>
+<a id="__codelineno-0-257" name="__codelineno-0-257"></a><span class="w">    </span><span class="sd">"""BADA4 base engine data common to all engine types.</span>
 <a id="__codelineno-0-258" name="__codelineno-0-258"></a>
 <a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-260" name="__codelineno-0-260"></a><span class="sd">        engines: Number of engines.</span>
 <a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">        lhv: Lower heating value of fuel (J/kg).</span>
 <a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="sd">        wref: Reference weight for engine thrust [N] (= MREF * g).</span>
-<a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="sd">    """</span>
 <a id="__codelineno-0-264" name="__codelineno-0-264"></a>
-<a id="__codelineno-0-265" name="__codelineno-0-265"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">)</span>
 <a id="__codelineno-0-266" name="__codelineno-0-266"></a>
 <a id="__codelineno-0-267" name="__codelineno-0-267"></a>    <span class="n">engines</span><span class="p">:</span> <span class="nb">int</span>
 <a id="__codelineno-0-268" name="__codelineno-0-268"></a>    <span class="n">lhv</span><span class="p">:</span> <span class="nb">float</span>
@@ -2348,24 +2348,24 @@ speed coefficients, and high-lift/landing-gear mapping per configuration.</p>
 <span class="normal"><a href="#__codelineno-0-97">97</a></span>
 <span class="normal"><a href="#__codelineno-0-98">98</a></span>
 <span class="normal"><a href="#__codelineno-0-99">99</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4GeometricLimitsData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Geometric Limitations Model (GLM) data - Section 6.1.</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="w">    </span><span class="sd">"""Geometric Limitations Model (GLM) data - Section 6.1.</span>
 <a id="__codelineno-0-82" name="__codelineno-0-82"></a>
 <a id="__codelineno-0-83" name="__codelineno-0-83"></a><span class="sd">    Pure data container for geometric limits.</span>
 <a id="__codelineno-0-84" name="__codelineno-0-84"></a>
 <a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-86" name="__codelineno-0-86"></a><span class="sd">        hmo: Maximum operating altitude [ft].</span>
 <a id="__codelineno-0-87" name="__codelineno-0-87"></a><span class="sd">        mfa: Maximum high-lift devices use altitude [ft], defaults to hmo.</span>
-<a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="sd">    """</span>
 <a id="__codelineno-0-89" name="__codelineno-0-89"></a>
-<a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">)</span>
 <a id="__codelineno-0-91" name="__codelineno-0-91"></a>
 <a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="n">hmo</span><span class="p">:</span> <span class="nb">float</span>
 <a id="__codelineno-0-93" name="__codelineno-0-93"></a>    <span class="n">mfa</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-94" name="__codelineno-0-94"></a>
-<a id="__codelineno-0-95" name="__codelineno-0-95"></a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-95" name="__codelineno-0-95"></a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"after"</span><span class="p">)</span>
 <a id="__codelineno-0-96" name="__codelineno-0-96"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_set_mfa_default</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BADA4GeometricLimitsData</span><span class="p">:</span>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mfa</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-98" name="__codelineno-0-98"></a>            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;mfa&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hmo</span><span class="p">)</span>
+<a id="__codelineno-0-98" name="__codelineno-0-98"></a>            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"mfa"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hmo</span><span class="p">)</span>
 <a id="__codelineno-0-99" name="__codelineno-0-99"></a>        <span class="k">return</span> <span class="bp">self</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2439,13 +2439,13 @@ for different engine settings.</p>
 <a id="__codelineno-0-305" name="__codelineno-0-305"></a>    <span class="n">BADA4EngineData</span><span class="p">,</span>
 <a id="__codelineno-0-306" name="__codelineno-0-306"></a>    <span class="n">BADA4JetOrTurbopropEngineData</span><span class="p">,</span>
 <a id="__codelineno-0-307" name="__codelineno-0-307"></a><span class="p">):</span>
-<a id="__codelineno-0-308" name="__codelineno-0-308"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA4 jet engine data.</span>
+<a id="__codelineno-0-308" name="__codelineno-0-308"></a><span class="w">    </span><span class="sd">"""BADA4 jet engine data.</span>
 <a id="__codelineno-0-309" name="__codelineno-0-309"></a>
 <a id="__codelineno-0-310" name="__codelineno-0-310"></a><span class="sd">    Contains throttle-dependent thrust and fuel flow coefficients</span>
 <a id="__codelineno-0-311" name="__codelineno-0-311"></a><span class="sd">    for different engine settings.</span>
-<a id="__codelineno-0-312" name="__codelineno-0-312"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-312" name="__codelineno-0-312"></a><span class="sd">    """</span>
 <a id="__codelineno-0-313" name="__codelineno-0-313"></a>
-<a id="__codelineno-0-314" name="__codelineno-0-314"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-314" name="__codelineno-0-314"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-0-315" name="__codelineno-0-315"></a>
 <a id="__codelineno-0-316" name="__codelineno-0-316"></a>    <span class="n">b</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">EngineSetting</span><span class="p">,</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">]</span>
 <a id="__codelineno-0-317" name="__codelineno-0-317"></a>    <span class="n">c</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">EngineSetting</span><span class="p">,</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">]</span>
@@ -2523,16 +2523,16 @@ for different engine settings.</p>
 <span class="normal"><a href="#__codelineno-0-285">285</a></span>
 <span class="normal"><a href="#__codelineno-0-286">286</a></span>
 <span class="normal"><a href="#__codelineno-0-287">287</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-272" name="__codelineno-0-272"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4JetOrTurbopropEngineData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Common data for jet and turboprop engines.</span>
+<a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="w">    </span><span class="sd">"""Common data for jet and turboprop engines.</span>
 <a id="__codelineno-0-274" name="__codelineno-0-274"></a>
 <a id="__codelineno-0-275" name="__codelineno-0-275"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="sd">        a: Mach-dependent thrust coefficients.</span>
 <a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="sd">        f: Altitude-dependent thrust coefficients.</span>
 <a id="__codelineno-0-278" name="__codelineno-0-278"></a><span class="sd">        fi: Integrated thrust coefficients.</span>
 <a id="__codelineno-0-279" name="__codelineno-0-279"></a><span class="sd">        ti: Integrated thrust coefficients.</span>
-<a id="__codelineno-0-280" name="__codelineno-0-280"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-280" name="__codelineno-0-280"></a><span class="sd">    """</span>
 <a id="__codelineno-0-281" name="__codelineno-0-281"></a>
-<a id="__codelineno-0-282" name="__codelineno-0-282"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-282" name="__codelineno-0-282"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-0-283" name="__codelineno-0-283"></a>
 <a id="__codelineno-0-284" name="__codelineno-0-284"></a>    <span class="n">a</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span>
 <a id="__codelineno-0-285" name="__codelineno-0-285"></a>    <span class="n">f</span><span class="p">:</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span>
@@ -2628,7 +2628,7 @@ for different engine settings.</p>
 <span class="normal"><a href="#__codelineno-0-129">129</a></span>
 <span class="normal"><a href="#__codelineno-0-130">130</a></span>
 <span class="normal"><a href="#__codelineno-0-131">131</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-102" name="__codelineno-0-102"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4KinematicLimitsData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Kinematic Limitations Model (KLM) data - Section 6.2.</span>
+<a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="w">    </span><span class="sd">"""Kinematic Limitations Model (KLM) data - Section 6.2.</span>
 <a id="__codelineno-0-104" name="__codelineno-0-104"></a>
 <a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">    Pure data container for kinematic limits.</span>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a>
@@ -2639,9 +2639,9 @@ for different engine settings.</p>
 <a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">        mle: Maximum Mach with landing gear extended, defaults to mmo.</span>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="sd">        vfe: Dict mapping HLid string to placard speed [kt] (raw lookup table).</span>
 <a id="__codelineno-0-113" name="__codelineno-0-113"></a><span class="sd">        vfe_by_config: Dict mapping AerodynamicConfig to placard VFE [kt].</span>
-<a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="sd">    """</span>
 <a id="__codelineno-0-115" name="__codelineno-0-115"></a>
-<a id="__codelineno-0-116" name="__codelineno-0-116"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-116" name="__codelineno-0-116"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-0-117" name="__codelineno-0-117"></a>
 <a id="__codelineno-0-118" name="__codelineno-0-118"></a>    <span class="n">vmo</span><span class="p">:</span> <span class="nb">float</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a>    <span class="n">mmo</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
@@ -2650,12 +2650,12 @@ for different engine settings.</p>
 <a id="__codelineno-0-122" name="__codelineno-0-122"></a>    <span class="n">vfe</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>    <span class="n">vfe_by_config</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"after"</span><span class="p">)</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_set_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BADA4KinematicLimitsData</span><span class="p">:</span>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vle</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a>            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;vle&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmo</span><span class="p">)</span>
+<a id="__codelineno-0-128" name="__codelineno-0-128"></a>            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"vle"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vmo</span><span class="p">)</span>
 <a id="__codelineno-0-129" name="__codelineno-0-129"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mle</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmo</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-130" name="__codelineno-0-130"></a>            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;mle&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmo</span><span class="p">)</span>
+<a id="__codelineno-0-130" name="__codelineno-0-130"></a>            <span class="nb">object</span><span class="o">.</span><span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">"mle"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmo</span><span class="p">)</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>        <span class="k">return</span> <span class="bp">self</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2745,7 +2745,7 @@ for different engine settings.</p>
 <span class="normal"><a href="#__codelineno-0-192">192</a></span>
 <span class="normal"><a href="#__codelineno-0-193">193</a></span>
 <span class="normal"><a href="#__codelineno-0-194">194</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4LimitsData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Combined BADA4 Aircraft Limitations data - Section 6.</span>
+<a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="w">    </span><span class="sd">"""Combined BADA4 Aircraft Limitations data - Section 6.</span>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    Pure data container composing geometric, kinematic, and buffet limits.</span>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a>
@@ -2753,9 +2753,9 @@ for different engine settings.</p>
 <a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">        geometric: Geometric limitations data (GLM).</span>
 <a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">        kinematic: Kinematic limitations data (KLM).</span>
 <a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">        buffet: Buffet limitations data (BLM).</span>
-<a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">    """</span>
 <a id="__codelineno-0-174" name="__codelineno-0-174"></a>
-<a id="__codelineno-0-175" name="__codelineno-0-175"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-175" name="__codelineno-0-175"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">)</span>
 <a id="__codelineno-0-176" name="__codelineno-0-176"></a>
 <a id="__codelineno-0-177" name="__codelineno-0-177"></a>    <span class="n">geometric</span><span class="p">:</span> <span class="n">BADA4GeometricLimitsData</span>
 <a id="__codelineno-0-178" name="__codelineno-0-178"></a>    <span class="n">kinematic</span><span class="p">:</span> <span class="n">BADA4KinematicLimitsData</span>
@@ -2763,17 +2763,17 @@ for different engine settings.</p>
 <a id="__codelineno-0-180" name="__codelineno-0-180"></a>
 <a id="__codelineno-0-181" name="__codelineno-0-181"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-182" name="__codelineno-0-182"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">vmo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Maximum operating speed [kt].&quot;&quot;&quot;</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="w">        </span><span class="sd">"""Maximum operating speed [kt]."""</span>
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kinematic</span><span class="o">.</span><span class="n">vmo</span>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-187" name="__codelineno-0-187"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">mmo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Maximum operating Mach number.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="w">        </span><span class="sd">"""Maximum operating Mach number."""</span>
 <a id="__codelineno-0-189" name="__codelineno-0-189"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kinematic</span><span class="o">.</span><span class="n">mmo</span>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a>
 <a id="__codelineno-0-191" name="__codelineno-0-191"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">hmo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Maximum operating altitude [ft].&quot;&quot;&quot;</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="w">        </span><span class="sd">"""Maximum operating altitude [ft]."""</span>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">geometric</span><span class="o">.</span><span class="n">hmo</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2939,15 +2939,15 @@ for different engine settings.</p>
 <a id="__codelineno-0-339" name="__codelineno-0-339"></a>    <span class="n">BADA4EngineData</span><span class="p">,</span>
 <a id="__codelineno-0-340" name="__codelineno-0-340"></a>    <span class="n">BADA4TurbopropOrPistonEngineData</span><span class="p">,</span>
 <a id="__codelineno-0-341" name="__codelineno-0-341"></a><span class="p">):</span>
-<a id="__codelineno-0-342" name="__codelineno-0-342"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA4 piston engine data (PEM) - Section 3.3.3.</span>
+<a id="__codelineno-0-342" name="__codelineno-0-342"></a><span class="w">    </span><span class="sd">"""BADA4 piston engine data (PEM) - Section 3.3.3.</span>
 <a id="__codelineno-0-343" name="__codelineno-0-343"></a>
 <a id="__codelineno-0-344" name="__codelineno-0-344"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-345" name="__codelineno-0-345"></a><span class="sd">        hd_turbo: Turbocharger density altitude limit [ft]. Zero for atmospheric.</span>
 <a id="__codelineno-0-346" name="__codelineno-0-346"></a><span class="sd">        cpsfc: Power-specific fuel consumption coefficient [-].</span>
 <a id="__codelineno-0-347" name="__codelineno-0-347"></a><span class="sd">        p: Maximum one-engine power at MSL in standard atmosphere [hp].</span>
-<a id="__codelineno-0-348" name="__codelineno-0-348"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-348" name="__codelineno-0-348"></a><span class="sd">    """</span>
 <a id="__codelineno-0-349" name="__codelineno-0-349"></a>
-<a id="__codelineno-0-350" name="__codelineno-0-350"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-350" name="__codelineno-0-350"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">)</span>
 <a id="__codelineno-0-351" name="__codelineno-0-351"></a>
 <a id="__codelineno-0-352" name="__codelineno-0-352"></a>    <span class="n">hd_turbo</span><span class="p">:</span> <span class="nb">float</span>
 <a id="__codelineno-0-353" name="__codelineno-0-353"></a>    <span class="n">cpsfc</span><span class="p">:</span> <span class="nb">float</span>
@@ -2955,7 +2955,7 @@ for different engine settings.</p>
 <a id="__codelineno-0-355" name="__codelineno-0-355"></a>
 <a id="__codelineno-0-356" name="__codelineno-0-356"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-357" name="__codelineno-0-357"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">sigma_turbo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-358" name="__codelineno-0-358"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Density ratio at turbocharger limit altitude.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-358" name="__codelineno-0-358"></a><span class="w">        </span><span class="sd">"""Density ratio at turbocharger limit altitude."""</span>
 <a id="__codelineno-0-359" name="__codelineno-0-359"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hd_turbo</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
 <a id="__codelineno-0-360" name="__codelineno-0-360"></a>            <span class="k">return</span> <span class="mf">1.0</span>
 <a id="__codelineno-0-361" name="__codelineno-0-361"></a>        <span class="n">h_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hd_turbo</span> <span class="o">*</span> <span class="n">FT</span>
@@ -2963,14 +2963,14 @@ for different engine settings.</p>
 <a id="__codelineno-0-363" name="__codelineno-0-363"></a>
 <a id="__codelineno-0-364" name="__codelineno-0-364"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-365" name="__codelineno-0-365"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">delta_turbo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-366" name="__codelineno-0-366"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Pressure ratio at turbocharger limit altitude.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-366" name="__codelineno-0-366"></a><span class="w">        </span><span class="sd">"""Pressure ratio at turbocharger limit altitude."""</span>
 <a id="__codelineno-0-367" name="__codelineno-0-367"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hd_turbo</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
 <a id="__codelineno-0-368" name="__codelineno-0-368"></a>            <span class="k">return</span> <span class="mf">1.0</span>
 <a id="__codelineno-0-369" name="__codelineno-0-369"></a>        <span class="k">return</span> <span class="n">isa</span><span class="o">.</span><span class="n">air_pressure</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hd_turbo</span> <span class="o">*</span> <span class="n">FT</span><span class="p">)</span> <span class="o">/</span> <span class="n">isa</span><span class="o">.</span><span class="n">P_SL</span>
 <a id="__codelineno-0-370" name="__codelineno-0-370"></a>
 <a id="__codelineno-0-371" name="__codelineno-0-371"></a>    <span class="nd">@property</span>
 <a id="__codelineno-0-372" name="__codelineno-0-372"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">theta_turbo</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-373" name="__codelineno-0-373"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Temperature ratio at turbocharger limit altitude.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-373" name="__codelineno-0-373"></a><span class="w">        </span><span class="sd">"""Temperature ratio at turbocharger limit altitude."""</span>
 <a id="__codelineno-0-374" name="__codelineno-0-374"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hd_turbo</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
 <a id="__codelineno-0-375" name="__codelineno-0-375"></a>            <span class="k">return</span> <span class="mf">1.0</span>
 <a id="__codelineno-0-376" name="__codelineno-0-376"></a>        <span class="k">return</span> <span class="n">isa</span><span class="o">.</span><span class="n">air_temperature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hd_turbo</span> <span class="o">*</span> <span class="n">FT</span><span class="p">)</span> <span class="o">/</span> <span class="n">isa</span><span class="o">.</span><span class="n">TAU_SL</span>
@@ -3113,13 +3113,13 @@ for different engine settings.</p>
 <a id="__codelineno-0-323" name="__codelineno-0-323"></a>    <span class="n">BADA4JetOrTurbopropEngineData</span><span class="p">,</span>
 <a id="__codelineno-0-324" name="__codelineno-0-324"></a>    <span class="n">BADA4TurbopropOrPistonEngineData</span><span class="p">,</span>
 <a id="__codelineno-0-325" name="__codelineno-0-325"></a><span class="p">):</span>
-<a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA4 turboprop engine data.</span>
+<a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="w">    </span><span class="sd">"""BADA4 turboprop engine data.</span>
 <a id="__codelineno-0-327" name="__codelineno-0-327"></a>
 <a id="__codelineno-0-328" name="__codelineno-0-328"></a><span class="sd">    Contains power-dependent thrust and fuel flow coefficients</span>
 <a id="__codelineno-0-329" name="__codelineno-0-329"></a><span class="sd">    for different engine settings.</span>
-<a id="__codelineno-0-330" name="__codelineno-0-330"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-330" name="__codelineno-0-330"></a><span class="sd">    """</span>
 <a id="__codelineno-0-331" name="__codelineno-0-331"></a>
-<a id="__codelineno-0-332" name="__codelineno-0-332"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<a id="__codelineno-0-332" name="__codelineno-0-332"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">,</span> <span class="n">arbitrary_types_allowed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-0-333" name="__codelineno-0-333"></a>
 <a id="__codelineno-0-334" name="__codelineno-0-334"></a>    <span class="n">p</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">EngineSetting</span><span class="p">,</span> <span class="n">npt</span><span class="o">.</span><span class="n">NDArray</span><span class="p">]</span>
 <a id="__codelineno-0-335" name="__codelineno-0-335"></a>    <span class="n">max_power</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">EngineSetting</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
@@ -3190,14 +3190,14 @@ for different engine settings.</p>
 <span class="normal"><a href="#__codelineno-0-299">299</a></span>
 <span class="normal"><a href="#__codelineno-0-300">300</a></span>
 <span class="normal"><a href="#__codelineno-0-301">301</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-290" name="__codelineno-0-290"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA4TurbopropOrPistonEngineData</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Common data for turboprop and piston engines.</span>
+<a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="w">    </span><span class="sd">"""Common data for turboprop and piston engines.</span>
 <a id="__codelineno-0-292" name="__codelineno-0-292"></a>
 <a id="__codelineno-0-293" name="__codelineno-0-293"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-294" name="__codelineno-0-294"></a><span class="sd">        prop_dia: Propeller diameter (m).</span>
 <a id="__codelineno-0-295" name="__codelineno-0-295"></a><span class="sd">        max_eff: Maximum propeller efficiency.</span>
-<a id="__codelineno-0-296" name="__codelineno-0-296"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-296" name="__codelineno-0-296"></a><span class="sd">    """</span>
 <a id="__codelineno-0-297" name="__codelineno-0-297"></a>
-<a id="__codelineno-0-298" name="__codelineno-0-298"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;forbid&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-298" name="__codelineno-0-298"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="s2">"forbid"</span><span class="p">)</span>
 <a id="__codelineno-0-299" name="__codelineno-0-299"></a>
 <a id="__codelineno-0-300" name="__codelineno-0-300"></a>    <span class="n">prop_dia</span><span class="p">:</span> <span class="nb">float</span>
 <a id="__codelineno-0-301" name="__codelineno-0-301"></a>    <span class="n">max_eff</span><span class="p">:</span> <span class="nb">float</span>

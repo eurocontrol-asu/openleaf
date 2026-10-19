@@ -1578,7 +1578,7 @@ performance calculations including thrust, fuel flow, and drag.</p>
     # Initialize from ICAO code (requires configuration)
     model = BADA3Model("A320")</p>
 <div class="highlight"><span class="filename">Text Only</span><pre><span></span><code># Initialize from specific file
-model = BADA3Model.from_file(&quot;/path/to/A320__.OPF&quot;)
+model = BADA3Model.from_file("/path/to/A320__.OPF")
 
 # Initialize from pre-loaded data
 model = BADA3Model.from_data(bada3_data)
@@ -1748,15 +1748,15 @@ configurations using BADA3 drag polar coefficients.</p>
 <span class="normal"><a href="#__codelineno-0-640">640</a></span>
 <span class="normal"><a href="#__codelineno-0-641">641</a></span>
 <span class="normal"><a href="#__codelineno-0-642">642</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-531" name="__codelineno-0-531"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA3AeroModel</span><span class="p">(</span><span class="n">AerodynamicsModel</span><span class="p">[</span><span class="n">BADA3AerodynamicsData</span><span class="p">]):</span>
-<a id="__codelineno-0-532" name="__codelineno-0-532"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA3 aerodynamic model.</span>
+<a id="__codelineno-0-532" name="__codelineno-0-532"></a><span class="w">    </span><span class="sd">"""BADA3 aerodynamic model.</span>
 <a id="__codelineno-0-533" name="__codelineno-0-533"></a>
 <a id="__codelineno-0-534" name="__codelineno-0-534"></a><span class="sd">    Implements drag coefficient calculations for different aircraft</span>
 <a id="__codelineno-0-535" name="__codelineno-0-535"></a><span class="sd">    configurations using BADA3 drag polar coefficients.</span>
-<a id="__codelineno-0-536" name="__codelineno-0-536"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-536" name="__codelineno-0-536"></a><span class="sd">    """</span>
 <a id="__codelineno-0-537" name="__codelineno-0-537"></a>
-<a id="__codelineno-0-538" name="__codelineno-0-538"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;lift_coef&quot;</span><span class="p">,</span> <span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-538" name="__codelineno-0-538"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">"lift_coef"</span><span class="p">,</span> <span class="s2">"aerodynamic_configuration"</span><span class="p">)</span>
 <a id="__codelineno-0-539" name="__codelineno-0-539"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">drag_coef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-540" name="__codelineno-0-540"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate drag coefficient from flight state data.</span>
+<a id="__codelineno-0-540" name="__codelineno-0-540"></a><span class="w">        </span><span class="sd">"""Calculate drag coefficient from flight state data.</span>
 <a id="__codelineno-0-541" name="__codelineno-0-541"></a>
 <a id="__codelineno-0-542" name="__codelineno-0-542"></a><span class="sd">        Extracts lift coefficient and configuration from the data dict</span>
 <a id="__codelineno-0-543" name="__codelineno-0-543"></a><span class="sd">        and computes drag using BADA3 drag polars.</span>
@@ -1771,12 +1771,12 @@ configurations using BADA3 drag polar coefficients.</p>
 <a id="__codelineno-0-552" name="__codelineno-0-552"></a>
 <a id="__codelineno-0-553" name="__codelineno-0-553"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-554" name="__codelineno-0-554"></a><span class="sd">            MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-555" name="__codelineno-0-555"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-556" name="__codelineno-0-556"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Computing drag_coef with config=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-555" name="__codelineno-0-555"></a><span class="sd">        """</span>
+<a id="__codelineno-0-556" name="__codelineno-0-556"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Computing drag_coef with config=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">])</span>
 <a id="__codelineno-0-557" name="__codelineno-0-557"></a>
 <a id="__codelineno-0-558" name="__codelineno-0-558"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drag_coef</span><span class="p">(</span>
-<a id="__codelineno-0-559" name="__codelineno-0-559"></a>            <span class="n">cl</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;lift_coef&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-560" name="__codelineno-0-560"></a>            <span class="n">conf</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-559" name="__codelineno-0-559"></a>            <span class="n">cl</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"lift_coef"</span><span class="p">],</span>
+<a id="__codelineno-0-560" name="__codelineno-0-560"></a>            <span class="n">conf</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">],</span>
 <a id="__codelineno-0-561" name="__codelineno-0-561"></a>        <span class="p">)</span>
 <a id="__codelineno-0-562" name="__codelineno-0-562"></a>
 <a id="__codelineno-0-563" name="__codelineno-0-563"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">drag_coef_from_inputs</span><span class="p">(</span>
@@ -1786,7 +1786,7 @@ configurations using BADA3 drag polar coefficients.</p>
 <a id="__codelineno-0-567" name="__codelineno-0-567"></a>        <span class="n">mach</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-568" name="__codelineno-0-568"></a>        <span class="n">conf</span><span class="p">:</span> <span class="n">ArrayScalarLike</span> <span class="o">=</span> <span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">CR</span><span class="p">,</span>
 <a id="__codelineno-0-569" name="__codelineno-0-569"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-570" name="__codelineno-0-570"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate drag coefficient from explicit inputs.</span>
+<a id="__codelineno-0-570" name="__codelineno-0-570"></a><span class="w">        </span><span class="sd">"""Calculate drag coefficient from explicit inputs.</span>
 <a id="__codelineno-0-571" name="__codelineno-0-571"></a>
 <a id="__codelineno-0-572" name="__codelineno-0-572"></a><span class="sd">        Note:</span>
 <a id="__codelineno-0-573" name="__codelineno-0-573"></a><span class="sd">            BADA3 drag polar is independent of Mach number (no wave drag).</span>
@@ -1800,7 +1800,7 @@ configurations using BADA3 drag polar coefficients.</p>
 <a id="__codelineno-0-581" name="__codelineno-0-581"></a>
 <a id="__codelineno-0-582" name="__codelineno-0-582"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-583" name="__codelineno-0-583"></a><span class="sd">            Drag coefficient (dimensionless).</span>
-<a id="__codelineno-0-584" name="__codelineno-0-584"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-584" name="__codelineno-0-584"></a><span class="sd">        """</span>
 <a id="__codelineno-0-585" name="__codelineno-0-585"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drag_coef</span><span class="p">(</span><span class="n">cl</span><span class="o">=</span><span class="n">cl</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
 <a id="__codelineno-0-586" name="__codelineno-0-586"></a>
 <a id="__codelineno-0-587" name="__codelineno-0-587"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_drag_coef</span><span class="p">(</span>
@@ -1809,7 +1809,7 @@ configurations using BADA3 drag polar coefficients.</p>
 <a id="__codelineno-0-590" name="__codelineno-0-590"></a>        <span class="n">cl</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-591" name="__codelineno-0-591"></a>        <span class="n">conf</span><span class="p">:</span> <span class="n">ArrayScalarLike</span> <span class="o">=</span> <span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">CR</span><span class="p">,</span>
 <a id="__codelineno-0-592" name="__codelineno-0-592"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-593" name="__codelineno-0-593"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Method to calculate drag coefficient from standard inputs.</span>
+<a id="__codelineno-0-593" name="__codelineno-0-593"></a><span class="w">        </span><span class="sd">"""Method to calculate drag coefficient from standard inputs.</span>
 <a id="__codelineno-0-594" name="__codelineno-0-594"></a>
 <a id="__codelineno-0-595" name="__codelineno-0-595"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-596" name="__codelineno-0-596"></a><span class="sd">            cl: Lift coefficient (dimensionless).</span>
@@ -1817,7 +1817,7 @@ configurations using BADA3 drag polar coefficients.</p>
 <a id="__codelineno-0-598" name="__codelineno-0-598"></a>
 <a id="__codelineno-0-599" name="__codelineno-0-599"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-600" name="__codelineno-0-600"></a><span class="sd">            Drag coefficient (dimensionless).</span>
-<a id="__codelineno-0-601" name="__codelineno-0-601"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-601" name="__codelineno-0-601"></a><span class="sd">        """</span>
 <a id="__codelineno-0-602" name="__codelineno-0-602"></a>        <span class="c1"># Fast path for scalar configuration (avoids np.where namespace</span>
 <a id="__codelineno-0-603" name="__codelineno-0-603"></a>        <span class="c1"># conflicts when cl is a JAX/PyTorch array and np.equal returns</span>
 <a id="__codelineno-0-604" name="__codelineno-0-604"></a>        <span class="c1"># a numpy.bool_ that triggers mixed-namespace detection).</span>
@@ -1847,7 +1847,7 @@ configurations using BADA3 drag polar coefficients.</p>
 <a id="__codelineno-0-628" name="__codelineno-0-628"></a>        <span class="n">cl</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-629" name="__codelineno-0-629"></a>        <span class="n">conf</span><span class="p">:</span> <span class="n">AerodynamicConfig</span><span class="p">,</span>
 <a id="__codelineno-0-630" name="__codelineno-0-630"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-631" name="__codelineno-0-631"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate drag polar for a single configuration.</span>
+<a id="__codelineno-0-631" name="__codelineno-0-631"></a><span class="w">        </span><span class="sd">"""Calculate drag polar for a single configuration.</span>
 <a id="__codelineno-0-632" name="__codelineno-0-632"></a>
 <a id="__codelineno-0-633" name="__codelineno-0-633"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-634" name="__codelineno-0-634"></a><span class="sd">            cl: Lift coefficient</span>
@@ -1855,7 +1855,7 @@ configurations using BADA3 drag polar coefficients.</p>
 <a id="__codelineno-0-636" name="__codelineno-0-636"></a>
 <a id="__codelineno-0-637" name="__codelineno-0-637"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-638" name="__codelineno-0-638"></a><span class="sd">            Drag coefficient</span>
-<a id="__codelineno-0-639" name="__codelineno-0-639"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-639" name="__codelineno-0-639"></a><span class="sd">        """</span>
 <a id="__codelineno-0-640" name="__codelineno-0-640"></a>        <span class="n">cd_0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cd_0</span><span class="p">[</span><span class="n">conf</span><span class="p">]</span>
 <a id="__codelineno-0-641" name="__codelineno-0-641"></a>        <span class="n">cd_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cd_2</span><span class="p">[</span><span class="n">conf</span><span class="p">]</span>
 <a id="__codelineno-0-642" name="__codelineno-0-642"></a>        <span class="k">return</span> <span class="n">cd_0</span> <span class="o">+</span> <span class="n">cd_2</span> <span class="o">*</span> <span class="n">cl</span><span class="o">**</span><span class="mi">2</span>
@@ -1924,9 +1924,9 @@ and computes drag using BADA3 drag polars.</p>
 <span class="normal"><a href="#__codelineno-0-558">558</a></span>
 <span class="normal"><a href="#__codelineno-0-559">559</a></span>
 <span class="normal"><a href="#__codelineno-0-560">560</a></span>
-<span class="normal"><a href="#__codelineno-0-561">561</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-538" name="__codelineno-0-538"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;lift_coef&quot;</span><span class="p">,</span> <span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-561">561</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-538" name="__codelineno-0-538"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">"lift_coef"</span><span class="p">,</span> <span class="s2">"aerodynamic_configuration"</span><span class="p">)</span>
 <a id="__codelineno-0-539" name="__codelineno-0-539"></a><span class="k">def</span><span class="w"> </span><span class="nf">drag_coef</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-540" name="__codelineno-0-540"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate drag coefficient from flight state data.</span>
+<a id="__codelineno-0-540" name="__codelineno-0-540"></a><span class="w">    </span><span class="sd">"""Calculate drag coefficient from flight state data.</span>
 <a id="__codelineno-0-541" name="__codelineno-0-541"></a>
 <a id="__codelineno-0-542" name="__codelineno-0-542"></a><span class="sd">    Extracts lift coefficient and configuration from the data dict</span>
 <a id="__codelineno-0-543" name="__codelineno-0-543"></a><span class="sd">    and computes drag using BADA3 drag polars.</span>
@@ -1941,12 +1941,12 @@ and computes drag using BADA3 drag polars.</p>
 <a id="__codelineno-0-552" name="__codelineno-0-552"></a>
 <a id="__codelineno-0-553" name="__codelineno-0-553"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-554" name="__codelineno-0-554"></a><span class="sd">        MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-555" name="__codelineno-0-555"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-556" name="__codelineno-0-556"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Computing drag_coef with config=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-555" name="__codelineno-0-555"></a><span class="sd">    """</span>
+<a id="__codelineno-0-556" name="__codelineno-0-556"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Computing drag_coef with config=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">])</span>
 <a id="__codelineno-0-557" name="__codelineno-0-557"></a>
 <a id="__codelineno-0-558" name="__codelineno-0-558"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drag_coef</span><span class="p">(</span>
-<a id="__codelineno-0-559" name="__codelineno-0-559"></a>        <span class="n">cl</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;lift_coef&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-560" name="__codelineno-0-560"></a>        <span class="n">conf</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-559" name="__codelineno-0-559"></a>        <span class="n">cl</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"lift_coef"</span><span class="p">],</span>
+<a id="__codelineno-0-560" name="__codelineno-0-560"></a>        <span class="n">conf</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">],</span>
 <a id="__codelineno-0-561" name="__codelineno-0-561"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2009,7 +2009,7 @@ and computes drag using BADA3 drag polars.</p>
 <a id="__codelineno-0-567" name="__codelineno-0-567"></a>    <span class="n">mach</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-568" name="__codelineno-0-568"></a>    <span class="n">conf</span><span class="p">:</span> <span class="n">ArrayScalarLike</span> <span class="o">=</span> <span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">CR</span><span class="p">,</span>
 <a id="__codelineno-0-569" name="__codelineno-0-569"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-570" name="__codelineno-0-570"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate drag coefficient from explicit inputs.</span>
+<a id="__codelineno-0-570" name="__codelineno-0-570"></a><span class="w">    </span><span class="sd">"""Calculate drag coefficient from explicit inputs.</span>
 <a id="__codelineno-0-571" name="__codelineno-0-571"></a>
 <a id="__codelineno-0-572" name="__codelineno-0-572"></a><span class="sd">    Note:</span>
 <a id="__codelineno-0-573" name="__codelineno-0-573"></a><span class="sd">        BADA3 drag polar is independent of Mach number (no wave drag).</span>
@@ -2023,7 +2023,7 @@ and computes drag using BADA3 drag polars.</p>
 <a id="__codelineno-0-581" name="__codelineno-0-581"></a>
 <a id="__codelineno-0-582" name="__codelineno-0-582"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-583" name="__codelineno-0-583"></a><span class="sd">        Drag coefficient (dimensionless).</span>
-<a id="__codelineno-0-584" name="__codelineno-0-584"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-584" name="__codelineno-0-584"></a><span class="sd">    """</span>
 <a id="__codelineno-0-585" name="__codelineno-0-585"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_drag_coef</span><span class="p">(</span><span class="n">cl</span><span class="o">=</span><span class="n">cl</span><span class="p">,</span> <span class="n">conf</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2353,11 +2353,11 @@ calculations based on speed, altitude, and throttle settings.</p>
 <span class="normal"><a href="#__codelineno-0-377">377</a></span>
 <span class="normal"><a href="#__codelineno-0-378">378</a></span>
 <span class="normal"><a href="#__codelineno-0-379">379</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA3EngineModel</span><span class="p">(</span><span class="n">EngineModel</span><span class="p">[</span><span class="n">BADA3EngineData</span><span class="p">]):</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA3 engine model with thrust and fuel flow calculations.</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="w">    </span><span class="sd">"""BADA3 engine model with thrust and fuel flow calculations.</span>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>
 <a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="sd">    Implements BADA3 engine performance models with thrust and fuel flow</span>
 <a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">    calculations based on speed, altitude, and throttle settings.</span>
-<a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-101" name="__codelineno-0-101"></a><span class="sd">    """</span>
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a>
 <a id="__codelineno-0-103" name="__codelineno-0-103"></a>    <span class="c1"># Common methods</span>
 <a id="__codelineno-0-104" name="__codelineno-0-104"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_thrust_max</span><span class="p">(</span>
@@ -2368,7 +2368,7 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-109" name="__codelineno-0-109"></a>        <span class="n">delta_isa</span><span class="p">:</span> <span class="n">ArrayScalarLike</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a>        <span class="n">setting</span><span class="p">:</span> <span class="n">ArrayScalarLike</span> <span class="o">=</span> <span class="n">EngineSetting</span><span class="o">.</span><span class="n">MCMB</span><span class="p">,</span>
 <a id="__codelineno-0-111" name="__codelineno-0-111"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate maximum available thrust from flight conditions.</span>
+<a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="w">        </span><span class="sd">"""Calculate maximum available thrust from flight conditions.</span>
 <a id="__codelineno-0-113" name="__codelineno-0-113"></a>
 <a id="__codelineno-0-114" name="__codelineno-0-114"></a><span class="sd">        Implements BADA3 formula 3.7-1 with ISA correction:</span>
 <a id="__codelineno-0-115" name="__codelineno-0-115"></a><span class="sd">            T_max = T_max_isa * (1 - CT_c5 * (ΔTISA - CT_c4))</span>
@@ -2384,7 +2384,7 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="sd">            Maximum available thrust in Newtons.</span>
-<a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="sd">        """</span>
 <a id="__codelineno-0-129" name="__codelineno-0-129"></a>        <span class="n">thrust_max_isa</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thrust_max_isa</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">)</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>        <span class="n">coef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
@@ -2414,7 +2414,7 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-155" name="__codelineno-0-155"></a>        <span class="n">setting</span><span class="p">:</span> <span class="n">ArrayScalarLike</span> <span class="o">=</span> <span class="n">EngineSetting</span><span class="o">.</span><span class="n">MCMB</span><span class="p">,</span>
 <a id="__codelineno-0-156" name="__codelineno-0-156"></a>        <span class="n">conf</span><span class="p">:</span> <span class="n">AerodynamicConfig</span> <span class="o">=</span> <span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">CR</span><span class="p">,</span>
 <a id="__codelineno-0-157" name="__codelineno-0-157"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate minimum available thrust from flight conditions.</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="w">        </span><span class="sd">"""Calculate minimum available thrust from flight conditions.</span>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="sd">            v: True airspeed in m/s.</span>
@@ -2425,7 +2425,7 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">            Minimum available thrust in Newtons.</span>
-<a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">        """</span>
 <a id="__codelineno-0-170" name="__codelineno-0-170"></a>        <span class="n">h_ft</span> <span class="o">=</span> <span class="n">h</span> <span class="o">/</span> <span class="n">FT</span>
 <a id="__codelineno-0-171" name="__codelineno-0-171"></a>
 <a id="__codelineno-0-172" name="__codelineno-0-172"></a>        <span class="n">coef</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
@@ -2459,7 +2459,7 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-200" name="__codelineno-0-200"></a>        <span class="n">thrust</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-201" name="__codelineno-0-201"></a>        <span class="n">setting</span><span class="p">:</span> <span class="n">ArrayScalarLike</span> <span class="o">=</span> <span class="n">EngineSetting</span><span class="o">.</span><span class="n">MCMB</span><span class="p">,</span>
 <a id="__codelineno-0-202" name="__codelineno-0-202"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate fuel flow from flight conditions and thrust.</span>
+<a id="__codelineno-0-203" name="__codelineno-0-203"></a><span class="w">        </span><span class="sd">"""Calculate fuel flow from flight conditions and thrust.</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a>
 <a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">            v: True airspeed in m/s.</span>
@@ -2468,7 +2468,7 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">            Fuel flow rate in kg/s.</span>
-<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-212" name="__codelineno-0-212"></a><span class="sd">        """</span>
 <a id="__codelineno-0-213" name="__codelineno-0-213"></a>        <span class="n">fuel_flow_nom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fuel_flow_nom</span><span class="p">(</span>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a>            <span class="n">v</span><span class="o">=</span><span class="n">v</span><span class="p">,</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a>            <span class="n">thrust</span><span class="o">=</span><span class="n">thrust</span><span class="p">,</span>
@@ -2481,9 +2481,9 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-222" name="__codelineno-0-222"></a>        <span class="c1"># fuel_flow_nom on the left ensures torch/JAX type propagation</span>
 <a id="__codelineno-0-223" name="__codelineno-0-223"></a>        <span class="k">return</span> <span class="n">fuel_flow_nom</span> <span class="o">*</span> <span class="n">coef</span>
 <a id="__codelineno-0-224" name="__codelineno-0-224"></a>
-<a id="__codelineno-0-225" name="__codelineno-0-225"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;true_airspeed&quot;</span><span class="p">,</span> <span class="s2">&quot;altitude&quot;</span><span class="p">,</span> <span class="s2">&quot;engine_setting&quot;</span><span class="p">,</span> <span class="s2">&quot;delta_isa&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-225" name="__codelineno-0-225"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">"true_airspeed"</span><span class="p">,</span> <span class="s2">"altitude"</span><span class="p">,</span> <span class="s2">"engine_setting"</span><span class="p">,</span> <span class="s2">"delta_isa"</span><span class="p">)</span>
 <a id="__codelineno-0-226" name="__codelineno-0-226"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">thrust_max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get maximum thrust from flight state dictionary.</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="w">        </span><span class="sd">"""Get maximum thrust from flight state dictionary.</span>
 <a id="__codelineno-0-228" name="__codelineno-0-228"></a>
 <a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-230" name="__codelineno-0-230"></a><span class="sd">            data: Flight state data with:</span>
@@ -2497,25 +2497,25 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-238" name="__codelineno-0-238"></a>
 <a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-240" name="__codelineno-0-240"></a><span class="sd">            MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-242" name="__codelineno-0-242"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Computing thrust_max with setting=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;engine_setting&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="sd">        """</span>
+<a id="__codelineno-0-242" name="__codelineno-0-242"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Computing thrust_max with setting=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">"engine_setting"</span><span class="p">])</span>
 <a id="__codelineno-0-243" name="__codelineno-0-243"></a>
 <a id="__codelineno-0-244" name="__codelineno-0-244"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thrust_max</span><span class="p">(</span>
-<a id="__codelineno-0-245" name="__codelineno-0-245"></a>            <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;true_airspeed&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-246" name="__codelineno-0-246"></a>            <span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;altitude&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-247" name="__codelineno-0-247"></a>            <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;engine_setting&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-248" name="__codelineno-0-248"></a>            <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;delta_isa&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a>            <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"true_airspeed"</span><span class="p">],</span>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a>            <span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"altitude"</span><span class="p">],</span>
+<a id="__codelineno-0-247" name="__codelineno-0-247"></a>            <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"engine_setting"</span><span class="p">],</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a>            <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"delta_isa"</span><span class="p">],</span>
 <a id="__codelineno-0-249" name="__codelineno-0-249"></a>        <span class="p">)</span>
 <a id="__codelineno-0-250" name="__codelineno-0-250"></a>
 <a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="nd">@requires</span><span class="p">(</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a>        <span class="s2">&quot;true_airspeed&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-253" name="__codelineno-0-253"></a>        <span class="s2">&quot;altitude&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-254" name="__codelineno-0-254"></a>        <span class="s2">&quot;engine_setting&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-255" name="__codelineno-0-255"></a>        <span class="s2">&quot;delta_isa&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a>        <span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a>        <span class="s2">"true_airspeed"</span><span class="p">,</span>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a>        <span class="s2">"altitude"</span><span class="p">,</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a>        <span class="s2">"engine_setting"</span><span class="p">,</span>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a>        <span class="s2">"delta_isa"</span><span class="p">,</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a>        <span class="s2">"aerodynamic_configuration"</span><span class="p">,</span>
 <a id="__codelineno-0-257" name="__codelineno-0-257"></a>    <span class="p">)</span>
 <a id="__codelineno-0-258" name="__codelineno-0-258"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">thrust_min</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get minimum thrust from flight state dictionary.</span>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="w">        </span><span class="sd">"""Get minimum thrust from flight state dictionary.</span>
 <a id="__codelineno-0-260" name="__codelineno-0-260"></a>
 <a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="sd">            data: Flight state data with:</span>
@@ -2530,24 +2530,24 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-271" name="__codelineno-0-271"></a>
 <a id="__codelineno-0-272" name="__codelineno-0-272"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">            MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">        """</span>
 <a id="__codelineno-0-275" name="__codelineno-0-275"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-<a id="__codelineno-0-276" name="__codelineno-0-276"></a>            <span class="s2">&quot;Computing thrust_min with setting=</span><span class="si">%s</span><span class="s2">, config=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-277" name="__codelineno-0-277"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;engine_setting&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-278" name="__codelineno-0-278"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-276" name="__codelineno-0-276"></a>            <span class="s2">"Computing thrust_min with setting=</span><span class="si">%s</span><span class="s2">, config=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+<a id="__codelineno-0-277" name="__codelineno-0-277"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">"engine_setting"</span><span class="p">],</span>
+<a id="__codelineno-0-278" name="__codelineno-0-278"></a>            <span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">],</span>
 <a id="__codelineno-0-279" name="__codelineno-0-279"></a>        <span class="p">)</span>
 <a id="__codelineno-0-280" name="__codelineno-0-280"></a>
 <a id="__codelineno-0-281" name="__codelineno-0-281"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thrust_min</span><span class="p">(</span>
-<a id="__codelineno-0-282" name="__codelineno-0-282"></a>            <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;true_airspeed&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-283" name="__codelineno-0-283"></a>            <span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;altitude&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-284" name="__codelineno-0-284"></a>            <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;engine_setting&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-285" name="__codelineno-0-285"></a>            <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;delta_isa&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-286" name="__codelineno-0-286"></a>            <span class="n">conf</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-282" name="__codelineno-0-282"></a>            <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"true_airspeed"</span><span class="p">],</span>
+<a id="__codelineno-0-283" name="__codelineno-0-283"></a>            <span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"altitude"</span><span class="p">],</span>
+<a id="__codelineno-0-284" name="__codelineno-0-284"></a>            <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"engine_setting"</span><span class="p">],</span>
+<a id="__codelineno-0-285" name="__codelineno-0-285"></a>            <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"delta_isa"</span><span class="p">],</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a>            <span class="n">conf</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">],</span>
 <a id="__codelineno-0-287" name="__codelineno-0-287"></a>        <span class="p">)</span>
 <a id="__codelineno-0-288" name="__codelineno-0-288"></a>
-<a id="__codelineno-0-289" name="__codelineno-0-289"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;true_airspeed&quot;</span><span class="p">,</span> <span class="s2">&quot;thrust&quot;</span><span class="p">,</span> <span class="s2">&quot;engine_setting&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-289" name="__codelineno-0-289"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">"true_airspeed"</span><span class="p">,</span> <span class="s2">"thrust"</span><span class="p">,</span> <span class="s2">"engine_setting"</span><span class="p">)</span>
 <a id="__codelineno-0-290" name="__codelineno-0-290"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fuel_flow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get fuel flow from flight state dictionary.</span>
+<a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="w">        </span><span class="sd">"""Get fuel flow from flight state dictionary.</span>
 <a id="__codelineno-0-292" name="__codelineno-0-292"></a>
 <a id="__codelineno-0-293" name="__codelineno-0-293"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-294" name="__codelineno-0-294"></a><span class="sd">            data: Flight state data with:</span>
@@ -2560,18 +2560,18 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-301" name="__codelineno-0-301"></a>
 <a id="__codelineno-0-302" name="__codelineno-0-302"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-303" name="__codelineno-0-303"></a><span class="sd">            MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-304" name="__codelineno-0-304"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-305" name="__codelineno-0-305"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Computing fuel_flow&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-304" name="__codelineno-0-304"></a><span class="sd">        """</span>
+<a id="__codelineno-0-305" name="__codelineno-0-305"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Computing fuel_flow"</span><span class="p">)</span>
 <a id="__codelineno-0-306" name="__codelineno-0-306"></a>
 <a id="__codelineno-0-307" name="__codelineno-0-307"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fuel_flow</span><span class="p">(</span>
-<a id="__codelineno-0-308" name="__codelineno-0-308"></a>            <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;true_airspeed&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-309" name="__codelineno-0-309"></a>            <span class="n">thrust</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;thrust&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-310" name="__codelineno-0-310"></a>            <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;engine_setting&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-308" name="__codelineno-0-308"></a>            <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"true_airspeed"</span><span class="p">],</span>
+<a id="__codelineno-0-309" name="__codelineno-0-309"></a>            <span class="n">thrust</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"thrust"</span><span class="p">],</span>
+<a id="__codelineno-0-310" name="__codelineno-0-310"></a>            <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"engine_setting"</span><span class="p">],</span>
 <a id="__codelineno-0-311" name="__codelineno-0-311"></a>        <span class="p">)</span>
 <a id="__codelineno-0-312" name="__codelineno-0-312"></a>
-<a id="__codelineno-0-313" name="__codelineno-0-313"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;altitude&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-313" name="__codelineno-0-313"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">"altitude"</span><span class="p">)</span>
 <a id="__codelineno-0-314" name="__codelineno-0-314"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">fuel_flow_min</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-315" name="__codelineno-0-315"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get minimum fuel flow from flight state dictionary.</span>
+<a id="__codelineno-0-315" name="__codelineno-0-315"></a><span class="w">        </span><span class="sd">"""Get minimum fuel flow from flight state dictionary.</span>
 <a id="__codelineno-0-316" name="__codelineno-0-316"></a>
 <a id="__codelineno-0-317" name="__codelineno-0-317"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-318" name="__codelineno-0-318"></a><span class="sd">            data: Flight state data with:</span>
@@ -2582,10 +2582,10 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-323" name="__codelineno-0-323"></a>
 <a id="__codelineno-0-324" name="__codelineno-0-324"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-325" name="__codelineno-0-325"></a><span class="sd">            MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-327" name="__codelineno-0-327"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Computing fuel_flow_min&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="sd">        """</span>
+<a id="__codelineno-0-327" name="__codelineno-0-327"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Computing fuel_flow_min"</span><span class="p">)</span>
 <a id="__codelineno-0-328" name="__codelineno-0-328"></a>
-<a id="__codelineno-0-329" name="__codelineno-0-329"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fuel_flow_min</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;altitude&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-329" name="__codelineno-0-329"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fuel_flow_min</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"altitude"</span><span class="p">])</span>
 <a id="__codelineno-0-330" name="__codelineno-0-330"></a>
 <a id="__codelineno-0-331" name="__codelineno-0-331"></a>    <span class="c1"># Abstract methods</span>
 <a id="__codelineno-0-332" name="__codelineno-0-332"></a>    <span class="nd">@abstractmethod</span>
@@ -2595,7 +2595,7 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-336" name="__codelineno-0-336"></a>        <span class="n">v</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-337" name="__codelineno-0-337"></a>        <span class="n">h</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-338" name="__codelineno-0-338"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-339" name="__codelineno-0-339"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate maximum thrust under ISA conditions (abstract method).</span>
+<a id="__codelineno-0-339" name="__codelineno-0-339"></a><span class="w">        </span><span class="sd">"""Calculate maximum thrust under ISA conditions (abstract method).</span>
 <a id="__codelineno-0-340" name="__codelineno-0-340"></a>
 <a id="__codelineno-0-341" name="__codelineno-0-341"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-342" name="__codelineno-0-342"></a><span class="sd">            v: True airspeed in m/s.</span>
@@ -2603,7 +2603,7 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-344" name="__codelineno-0-344"></a>
 <a id="__codelineno-0-345" name="__codelineno-0-345"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-346" name="__codelineno-0-346"></a><span class="sd">            Maximum thrust under ISA conditions in Newtons.</span>
-<a id="__codelineno-0-347" name="__codelineno-0-347"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-347" name="__codelineno-0-347"></a><span class="sd">        """</span>
 <a id="__codelineno-0-348" name="__codelineno-0-348"></a>
 <a id="__codelineno-0-349" name="__codelineno-0-349"></a>    <span class="nd">@abstractmethod</span>
 <a id="__codelineno-0-350" name="__codelineno-0-350"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_fuel_flow_nom</span><span class="p">(</span>
@@ -2612,7 +2612,7 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-353" name="__codelineno-0-353"></a>        <span class="n">v</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-354" name="__codelineno-0-354"></a>        <span class="n">thrust</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-355" name="__codelineno-0-355"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-356" name="__codelineno-0-356"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate nominal fuel flow (abstract method).</span>
+<a id="__codelineno-0-356" name="__codelineno-0-356"></a><span class="w">        </span><span class="sd">"""Calculate nominal fuel flow (abstract method).</span>
 <a id="__codelineno-0-357" name="__codelineno-0-357"></a>
 <a id="__codelineno-0-358" name="__codelineno-0-358"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-359" name="__codelineno-0-359"></a><span class="sd">            v: True airspeed in m/s.</span>
@@ -2620,7 +2620,7 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-361" name="__codelineno-0-361"></a>
 <a id="__codelineno-0-362" name="__codelineno-0-362"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-363" name="__codelineno-0-363"></a><span class="sd">            Nominal fuel flow rate in kg/s.</span>
-<a id="__codelineno-0-364" name="__codelineno-0-364"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-364" name="__codelineno-0-364"></a><span class="sd">        """</span>
 <a id="__codelineno-0-365" name="__codelineno-0-365"></a>
 <a id="__codelineno-0-366" name="__codelineno-0-366"></a>    <span class="nd">@abstractmethod</span>
 <a id="__codelineno-0-367" name="__codelineno-0-367"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_fuel_flow_min</span><span class="p">(</span>
@@ -2628,14 +2628,14 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-369" name="__codelineno-0-369"></a>        <span class="o">*</span><span class="p">,</span>
 <a id="__codelineno-0-370" name="__codelineno-0-370"></a>        <span class="n">h</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-371" name="__codelineno-0-371"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-372" name="__codelineno-0-372"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate minimum fuel flow (abstract method).</span>
+<a id="__codelineno-0-372" name="__codelineno-0-372"></a><span class="w">        </span><span class="sd">"""Calculate minimum fuel flow (abstract method).</span>
 <a id="__codelineno-0-373" name="__codelineno-0-373"></a>
 <a id="__codelineno-0-374" name="__codelineno-0-374"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-375" name="__codelineno-0-375"></a><span class="sd">            h: Geometric altitude in m.</span>
 <a id="__codelineno-0-376" name="__codelineno-0-376"></a>
 <a id="__codelineno-0-377" name="__codelineno-0-377"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-378" name="__codelineno-0-378"></a><span class="sd">            Minimum fuel flow rate in kg/s.</span>
-<a id="__codelineno-0-379" name="__codelineno-0-379"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-379" name="__codelineno-0-379"></a><span class="sd">        """</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -2699,9 +2699,9 @@ calculations based on speed, altitude, and throttle settings.</p>
 <span class="normal"><a href="#__codelineno-0-308">308</a></span>
 <span class="normal"><a href="#__codelineno-0-309">309</a></span>
 <span class="normal"><a href="#__codelineno-0-310">310</a></span>
-<span class="normal"><a href="#__codelineno-0-311">311</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-289" name="__codelineno-0-289"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;true_airspeed&quot;</span><span class="p">,</span> <span class="s2">&quot;thrust&quot;</span><span class="p">,</span> <span class="s2">&quot;engine_setting&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-311">311</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-289" name="__codelineno-0-289"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">"true_airspeed"</span><span class="p">,</span> <span class="s2">"thrust"</span><span class="p">,</span> <span class="s2">"engine_setting"</span><span class="p">)</span>
 <a id="__codelineno-0-290" name="__codelineno-0-290"></a><span class="k">def</span><span class="w"> </span><span class="nf">fuel_flow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get fuel flow from flight state dictionary.</span>
+<a id="__codelineno-0-291" name="__codelineno-0-291"></a><span class="w">    </span><span class="sd">"""Get fuel flow from flight state dictionary.</span>
 <a id="__codelineno-0-292" name="__codelineno-0-292"></a>
 <a id="__codelineno-0-293" name="__codelineno-0-293"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-294" name="__codelineno-0-294"></a><span class="sd">        data: Flight state data with:</span>
@@ -2714,13 +2714,13 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-301" name="__codelineno-0-301"></a>
 <a id="__codelineno-0-302" name="__codelineno-0-302"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-303" name="__codelineno-0-303"></a><span class="sd">        MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-304" name="__codelineno-0-304"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-305" name="__codelineno-0-305"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Computing fuel_flow&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-304" name="__codelineno-0-304"></a><span class="sd">    """</span>
+<a id="__codelineno-0-305" name="__codelineno-0-305"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Computing fuel_flow"</span><span class="p">)</span>
 <a id="__codelineno-0-306" name="__codelineno-0-306"></a>
 <a id="__codelineno-0-307" name="__codelineno-0-307"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fuel_flow</span><span class="p">(</span>
-<a id="__codelineno-0-308" name="__codelineno-0-308"></a>        <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;true_airspeed&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-309" name="__codelineno-0-309"></a>        <span class="n">thrust</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;thrust&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-310" name="__codelineno-0-310"></a>        <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;engine_setting&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-308" name="__codelineno-0-308"></a>        <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"true_airspeed"</span><span class="p">],</span>
+<a id="__codelineno-0-309" name="__codelineno-0-309"></a>        <span class="n">thrust</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"thrust"</span><span class="p">],</span>
+<a id="__codelineno-0-310" name="__codelineno-0-310"></a>        <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"engine_setting"</span><span class="p">],</span>
 <a id="__codelineno-0-311" name="__codelineno-0-311"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2767,9 +2767,9 @@ calculations based on speed, altitude, and throttle settings.</p>
 <span class="normal"><a href="#__codelineno-0-326">326</a></span>
 <span class="normal"><a href="#__codelineno-0-327">327</a></span>
 <span class="normal"><a href="#__codelineno-0-328">328</a></span>
-<span class="normal"><a href="#__codelineno-0-329">329</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-313" name="__codelineno-0-313"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;altitude&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-329">329</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-313" name="__codelineno-0-313"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">"altitude"</span><span class="p">)</span>
 <a id="__codelineno-0-314" name="__codelineno-0-314"></a><span class="k">def</span><span class="w"> </span><span class="nf">fuel_flow_min</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-315" name="__codelineno-0-315"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get minimum fuel flow from flight state dictionary.</span>
+<a id="__codelineno-0-315" name="__codelineno-0-315"></a><span class="w">    </span><span class="sd">"""Get minimum fuel flow from flight state dictionary.</span>
 <a id="__codelineno-0-316" name="__codelineno-0-316"></a>
 <a id="__codelineno-0-317" name="__codelineno-0-317"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-318" name="__codelineno-0-318"></a><span class="sd">        data: Flight state data with:</span>
@@ -2780,10 +2780,10 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-323" name="__codelineno-0-323"></a>
 <a id="__codelineno-0-324" name="__codelineno-0-324"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-325" name="__codelineno-0-325"></a><span class="sd">        MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-327" name="__codelineno-0-327"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Computing fuel_flow_min&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-326" name="__codelineno-0-326"></a><span class="sd">    """</span>
+<a id="__codelineno-0-327" name="__codelineno-0-327"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Computing fuel_flow_min"</span><span class="p">)</span>
 <a id="__codelineno-0-328" name="__codelineno-0-328"></a>
-<a id="__codelineno-0-329" name="__codelineno-0-329"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fuel_flow_min</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;altitude&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-329" name="__codelineno-0-329"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fuel_flow_min</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"altitude"</span><span class="p">])</span>
 </code></pre></div></td></tr></table></div>
             </details>
     </div>
@@ -2840,9 +2840,9 @@ calculations based on speed, altitude, and throttle settings.</p>
 <span class="normal"><a href="#__codelineno-0-246">246</a></span>
 <span class="normal"><a href="#__codelineno-0-247">247</a></span>
 <span class="normal"><a href="#__codelineno-0-248">248</a></span>
-<span class="normal"><a href="#__codelineno-0-249">249</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;true_airspeed&quot;</span><span class="p">,</span> <span class="s2">&quot;altitude&quot;</span><span class="p">,</span> <span class="s2">&quot;engine_setting&quot;</span><span class="p">,</span> <span class="s2">&quot;delta_isa&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-249">249</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">"true_airspeed"</span><span class="p">,</span> <span class="s2">"altitude"</span><span class="p">,</span> <span class="s2">"engine_setting"</span><span class="p">,</span> <span class="s2">"delta_isa"</span><span class="p">)</span>
 <a id="__codelineno-0-226" name="__codelineno-0-226"></a><span class="k">def</span><span class="w"> </span><span class="nf">thrust_max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get maximum thrust from flight state dictionary.</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="w">    </span><span class="sd">"""Get maximum thrust from flight state dictionary.</span>
 <a id="__codelineno-0-228" name="__codelineno-0-228"></a>
 <a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-230" name="__codelineno-0-230"></a><span class="sd">        data: Flight state data with:</span>
@@ -2856,14 +2856,14 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-238" name="__codelineno-0-238"></a>
 <a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-240" name="__codelineno-0-240"></a><span class="sd">        MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-242" name="__codelineno-0-242"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Computing thrust_max with setting=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;engine_setting&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-241" name="__codelineno-0-241"></a><span class="sd">    """</span>
+<a id="__codelineno-0-242" name="__codelineno-0-242"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Computing thrust_max with setting=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="s2">"engine_setting"</span><span class="p">])</span>
 <a id="__codelineno-0-243" name="__codelineno-0-243"></a>
 <a id="__codelineno-0-244" name="__codelineno-0-244"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thrust_max</span><span class="p">(</span>
-<a id="__codelineno-0-245" name="__codelineno-0-245"></a>        <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;true_airspeed&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-246" name="__codelineno-0-246"></a>        <span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;altitude&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-247" name="__codelineno-0-247"></a>        <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;engine_setting&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-248" name="__codelineno-0-248"></a>        <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;delta_isa&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-245" name="__codelineno-0-245"></a>        <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"true_airspeed"</span><span class="p">],</span>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a>        <span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"altitude"</span><span class="p">],</span>
+<a id="__codelineno-0-247" name="__codelineno-0-247"></a>        <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"engine_setting"</span><span class="p">],</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a>        <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"delta_isa"</span><span class="p">],</span>
 <a id="__codelineno-0-249" name="__codelineno-0-249"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2935,14 +2935,14 @@ calculations based on speed, altitude, and throttle settings.</p>
 <span class="normal"><a href="#__codelineno-0-285">285</a></span>
 <span class="normal"><a href="#__codelineno-0-286">286</a></span>
 <span class="normal"><a href="#__codelineno-0-287">287</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-251" name="__codelineno-0-251"></a><span class="nd">@requires</span><span class="p">(</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a>    <span class="s2">&quot;true_airspeed&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="s2">&quot;altitude&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="s2">&quot;engine_setting&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="s2">&quot;delta_isa&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a>    <span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a>    <span class="s2">"true_airspeed"</span><span class="p">,</span>
+<a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="s2">"altitude"</span><span class="p">,</span>
+<a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="s2">"engine_setting"</span><span class="p">,</span>
+<a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="s2">"delta_isa"</span><span class="p">,</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a>    <span class="s2">"aerodynamic_configuration"</span><span class="p">,</span>
 <a id="__codelineno-0-257" name="__codelineno-0-257"></a><span class="p">)</span>
 <a id="__codelineno-0-258" name="__codelineno-0-258"></a><span class="k">def</span><span class="w"> </span><span class="nf">thrust_min</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get minimum thrust from flight state dictionary.</span>
+<a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="w">    </span><span class="sd">"""Get minimum thrust from flight state dictionary.</span>
 <a id="__codelineno-0-260" name="__codelineno-0-260"></a>
 <a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="sd">        data: Flight state data with:</span>
@@ -2957,19 +2957,19 @@ calculations based on speed, altitude, and throttle settings.</p>
 <a id="__codelineno-0-271" name="__codelineno-0-271"></a>
 <a id="__codelineno-0-272" name="__codelineno-0-272"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-273" name="__codelineno-0-273"></a><span class="sd">        MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-274" name="__codelineno-0-274"></a><span class="sd">    """</span>
 <a id="__codelineno-0-275" name="__codelineno-0-275"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
-<a id="__codelineno-0-276" name="__codelineno-0-276"></a>        <span class="s2">&quot;Computing thrust_min with setting=</span><span class="si">%s</span><span class="s2">, config=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span>
-<a id="__codelineno-0-277" name="__codelineno-0-277"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;engine_setting&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-278" name="__codelineno-0-278"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-276" name="__codelineno-0-276"></a>        <span class="s2">"Computing thrust_min with setting=</span><span class="si">%s</span><span class="s2">, config=</span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span>
+<a id="__codelineno-0-277" name="__codelineno-0-277"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">"engine_setting"</span><span class="p">],</span>
+<a id="__codelineno-0-278" name="__codelineno-0-278"></a>        <span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">],</span>
 <a id="__codelineno-0-279" name="__codelineno-0-279"></a>    <span class="p">)</span>
 <a id="__codelineno-0-280" name="__codelineno-0-280"></a>
 <a id="__codelineno-0-281" name="__codelineno-0-281"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_thrust_min</span><span class="p">(</span>
-<a id="__codelineno-0-282" name="__codelineno-0-282"></a>        <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;true_airspeed&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-283" name="__codelineno-0-283"></a>        <span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;altitude&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-284" name="__codelineno-0-284"></a>        <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;engine_setting&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-285" name="__codelineno-0-285"></a>        <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;delta_isa&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-286" name="__codelineno-0-286"></a>        <span class="n">conf</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-282" name="__codelineno-0-282"></a>        <span class="n">v</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"true_airspeed"</span><span class="p">],</span>
+<a id="__codelineno-0-283" name="__codelineno-0-283"></a>        <span class="n">h</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"altitude"</span><span class="p">],</span>
+<a id="__codelineno-0-284" name="__codelineno-0-284"></a>        <span class="n">setting</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"engine_setting"</span><span class="p">],</span>
+<a id="__codelineno-0-285" name="__codelineno-0-285"></a>        <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"delta_isa"</span><span class="p">],</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a>        <span class="n">conf</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">],</span>
 <a id="__codelineno-0-287" name="__codelineno-0-287"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3040,11 +3040,11 @@ BADA3 turbine engine coefficients.</p>
 <span class="normal"><a href="#__codelineno-0-460">460</a></span>
 <span class="normal"><a href="#__codelineno-0-461">461</a></span>
 <span class="normal"><a href="#__codelineno-0-462">462</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-438" name="__codelineno-0-438"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA3JetEngineModel</span><span class="p">(</span><span class="n">BADA3TurbineModel</span><span class="p">):</span>
-<a id="__codelineno-0-439" name="__codelineno-0-439"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA3 jet engine model.</span>
+<a id="__codelineno-0-439" name="__codelineno-0-439"></a><span class="w">    </span><span class="sd">"""BADA3 jet engine model.</span>
 <a id="__codelineno-0-440" name="__codelineno-0-440"></a>
 <a id="__codelineno-0-441" name="__codelineno-0-441"></a><span class="sd">    Implements thrust and fuel flow calculations for jet engines using</span>
 <a id="__codelineno-0-442" name="__codelineno-0-442"></a><span class="sd">    BADA3 turbine engine coefficients.</span>
-<a id="__codelineno-0-443" name="__codelineno-0-443"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-443" name="__codelineno-0-443"></a><span class="sd">    """</span>
 <a id="__codelineno-0-444" name="__codelineno-0-444"></a>
 <a id="__codelineno-0-445" name="__codelineno-0-445"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_thrust_max_isa</span><span class="p">(</span>
 <a id="__codelineno-0-446" name="__codelineno-0-446"></a>        <span class="bp">self</span><span class="p">,</span>
@@ -3112,7 +3112,7 @@ BADA3 turbine engine coefficients.</p>
 - HMO: Maximum operating altitude [ft]
 - Mass/temperature dependent maximum altitude per BADA3 formula 3.5-1</p>
 <p>The actual maximum altitude is calculated as:
-    hmax_act = MIN(hMO, hmax + Gt<em>(ΔTISA - CTc4) + Gw</em>(mmax - mact))</p>
+    hmax_act = MIN(hMO, hmax + Gt*(ΔTISA - CTc4) + Gw*(mmax - mact))</p>
 <p>where:
     - hmax: maximum altitude at MTOW under ISA [ft]
     - Gt: temperature gradient [ft/°C]
@@ -3305,7 +3305,7 @@ BADA3 turbine engine coefficients.</p>
 <span class="normal"><a href="#__codelineno-0-205">205</a></span>
 <span class="normal"><a href="#__codelineno-0-206">206</a></span>
 <span class="normal"><a href="#__codelineno-0-207">207</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA3LimitsModel</span><span class="p">(</span><span class="n">LimitsModel</span><span class="p">[</span><span class="n">BADA3LimitsData</span><span class="p">]):</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA3 aircraft limitations with mass/temperature dependent altitude.</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">    </span><span class="sd">"""BADA3 aircraft limitations with mass/temperature dependent altitude.</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a>
 <a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">    Implements BADA3 flight envelope limits including:</span>
 <a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">    - VMO: Maximum operating calibrated airspeed [kt]</span>
@@ -3322,19 +3322,19 @@ BADA3 turbine engine coefficients.</p>
 <a id="__codelineno-0-47" name="__codelineno-0-47"></a><span class="sd">        - Gw: mass gradient [ft/kg]</span>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a><span class="sd">        - CTc4: thrust temperature coefficient (from engine data)</span>
 <a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="sd">        - mmax: maximum mass for altitude calculation [kg]</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="sd">    """</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">BADA3LimitsData</span><span class="p">):</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize BADA3 limits.</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">        </span><span class="sd">"""Initialize BADA3 limits.</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">            data: BADA3 limits data container.</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">        """</span>
 <a id="__codelineno-0-58" name="__codelineno-0-58"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;aircraft_mass&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">"aerodynamic_configuration"</span><span class="p">,</span> <span class="s2">"aircraft_mass"</span><span class="p">)</span>
 <a id="__codelineno-0-61" name="__codelineno-0-61"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">min_cas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get minimum calibrated airspeed (stall speed) by configuration.</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">        </span><span class="sd">"""Get minimum calibrated airspeed (stall speed) by configuration.</span>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">        BADA3 provides fixed stall speeds by configuration from the OPF file.</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">        These are reference stall speeds at mref mass. For other masses,</span>
@@ -3350,10 +3350,10 @@ BADA3 turbine engine coefficients.</p>
 <a id="__codelineno-0-75" name="__codelineno-0-75"></a>
 <a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">            MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">        """</span>
 <a id="__codelineno-0-79" name="__codelineno-0-79"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_cas_impl</span><span class="p">(</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>            <span class="n">config</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a>            <span class="n">mass</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aircraft_mass&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>            <span class="n">config</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">],</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a>            <span class="n">mass</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"aircraft_mass"</span><span class="p">],</span>
 <a id="__codelineno-0-82" name="__codelineno-0-82"></a>        <span class="p">)</span>
 <a id="__codelineno-0-83" name="__codelineno-0-83"></a>
 <a id="__codelineno-0-84" name="__codelineno-0-84"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_min_cas_impl</span><span class="p">(</span>
@@ -3361,7 +3361,7 @@ BADA3 turbine engine coefficients.</p>
 <a id="__codelineno-0-86" name="__codelineno-0-86"></a>        <span class="n">config</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-87" name="__codelineno-0-87"></a>        <span class="n">mass</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-88" name="__codelineno-0-88"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-89" name="__codelineno-0-89"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate minimum CAS from typed inputs.</span>
+<a id="__codelineno-0-89" name="__codelineno-0-89"></a><span class="w">        </span><span class="sd">"""Calculate minimum CAS from typed inputs.</span>
 <a id="__codelineno-0-90" name="__codelineno-0-90"></a>
 <a id="__codelineno-0-91" name="__codelineno-0-91"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-92" name="__codelineno-0-92"></a><span class="sd">            config: Aerodynamic configuration enum (scalar or array).</span>
@@ -3372,7 +3372,7 @@ BADA3 turbine engine coefficients.</p>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a><span class="sd">        Note:</span>
 <a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="sd">            Fully vectorized - both config and mass can be arrays or CasADi symbolics.</span>
-<a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">        """</span>
 <a id="__codelineno-0-101" name="__codelineno-0-101"></a>        <span class="c1"># Select stall speed based on configuration using common utility</span>
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a>        <span class="n">vstall_ref</span> <span class="o">=</span> <span class="n">select_by_config</span><span class="p">(</span>
 <a id="__codelineno-0-103" name="__codelineno-0-103"></a>            <span class="n">config</span><span class="p">,</span>
@@ -3397,9 +3397,9 @@ BADA3 turbine engine coefficients.</p>
 <a id="__codelineno-0-122" name="__codelineno-0-122"></a>        <span class="c1"># Return 0 where vstall was undefined</span>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">vstall_ref</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">result</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 <a id="__codelineno-0-124" name="__codelineno-0-124"></a>
-<a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;aircraft_mass&quot;</span><span class="p">,</span> <span class="s2">&quot;delta_isa&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-125" name="__codelineno-0-125"></a>    <span class="nd">@requires</span><span class="p">(</span><span class="s2">"aircraft_mass"</span><span class="p">,</span> <span class="s2">"delta_isa"</span><span class="p">)</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">max_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get maximum operating altitude considering mass and temperature.</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="w">        </span><span class="sd">"""Get maximum operating altitude considering mass and temperature.</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a>
 <a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">        Implements BADA3 formula 3.5-1:</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a><span class="sd">            hmax_act = MIN(hMO, hmax + Gt*(ΔTISA - CTc4) + Gw*(mmax - mact))</span>
@@ -3419,10 +3419,10 @@ BADA3 turbine engine coefficients.</p>
 <a id="__codelineno-0-144" name="__codelineno-0-144"></a>
 <a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">            MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">        """</span>
 <a id="__codelineno-0-148" name="__codelineno-0-148"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_altitude_impl</span><span class="p">(</span>
-<a id="__codelineno-0-149" name="__codelineno-0-149"></a>            <span class="n">mass</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aircraft_mass&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-150" name="__codelineno-0-150"></a>            <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;delta_isa&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-149" name="__codelineno-0-149"></a>            <span class="n">mass</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"aircraft_mass"</span><span class="p">],</span>
+<a id="__codelineno-0-150" name="__codelineno-0-150"></a>            <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"delta_isa"</span><span class="p">],</span>
 <a id="__codelineno-0-151" name="__codelineno-0-151"></a>        <span class="p">)</span>
 <a id="__codelineno-0-152" name="__codelineno-0-152"></a>
 <a id="__codelineno-0-153" name="__codelineno-0-153"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_max_altitude_impl</span><span class="p">(</span>
@@ -3430,7 +3430,7 @@ BADA3 turbine engine coefficients.</p>
 <a id="__codelineno-0-155" name="__codelineno-0-155"></a>        <span class="n">mass</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-156" name="__codelineno-0-156"></a>        <span class="n">delta_isa</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-157" name="__codelineno-0-157"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate maximum altitude from typed inputs.</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="w">        </span><span class="sd">"""Calculate maximum altitude from typed inputs.</span>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="sd">            mass: Aircraft mass in kg.</span>
@@ -3438,7 +3438,7 @@ BADA3 turbine engine coefficients.</p>
 <a id="__codelineno-0-163" name="__codelineno-0-163"></a>
 <a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="sd">            Maximum altitude in feet.</span>
-<a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">        """</span>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">hmax</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a>            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">hmo</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a>
@@ -3452,18 +3452,18 @@ BADA3 turbine engine coefficients.</p>
 <a id="__codelineno-0-177" name="__codelineno-0-177"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">hmo</span><span class="p">,</span> <span class="n">h_max_actual</span><span class="p">)</span>
 <a id="__codelineno-0-178" name="__codelineno-0-178"></a>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">stall_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">:</span> <span class="n">AerodynamicConfig</span> <span class="o">=</span> <span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">CR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get stall speed for a given configuration.</span>
+<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="w">        </span><span class="sd">"""Get stall speed for a given configuration.</span>
 <a id="__codelineno-0-181" name="__codelineno-0-181"></a>
 <a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">            conf: Aerodynamic configuration.</span>
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="sd">            Stall speed in knots CAS, or 0.0 if not available.</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="sd">        """</span>
 <a id="__codelineno-0-188" name="__codelineno-0-188"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vstall</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 <a id="__codelineno-0-189" name="__codelineno-0-189"></a>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">buffet_onset_cl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate buffet onset lift coefficient.</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="w">        </span><span class="sd">"""Calculate buffet onset lift coefficient.</span>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a>
 <a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">        BADA3 low-speed buffeting limit (jet aircraft): the buffet-onset lift</span>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">        coefficient decreases linearly with Mach,</span>
@@ -3478,7 +3478,7 @@ BADA3 turbine engine coefficients.</p>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">            Buffet onset lift coefficient.</span>
-<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">        """</span>
 <a id="__codelineno-0-207" name="__codelineno-0-207"></a>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">clbo</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">mach</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -3521,11 +3521,11 @@ BADA3 turbine engine coefficients.</p>
 <span class="normal"><a href="#__codelineno-0-56">56</a></span>
 <span class="normal"><a href="#__codelineno-0-57">57</a></span>
 <span class="normal"><a href="#__codelineno-0-58">58</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-52" name="__codelineno-0-52"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">BADA3LimitsData</span><span class="p">):</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize BADA3 limits.</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a><span class="w">    </span><span class="sd">"""Initialize BADA3 limits.</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54"></a>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a><span class="sd">        data: BADA3 limits data container.</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="sd">    """</span>
 <a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3577,7 +3577,7 @@ is the buffeting gradient [1/M] from the OPF aerodynamics section.</p>
 <span class="normal"><a href="#__codelineno-0-205">205</a></span>
 <span class="normal"><a href="#__codelineno-0-206">206</a></span>
 <span class="normal"><a href="#__codelineno-0-207">207</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-190" name="__codelineno-0-190"></a><span class="k">def</span><span class="w"> </span><span class="nf">buffet_onset_cl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mach</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate buffet onset lift coefficient.</span>
+<a id="__codelineno-0-191" name="__codelineno-0-191"></a><span class="w">    </span><span class="sd">"""Calculate buffet onset lift coefficient.</span>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a>
 <a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">    BADA3 low-speed buffeting limit (jet aircraft): the buffet-onset lift</span>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">    coefficient decreases linearly with Mach,</span>
@@ -3592,7 +3592,7 @@ is the buffeting gradient [1/M] from the OPF aerodynamics section.</p>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="sd">        Buffet onset lift coefficient.</span>
-<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="sd">    """</span>
 <a id="__codelineno-0-207" name="__codelineno-0-207"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">clbo</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">k</span> <span class="o">*</span> <span class="n">mach</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3613,7 +3613,7 @@ is the buffeting gradient [1/M] from the OPF aerodynamics section.</p>
 
         <p>Get maximum operating altitude considering mass and temperature.</p>
 <p>Implements BADA3 formula 3.5-1:
-    hmax_act = MIN(hMO, hmax + Gt<em>(ΔTISA - CTc4) + Gw</em>(mmax - mact))</p>
+    hmax_act = MIN(hMO, hmax + Gt*(ΔTISA - CTc4) + Gw*(mmax - mact))</p>
 <p>With constraints from manual:
     - if (ΔTISA - CTc4) &lt; 0, then (ΔTISA - CTc4) = 0
     - Gt &lt;= 0 (temperature gradient is negative)
@@ -3656,9 +3656,9 @@ is the buffeting gradient [1/M] from the OPF aerodynamics section.</p>
 <span class="normal"><a href="#__codelineno-0-148">148</a></span>
 <span class="normal"><a href="#__codelineno-0-149">149</a></span>
 <span class="normal"><a href="#__codelineno-0-150">150</a></span>
-<span class="normal"><a href="#__codelineno-0-151">151</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;aircraft_mass&quot;</span><span class="p">,</span> <span class="s2">&quot;delta_isa&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-151">151</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-125" name="__codelineno-0-125"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">"aircraft_mass"</span><span class="p">,</span> <span class="s2">"delta_isa"</span><span class="p">)</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a><span class="k">def</span><span class="w"> </span><span class="nf">max_altitude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get maximum operating altitude considering mass and temperature.</span>
+<a id="__codelineno-0-127" name="__codelineno-0-127"></a><span class="w">    </span><span class="sd">"""Get maximum operating altitude considering mass and temperature.</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a>
 <a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="sd">    Implements BADA3 formula 3.5-1:</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a><span class="sd">        hmax_act = MIN(hMO, hmax + Gt*(ΔTISA - CTc4) + Gw*(mmax - mact))</span>
@@ -3678,10 +3678,10 @@ is the buffeting gradient [1/M] from the OPF aerodynamics section.</p>
 <a id="__codelineno-0-144" name="__codelineno-0-144"></a>
 <a id="__codelineno-0-145" name="__codelineno-0-145"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">        MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">    """</span>
 <a id="__codelineno-0-148" name="__codelineno-0-148"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_altitude_impl</span><span class="p">(</span>
-<a id="__codelineno-0-149" name="__codelineno-0-149"></a>        <span class="n">mass</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aircraft_mass&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-150" name="__codelineno-0-150"></a>        <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;delta_isa&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-149" name="__codelineno-0-149"></a>        <span class="n">mass</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"aircraft_mass"</span><span class="p">],</span>
+<a id="__codelineno-0-150" name="__codelineno-0-150"></a>        <span class="n">delta_isa</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"delta_isa"</span><span class="p">],</span>
 <a id="__codelineno-0-151" name="__codelineno-0-151"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3738,9 +3738,9 @@ the stall speed scales as sqrt(m/mref).</p>
 <span class="normal"><a href="#__codelineno-0-79">79</a></span>
 <span class="normal"><a href="#__codelineno-0-80">80</a></span>
 <span class="normal"><a href="#__codelineno-0-81">81</a></span>
-<span class="normal"><a href="#__codelineno-0-82">82</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">,</span> <span class="s2">&quot;aircraft_mass&quot;</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-82">82</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="nd">@requires</span><span class="p">(</span><span class="s2">"aerodynamic_configuration"</span><span class="p">,</span> <span class="s2">"aircraft_mass"</span><span class="p">)</span>
 <a id="__codelineno-0-61" name="__codelineno-0-61"></a><span class="k">def</span><span class="w"> </span><span class="nf">min_cas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get minimum calibrated airspeed (stall speed) by configuration.</span>
+<a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="w">    </span><span class="sd">"""Get minimum calibrated airspeed (stall speed) by configuration.</span>
 <a id="__codelineno-0-63" name="__codelineno-0-63"></a>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a><span class="sd">    BADA3 provides fixed stall speeds by configuration from the OPF file.</span>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    These are reference stall speeds at mref mass. For other masses,</span>
@@ -3756,10 +3756,10 @@ the stall speed scales as sqrt(m/mref).</p>
 <a id="__codelineno-0-75" name="__codelineno-0-75"></a>
 <a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-77" name="__codelineno-0-77"></a><span class="sd">        MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">    """</span>
 <a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min_cas_impl</span><span class="p">(</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="n">config</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">],</span>
-<a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="n">mass</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">&quot;aircraft_mass&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a>        <span class="n">config</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">],</span>
+<a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="n">mass</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s2">"aircraft_mass"</span><span class="p">],</span>
 <a id="__codelineno-0-82" name="__codelineno-0-82"></a>    <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -3797,14 +3797,14 @@ the stall speed scales as sqrt(m/mref).</p>
 <span class="normal"><a href="#__codelineno-0-186">186</a></span>
 <span class="normal"><a href="#__codelineno-0-187">187</a></span>
 <span class="normal"><a href="#__codelineno-0-188">188</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-179" name="__codelineno-0-179"></a><span class="k">def</span><span class="w"> </span><span class="nf">stall_speed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conf</span><span class="p">:</span> <span class="n">AerodynamicConfig</span> <span class="o">=</span> <span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">CR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get stall speed for a given configuration.</span>
+<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="w">    </span><span class="sd">"""Get stall speed for a given configuration.</span>
 <a id="__codelineno-0-181" name="__codelineno-0-181"></a>
 <a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">        conf: Aerodynamic configuration.</span>
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a><span class="sd">        Stall speed in knots CAS, or 0.0 if not available.</span>
-<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="sd">    """</span>
 <a id="__codelineno-0-188" name="__codelineno-0-188"></a>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">vstall</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -4099,7 +4099,7 @@ full aircraft performance calculations according to BADA3 specification.</p>
 <span class="normal"><a href="#__codelineno-0-891">891</a></span>
 <span class="normal"><a href="#__codelineno-0-892">892</a></span>
 <span class="normal"><a href="#__codelineno-0-893">893</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-648" name="__codelineno-0-648"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA3Model</span><span class="p">(</span><span class="n">AircraftModel</span><span class="p">):</span>
-<a id="__codelineno-0-649" name="__codelineno-0-649"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Complete BADA3 aircraft performance model.</span>
+<a id="__codelineno-0-649" name="__codelineno-0-649"></a><span class="w">    </span><span class="sd">"""Complete BADA3 aircraft performance model.</span>
 <a id="__codelineno-0-650" name="__codelineno-0-650"></a>
 <a id="__codelineno-0-651" name="__codelineno-0-651"></a><span class="sd">    Integrates aircraft data, aerodynamics, and engine models to provide</span>
 <a id="__codelineno-0-652" name="__codelineno-0-652"></a><span class="sd">    full aircraft performance calculations according to BADA3 specification.</span>
@@ -4107,56 +4107,56 @@ full aircraft performance calculations according to BADA3 specification.</p>
 <a id="__codelineno-0-654" name="__codelineno-0-654"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-655" name="__codelineno-0-655"></a><span class="sd">        limits: BADA3-specific aircraft limits including mass/temperature</span>
 <a id="__codelineno-0-656" name="__codelineno-0-656"></a><span class="sd">            dependent max altitude, stall speeds, and buffet data.</span>
-<a id="__codelineno-0-657" name="__codelineno-0-657"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-657" name="__codelineno-0-657"></a><span class="sd">    """</span>
 <a id="__codelineno-0-658" name="__codelineno-0-658"></a>
 <a id="__codelineno-0-659" name="__codelineno-0-659"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">icao</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<a id="__codelineno-0-660" name="__codelineno-0-660"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize BADA3 model from ICAO aircraft type code.</span>
+<a id="__codelineno-0-660" name="__codelineno-0-660"></a><span class="w">        </span><span class="sd">"""Initialize BADA3 model from ICAO aircraft type code.</span>
 <a id="__codelineno-0-661" name="__codelineno-0-661"></a>
 <a id="__codelineno-0-662" name="__codelineno-0-662"></a><span class="sd">        Args:</span>
-<a id="__codelineno-0-663" name="__codelineno-0-663"></a><span class="sd">            icao: ICAO aircraft type code (e.g., &#39;A320&#39;, &#39;B738&#39;).</span>
+<a id="__codelineno-0-663" name="__codelineno-0-663"></a><span class="sd">            icao: ICAO aircraft type code (e.g., 'A320', 'B738').</span>
 <a id="__codelineno-0-664" name="__codelineno-0-664"></a>
 <a id="__codelineno-0-665" name="__codelineno-0-665"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-666" name="__codelineno-0-666"></a><span class="sd">            ConfigurationError: If BADA3 data path is not configured.</span>
 <a id="__codelineno-0-667" name="__codelineno-0-667"></a><span class="sd">            FileNotFoundError: If aircraft not found in BADA3 data.</span>
 <a id="__codelineno-0-668" name="__codelineno-0-668"></a>
 <a id="__codelineno-0-669" name="__codelineno-0-669"></a><span class="sd">        Example:</span>
-<a id="__codelineno-0-670" name="__codelineno-0-670"></a><span class="sd">            &gt;&gt;&gt; model = BADA3Model(&quot;A320&quot;)</span>
+<a id="__codelineno-0-670" name="__codelineno-0-670"></a><span class="sd">            &gt;&gt;&gt; model = BADA3Model("A320")</span>
 <a id="__codelineno-0-671" name="__codelineno-0-671"></a><span class="sd">            &gt;&gt;&gt; model.mtom</span>
 <a id="__codelineno-0-672" name="__codelineno-0-672"></a><span class="sd">            77000.0</span>
-<a id="__codelineno-0-673" name="__codelineno-0-673"></a><span class="sd">        &quot;&quot;&quot;</span>
-<a id="__codelineno-0-674" name="__codelineno-0-674"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading BADA3 model for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">icao</span><span class="p">)</span>
+<a id="__codelineno-0-673" name="__codelineno-0-673"></a><span class="sd">        """</span>
+<a id="__codelineno-0-674" name="__codelineno-0-674"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loading BADA3 model for </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">icao</span><span class="p">)</span>
 <a id="__codelineno-0-675" name="__codelineno-0-675"></a>        <span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_path</span> <span class="o">=</span> <span class="n">_get_paths</span><span class="p">()</span>
 <a id="__codelineno-0-676" name="__codelineno-0-676"></a>        <span class="n">opf_file</span> <span class="o">=</span> <span class="n">resolve_bada3_file</span><span class="p">(</span><span class="n">icao</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_path</span><span class="p">)</span>
-<a id="__codelineno-0-677" name="__codelineno-0-677"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Resolved OPF file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">opf_file</span><span class="p">)</span>
+<a id="__codelineno-0-677" name="__codelineno-0-677"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Resolved OPF file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">opf_file</span><span class="p">)</span>
 <a id="__codelineno-0-678" name="__codelineno-0-678"></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">parse_bada3_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">opf_file</span><span class="p">))</span>
 <a id="__codelineno-0-679" name="__codelineno-0-679"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_init_from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-680" name="__codelineno-0-680"></a>
 <a id="__codelineno-0-681" name="__codelineno-0-681"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_init_from_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">BADA3Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-682" name="__codelineno-0-682"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize model from BADA3 data object.</span>
+<a id="__codelineno-0-682" name="__codelineno-0-682"></a><span class="w">        </span><span class="sd">"""Initialize model from BADA3 data object.</span>
 <a id="__codelineno-0-683" name="__codelineno-0-683"></a>
 <a id="__codelineno-0-684" name="__codelineno-0-684"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-685" name="__codelineno-0-685"></a><span class="sd">            data: Parsed BADA3 data.</span>
-<a id="__codelineno-0-686" name="__codelineno-0-686"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-686" name="__codelineno-0-686"></a><span class="sd">        """</span>
 <a id="__codelineno-0-687" name="__codelineno-0-687"></a>        <span class="n">engine</span><span class="p">:</span> <span class="n">EngineModel</span>
 <a id="__codelineno-0-688" name="__codelineno-0-688"></a>
 <a id="__codelineno-0-689" name="__codelineno-0-689"></a>        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">engine_type</span> <span class="o">==</span> <span class="n">EngineType</span><span class="o">.</span><span class="n">JET</span><span class="p">:</span>
-<a id="__codelineno-0-690" name="__codelineno-0-690"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Initializing jet engine model&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-690" name="__codelineno-0-690"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Initializing jet engine model"</span><span class="p">)</span>
 <a id="__codelineno-0-691" name="__codelineno-0-691"></a>            <span class="n">engine</span> <span class="o">=</span> <span class="n">BADA3JetEngineModel</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
 <a id="__codelineno-0-692" name="__codelineno-0-692"></a>        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">engine_type</span> <span class="o">==</span> <span class="n">EngineType</span><span class="o">.</span><span class="n">TURBOPROP</span><span class="p">:</span>
-<a id="__codelineno-0-693" name="__codelineno-0-693"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Initializing turboprop engine model&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-693" name="__codelineno-0-693"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Initializing turboprop engine model"</span><span class="p">)</span>
 <a id="__codelineno-0-694" name="__codelineno-0-694"></a>            <span class="n">engine</span> <span class="o">=</span> <span class="n">BADA3TurbopropEngineModel</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
 <a id="__codelineno-0-695" name="__codelineno-0-695"></a>        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">engine_type</span> <span class="o">==</span> <span class="n">EngineType</span><span class="o">.</span><span class="n">PISTON</span><span class="p">:</span>
-<a id="__codelineno-0-696" name="__codelineno-0-696"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Initializing piston engine model&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-696" name="__codelineno-0-696"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Initializing piston engine model"</span><span class="p">)</span>
 <a id="__codelineno-0-697" name="__codelineno-0-697"></a>            <span class="n">engine</span> <span class="o">=</span> <span class="n">BADA3PistonEngineModel</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">engine</span><span class="p">)</span>
 <a id="__codelineno-0-698" name="__codelineno-0-698"></a>        <span class="k">else</span><span class="p">:</span>
-<a id="__codelineno-0-699" name="__codelineno-0-699"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Unsupported engine type: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">engine_type</span><span class="p">)</span>
-<a id="__codelineno-0-700" name="__codelineno-0-700"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported engine type: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">engine_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-699" name="__codelineno-0-699"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">"Unsupported engine type: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">engine_type</span><span class="p">)</span>
+<a id="__codelineno-0-700" name="__codelineno-0-700"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unsupported engine type: </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">engine_type</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <a id="__codelineno-0-701" name="__codelineno-0-701"></a>
 <a id="__codelineno-0-702" name="__codelineno-0-702"></a>        <span class="n">aerodynamics</span> <span class="o">=</span> <span class="n">BADA3AeroModel</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">aerodynamics</span><span class="p">)</span>
 <a id="__codelineno-0-703" name="__codelineno-0-703"></a>        <span class="n">limits</span> <span class="o">=</span> <span class="n">BADA3LimitsModel</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">limits</span><span class="p">)</span>
 <a id="__codelineno-0-704" name="__codelineno-0-704"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">aircraft</span><span class="p">,</span> <span class="n">engine</span><span class="p">,</span> <span class="n">aerodynamics</span><span class="p">,</span> <span class="n">limits</span><span class="p">)</span>
 <a id="__codelineno-0-705" name="__codelineno-0-705"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
-<a id="__codelineno-0-706" name="__codelineno-0-706"></a>            <span class="s2">&quot;BADA3 model initialized: </span><span class="si">%s</span><span class="s2"> (engine=</span><span class="si">%s</span><span class="s2">, mtom=</span><span class="si">%.0f</span><span class="s2"> kg)&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-706" name="__codelineno-0-706"></a>            <span class="s2">"BADA3 model initialized: </span><span class="si">%s</span><span class="s2"> (engine=</span><span class="si">%s</span><span class="s2">, mtom=</span><span class="si">%.0f</span><span class="s2"> kg)"</span><span class="p">,</span>
 <a id="__codelineno-0-707" name="__codelineno-0-707"></a>            <span class="n">data</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
 <a id="__codelineno-0-708" name="__codelineno-0-708"></a>            <span class="n">data</span><span class="o">.</span><span class="n">aircraft</span><span class="o">.</span><span class="n">engine_type</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
 <a id="__codelineno-0-709" name="__codelineno-0-709"></a>            <span class="n">data</span><span class="o">.</span><span class="n">limits</span><span class="o">.</span><span class="n">mtom</span><span class="p">,</span>
@@ -4164,14 +4164,14 @@ full aircraft performance calculations according to BADA3 specification.</p>
 <a id="__codelineno-0-711" name="__codelineno-0-711"></a>
 <a id="__codelineno-0-712" name="__codelineno-0-712"></a>    <span class="nd">@classmethod</span>
 <a id="__codelineno-0-713" name="__codelineno-0-713"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">from_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">BADA3Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BADA3Model</span><span class="p">:</span>
-<a id="__codelineno-0-714" name="__codelineno-0-714"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Create BADA3 model from pre-loaded data.</span>
+<a id="__codelineno-0-714" name="__codelineno-0-714"></a><span class="w">        </span><span class="sd">"""Create BADA3 model from pre-loaded data.</span>
 <a id="__codelineno-0-715" name="__codelineno-0-715"></a>
 <a id="__codelineno-0-716" name="__codelineno-0-716"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-717" name="__codelineno-0-717"></a><span class="sd">            data: Parsed BADA3 data object.</span>
 <a id="__codelineno-0-718" name="__codelineno-0-718"></a>
 <a id="__codelineno-0-719" name="__codelineno-0-719"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-720" name="__codelineno-0-720"></a><span class="sd">            Initialized BADA3 aircraft model.</span>
-<a id="__codelineno-0-721" name="__codelineno-0-721"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-721" name="__codelineno-0-721"></a><span class="sd">        """</span>
 <a id="__codelineno-0-722" name="__codelineno-0-722"></a>        <span class="n">instance</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
 <a id="__codelineno-0-723" name="__codelineno-0-723"></a>        <span class="n">instance</span><span class="o">.</span><span class="n">_init_from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-724" name="__codelineno-0-724"></a>        <span class="k">return</span> <span class="n">instance</span>
@@ -4182,7 +4182,7 @@ full aircraft performance calculations according to BADA3 specification.</p>
 <a id="__codelineno-0-729" name="__codelineno-0-729"></a>        <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
 <a id="__codelineno-0-730" name="__codelineno-0-730"></a>        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <a id="__codelineno-0-731" name="__codelineno-0-731"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BADA3Model</span><span class="p">:</span>
-<a id="__codelineno-0-732" name="__codelineno-0-732"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Load BADA3 model from OPF file.</span>
+<a id="__codelineno-0-732" name="__codelineno-0-732"></a><span class="w">        </span><span class="sd">"""Load BADA3 model from OPF file.</span>
 <a id="__codelineno-0-733" name="__codelineno-0-733"></a>
 <a id="__codelineno-0-734" name="__codelineno-0-734"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-735" name="__codelineno-0-735"></a><span class="sd">            file: Path to BADA3 OPF file.</span>
@@ -4190,35 +4190,35 @@ full aircraft performance calculations according to BADA3 specification.</p>
 <a id="__codelineno-0-737" name="__codelineno-0-737"></a>
 <a id="__codelineno-0-738" name="__codelineno-0-738"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-739" name="__codelineno-0-739"></a><span class="sd">            Initialized BADA3 aircraft model.</span>
-<a id="__codelineno-0-740" name="__codelineno-0-740"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-740" name="__codelineno-0-740"></a><span class="sd">        """</span>
 <a id="__codelineno-0-741" name="__codelineno-0-741"></a>        <span class="n">data</span> <span class="o">=</span> <span class="n">parse_bada3_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
 <a id="__codelineno-0-742" name="__codelineno-0-742"></a>        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-743" name="__codelineno-0-743"></a>
 <a id="__codelineno-0-744" name="__codelineno-0-744"></a>    <span class="nd">@classmethod</span>
 <a id="__codelineno-0-745" name="__codelineno-0-745"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">available_aircraft</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<a id="__codelineno-0-746" name="__codelineno-0-746"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;List available BADA3 aircraft types.</span>
+<a id="__codelineno-0-746" name="__codelineno-0-746"></a><span class="w">        </span><span class="sd">"""List available BADA3 aircraft types.</span>
 <a id="__codelineno-0-747" name="__codelineno-0-747"></a>
 <a id="__codelineno-0-748" name="__codelineno-0-748"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-749" name="__codelineno-0-749"></a><span class="sd">            Sorted list of ICAO codes for available aircraft.</span>
 <a id="__codelineno-0-750" name="__codelineno-0-750"></a>
 <a id="__codelineno-0-751" name="__codelineno-0-751"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-752" name="__codelineno-0-752"></a><span class="sd">            ConfigurationError: If BADA3 data path is not configured.</span>
-<a id="__codelineno-0-753" name="__codelineno-0-753"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-753" name="__codelineno-0-753"></a><span class="sd">        """</span>
 <a id="__codelineno-0-754" name="__codelineno-0-754"></a>        <span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_path</span> <span class="o">=</span> <span class="n">_get_paths</span><span class="p">()</span>
 <a id="__codelineno-0-755" name="__codelineno-0-755"></a>        <span class="k">return</span> <span class="n">available_bada3_aircraft</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_path</span><span class="p">)</span>
 <a id="__codelineno-0-756" name="__codelineno-0-756"></a>
 <a id="__codelineno-0-757" name="__codelineno-0-757"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">aerodynamic_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-758" name="__codelineno-0-758"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine BADA3 aerodynamic configuration from flight state.</span>
+<a id="__codelineno-0-758" name="__codelineno-0-758"></a><span class="w">        </span><span class="sd">"""Determine BADA3 aerodynamic configuration from flight state.</span>
 <a id="__codelineno-0-759" name="__codelineno-0-759"></a>
 <a id="__codelineno-0-760" name="__codelineno-0-760"></a><span class="sd">        Implements BADA3 configuration selection rules from Section 3.5 and 5.6.</span>
 <a id="__codelineno-0-761" name="__codelineno-0-761"></a><span class="sd">        Fully vectorized using np.where for array inputs.</span>
 <a id="__codelineno-0-762" name="__codelineno-0-762"></a>
-<a id="__codelineno-0-763" name="__codelineno-0-763"></a><span class="sd">        For CLIMB (flight_phase = &quot;climb&quot; or not specified):</span>
+<a id="__codelineno-0-763" name="__codelineno-0-763"></a><span class="sd">        For CLIMB (flight_phase = "climb" or not specified):</span>
 <a id="__codelineno-0-764" name="__codelineno-0-764"></a><span class="sd">          - TO (Take-off): altitude &lt;= H_max_TO (400 ft)</span>
 <a id="__codelineno-0-765" name="__codelineno-0-765"></a><span class="sd">          - IC (Initial Climb): H_max_TO &lt; altitude &lt;= H_max_IC (2000 ft)</span>
 <a id="__codelineno-0-766" name="__codelineno-0-766"></a><span class="sd">          - CR (Cruise): altitude &gt; H_max_IC</span>
 <a id="__codelineno-0-767" name="__codelineno-0-767"></a>
-<a id="__codelineno-0-768" name="__codelineno-0-768"></a><span class="sd">        For DESCENT (flight_phase = &quot;descent&quot;):</span>
+<a id="__codelineno-0-768" name="__codelineno-0-768"></a><span class="sd">        For DESCENT (flight_phase = "descent"):</span>
 <a id="__codelineno-0-769" name="__codelineno-0-769"></a><span class="sd">          - CR: altitude &gt; H_max_AP (8000 ft) or V &gt; Vmin_CR + 10 kt</span>
 <a id="__codelineno-0-770" name="__codelineno-0-770"></a><span class="sd">          - AP: altitude &lt;= H_max_AP and V &lt; Vmin_CR + 10 kt</span>
 <a id="__codelineno-0-771" name="__codelineno-0-771"></a><span class="sd">          - LD: altitude &lt;= H_max_LD (3000 ft) and V &lt; Vmin_AP + 10 kt</span>
@@ -4232,7 +4232,7 @@ full aircraft performance calculations according to BADA3 specification.</p>
 <a id="__codelineno-0-779" name="__codelineno-0-779"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-780" name="__codelineno-0-780"></a><span class="sd">            data: Flight state dictionary with:</span>
 <a id="__codelineno-0-781" name="__codelineno-0-781"></a><span class="sd">                - altitude: Geometric altitude in meters (required)</span>
-<a id="__codelineno-0-782" name="__codelineno-0-782"></a><span class="sd">                - flight_phase: &quot;climb&quot;, &quot;cruise&quot;, or &quot;descent&quot; (required)</span>
+<a id="__codelineno-0-782" name="__codelineno-0-782"></a><span class="sd">                - flight_phase: "climb", "cruise", or "descent" (required)</span>
 <a id="__codelineno-0-783" name="__codelineno-0-783"></a><span class="sd">                - calibrated_airspeed: Calibrated airspeed [m/s] (required)</span>
 <a id="__codelineno-0-784" name="__codelineno-0-784"></a><span class="sd">                - aircraft_mass: Aircraft mass [kg] (required)</span>
 <a id="__codelineno-0-785" name="__codelineno-0-785"></a><span class="sd">                - aerodynamic_configuration: Explicit override (optional)</span>
@@ -4242,24 +4242,24 @@ full aircraft performance calculations according to BADA3 specification.</p>
 <a id="__codelineno-0-789" name="__codelineno-0-789"></a>
 <a id="__codelineno-0-790" name="__codelineno-0-790"></a><span class="sd">        Raises:</span>
 <a id="__codelineno-0-791" name="__codelineno-0-791"></a><span class="sd">            MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-792" name="__codelineno-0-792"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-792" name="__codelineno-0-792"></a><span class="sd">        """</span>
 <a id="__codelineno-0-793" name="__codelineno-0-793"></a>        <span class="c1"># Allow explicit override</span>
-<a id="__codelineno-0-794" name="__codelineno-0-794"></a>        <span class="k">if</span> <span class="s2">&quot;aerodynamic_configuration&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-<a id="__codelineno-0-795" name="__codelineno-0-795"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Using explicit aerodynamic_configuration from data&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-796" name="__codelineno-0-796"></a>            <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-794" name="__codelineno-0-794"></a>        <span class="k">if</span> <span class="s2">"aerodynamic_configuration"</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+<a id="__codelineno-0-795" name="__codelineno-0-795"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Using explicit aerodynamic_configuration from data"</span><span class="p">)</span>
+<a id="__codelineno-0-796" name="__codelineno-0-796"></a>            <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">]</span>
 <a id="__codelineno-0-797" name="__codelineno-0-797"></a>
 <a id="__codelineno-0-798" name="__codelineno-0-798"></a>        <span class="c1"># Use common thresholds (Section 5.6 altitude, Section 5.7 c_vmin)</span>
 <a id="__codelineno-0-799" name="__codelineno-0-799"></a>        <span class="n">thresholds</span> <span class="o">=</span> <span class="n">AERO_CONFIG_THRESHOLDS</span>
 <a id="__codelineno-0-800" name="__codelineno-0-800"></a>
 <a id="__codelineno-0-801" name="__codelineno-0-801"></a>        <span class="c1"># Extract inputs (all required when not overridden)</span>
-<a id="__codelineno-0-802" name="__codelineno-0-802"></a>        <span class="n">altitude</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;altitude&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-802" name="__codelineno-0-802"></a>        <span class="n">altitude</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"altitude"</span><span class="p">]</span>
 <a id="__codelineno-0-803" name="__codelineno-0-803"></a>        <span class="n">h_ft</span> <span class="o">=</span> <span class="n">altitude</span> <span class="o">/</span> <span class="n">FT</span>
-<a id="__codelineno-0-804" name="__codelineno-0-804"></a>        <span class="n">flight_phase</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;flight_phase&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-804" name="__codelineno-0-804"></a>        <span class="n">flight_phase</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"flight_phase"</span><span class="p">]</span>
 <a id="__codelineno-0-805" name="__codelineno-0-805"></a>        <span class="c1"># The Vmin thresholds below derive from OPF stall speeds, which are</span>
 <a id="__codelineno-0-806" name="__codelineno-0-806"></a>        <span class="c1"># CAS quantities — compare against CAS, not TAS (BADA4 does the same).</span>
-<a id="__codelineno-0-807" name="__codelineno-0-807"></a>        <span class="n">v_cas</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;calibrated_airspeed&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-807" name="__codelineno-0-807"></a>        <span class="n">v_cas</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"calibrated_airspeed"</span><span class="p">]</span>
 <a id="__codelineno-0-808" name="__codelineno-0-808"></a>        <span class="n">v_kt</span> <span class="o">=</span> <span class="n">v_cas</span> <span class="o">/</span> <span class="n">KT</span>
-<a id="__codelineno-0-809" name="__codelineno-0-809"></a>        <span class="n">mass</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;aircraft_mass&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-809" name="__codelineno-0-809"></a>        <span class="n">mass</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"aircraft_mass"</span><span class="p">]</span>
 <a id="__codelineno-0-810" name="__codelineno-0-810"></a>
 <a id="__codelineno-0-811" name="__codelineno-0-811"></a>        <span class="c1"># Get reference stall speeds (in knots CAS)</span>
 <a id="__codelineno-0-812" name="__codelineno-0-812"></a>        <span class="n">vstall_cr_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">(</span><span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">CR</span><span class="p">)</span>
@@ -4329,7 +4329,7 @@ full aircraft performance calculations according to BADA3 specification.</p>
 <a id="__codelineno-0-876" name="__codelineno-0-876"></a>    <span class="c1"># The base class returns None for high_lift().</span>
 <a id="__codelineno-0-877" name="__codelineno-0-877"></a>
 <a id="__codelineno-0-878" name="__codelineno-0-878"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">landing_gear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-879" name="__codelineno-0-879"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine landing gear state from flight state.</span>
+<a id="__codelineno-0-879" name="__codelineno-0-879"></a><span class="w">        </span><span class="sd">"""Determine landing gear state from flight state.</span>
 <a id="__codelineno-0-880" name="__codelineno-0-880"></a>
 <a id="__codelineno-0-881" name="__codelineno-0-881"></a><span class="sd">        BADA3 OPF files do not explicitly define landing gear position per</span>
 <a id="__codelineno-0-882" name="__codelineno-0-882"></a><span class="sd">        configuration. By BADA3 convention (Section 3.5), landing gear is</span>
@@ -4341,7 +4341,7 @@ full aircraft performance calculations according to BADA3 specification.</p>
 <a id="__codelineno-0-888" name="__codelineno-0-888"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-889" name="__codelineno-0-889"></a><span class="sd">            Boolean indicating gear extended (True = LD config) or</span>
 <a id="__codelineno-0-890" name="__codelineno-0-890"></a><span class="sd">            retracted (False = other configs).</span>
-<a id="__codelineno-0-891" name="__codelineno-0-891"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-891" name="__codelineno-0-891"></a><span class="sd">        """</span>
 <a id="__codelineno-0-892" name="__codelineno-0-892"></a>        <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aerodynamic_configuration</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-893" name="__codelineno-0-893"></a>        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">LD</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -4406,24 +4406,24 @@ full aircraft performance calculations according to BADA3 specification.</p>
 <span class="normal"><a href="#__codelineno-0-677">677</a></span>
 <span class="normal"><a href="#__codelineno-0-678">678</a></span>
 <span class="normal"><a href="#__codelineno-0-679">679</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-659" name="__codelineno-0-659"></a><span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">icao</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<a id="__codelineno-0-660" name="__codelineno-0-660"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize BADA3 model from ICAO aircraft type code.</span>
+<a id="__codelineno-0-660" name="__codelineno-0-660"></a><span class="w">    </span><span class="sd">"""Initialize BADA3 model from ICAO aircraft type code.</span>
 <a id="__codelineno-0-661" name="__codelineno-0-661"></a>
 <a id="__codelineno-0-662" name="__codelineno-0-662"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-663" name="__codelineno-0-663"></a><span class="sd">        icao: ICAO aircraft type code (e.g., &#39;A320&#39;, &#39;B738&#39;).</span>
+<a id="__codelineno-0-663" name="__codelineno-0-663"></a><span class="sd">        icao: ICAO aircraft type code (e.g., 'A320', 'B738').</span>
 <a id="__codelineno-0-664" name="__codelineno-0-664"></a>
 <a id="__codelineno-0-665" name="__codelineno-0-665"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-666" name="__codelineno-0-666"></a><span class="sd">        ConfigurationError: If BADA3 data path is not configured.</span>
 <a id="__codelineno-0-667" name="__codelineno-0-667"></a><span class="sd">        FileNotFoundError: If aircraft not found in BADA3 data.</span>
 <a id="__codelineno-0-668" name="__codelineno-0-668"></a>
 <a id="__codelineno-0-669" name="__codelineno-0-669"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-670" name="__codelineno-0-670"></a><span class="sd">        &gt;&gt;&gt; model = BADA3Model(&quot;A320&quot;)</span>
+<a id="__codelineno-0-670" name="__codelineno-0-670"></a><span class="sd">        &gt;&gt;&gt; model = BADA3Model("A320")</span>
 <a id="__codelineno-0-671" name="__codelineno-0-671"></a><span class="sd">        &gt;&gt;&gt; model.mtom</span>
 <a id="__codelineno-0-672" name="__codelineno-0-672"></a><span class="sd">        77000.0</span>
-<a id="__codelineno-0-673" name="__codelineno-0-673"></a><span class="sd">    &quot;&quot;&quot;</span>
-<a id="__codelineno-0-674" name="__codelineno-0-674"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading BADA3 model for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">icao</span><span class="p">)</span>
+<a id="__codelineno-0-673" name="__codelineno-0-673"></a><span class="sd">    """</span>
+<a id="__codelineno-0-674" name="__codelineno-0-674"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">"Loading BADA3 model for </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">icao</span><span class="p">)</span>
 <a id="__codelineno-0-675" name="__codelineno-0-675"></a>    <span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_path</span> <span class="o">=</span> <span class="n">_get_paths</span><span class="p">()</span>
 <a id="__codelineno-0-676" name="__codelineno-0-676"></a>    <span class="n">opf_file</span> <span class="o">=</span> <span class="n">resolve_bada3_file</span><span class="p">(</span><span class="n">icao</span><span class="p">,</span> <span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_path</span><span class="p">)</span>
-<a id="__codelineno-0-677" name="__codelineno-0-677"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Resolved OPF file: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">opf_file</span><span class="p">)</span>
+<a id="__codelineno-0-677" name="__codelineno-0-677"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Resolved OPF file: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">opf_file</span><span class="p">)</span>
 <a id="__codelineno-0-678" name="__codelineno-0-678"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">parse_bada3_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">opf_file</span><span class="p">))</span>
 <a id="__codelineno-0-679" name="__codelineno-0-679"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_init_from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -4588,17 +4588,17 @@ Fully vectorized using np.where for array inputs.</p>
 <span class="normal"><a href="#__codelineno-0-869">869</a></span>
 <span class="normal"><a href="#__codelineno-0-870">870</a></span>
 <span class="normal"><a href="#__codelineno-0-871">871</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-757" name="__codelineno-0-757"></a><span class="k">def</span><span class="w"> </span><span class="nf">aerodynamic_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-758" name="__codelineno-0-758"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine BADA3 aerodynamic configuration from flight state.</span>
+<a id="__codelineno-0-758" name="__codelineno-0-758"></a><span class="w">    </span><span class="sd">"""Determine BADA3 aerodynamic configuration from flight state.</span>
 <a id="__codelineno-0-759" name="__codelineno-0-759"></a>
 <a id="__codelineno-0-760" name="__codelineno-0-760"></a><span class="sd">    Implements BADA3 configuration selection rules from Section 3.5 and 5.6.</span>
 <a id="__codelineno-0-761" name="__codelineno-0-761"></a><span class="sd">    Fully vectorized using np.where for array inputs.</span>
 <a id="__codelineno-0-762" name="__codelineno-0-762"></a>
-<a id="__codelineno-0-763" name="__codelineno-0-763"></a><span class="sd">    For CLIMB (flight_phase = &quot;climb&quot; or not specified):</span>
+<a id="__codelineno-0-763" name="__codelineno-0-763"></a><span class="sd">    For CLIMB (flight_phase = "climb" or not specified):</span>
 <a id="__codelineno-0-764" name="__codelineno-0-764"></a><span class="sd">      - TO (Take-off): altitude &lt;= H_max_TO (400 ft)</span>
 <a id="__codelineno-0-765" name="__codelineno-0-765"></a><span class="sd">      - IC (Initial Climb): H_max_TO &lt; altitude &lt;= H_max_IC (2000 ft)</span>
 <a id="__codelineno-0-766" name="__codelineno-0-766"></a><span class="sd">      - CR (Cruise): altitude &gt; H_max_IC</span>
 <a id="__codelineno-0-767" name="__codelineno-0-767"></a>
-<a id="__codelineno-0-768" name="__codelineno-0-768"></a><span class="sd">    For DESCENT (flight_phase = &quot;descent&quot;):</span>
+<a id="__codelineno-0-768" name="__codelineno-0-768"></a><span class="sd">    For DESCENT (flight_phase = "descent"):</span>
 <a id="__codelineno-0-769" name="__codelineno-0-769"></a><span class="sd">      - CR: altitude &gt; H_max_AP (8000 ft) or V &gt; Vmin_CR + 10 kt</span>
 <a id="__codelineno-0-770" name="__codelineno-0-770"></a><span class="sd">      - AP: altitude &lt;= H_max_AP and V &lt; Vmin_CR + 10 kt</span>
 <a id="__codelineno-0-771" name="__codelineno-0-771"></a><span class="sd">      - LD: altitude &lt;= H_max_LD (3000 ft) and V &lt; Vmin_AP + 10 kt</span>
@@ -4612,7 +4612,7 @@ Fully vectorized using np.where for array inputs.</p>
 <a id="__codelineno-0-779" name="__codelineno-0-779"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-780" name="__codelineno-0-780"></a><span class="sd">        data: Flight state dictionary with:</span>
 <a id="__codelineno-0-781" name="__codelineno-0-781"></a><span class="sd">            - altitude: Geometric altitude in meters (required)</span>
-<a id="__codelineno-0-782" name="__codelineno-0-782"></a><span class="sd">            - flight_phase: &quot;climb&quot;, &quot;cruise&quot;, or &quot;descent&quot; (required)</span>
+<a id="__codelineno-0-782" name="__codelineno-0-782"></a><span class="sd">            - flight_phase: "climb", "cruise", or "descent" (required)</span>
 <a id="__codelineno-0-783" name="__codelineno-0-783"></a><span class="sd">            - calibrated_airspeed: Calibrated airspeed [m/s] (required)</span>
 <a id="__codelineno-0-784" name="__codelineno-0-784"></a><span class="sd">            - aircraft_mass: Aircraft mass [kg] (required)</span>
 <a id="__codelineno-0-785" name="__codelineno-0-785"></a><span class="sd">            - aerodynamic_configuration: Explicit override (optional)</span>
@@ -4622,24 +4622,24 @@ Fully vectorized using np.where for array inputs.</p>
 <a id="__codelineno-0-789" name="__codelineno-0-789"></a>
 <a id="__codelineno-0-790" name="__codelineno-0-790"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-791" name="__codelineno-0-791"></a><span class="sd">        MissingFieldError: If any required field is missing.</span>
-<a id="__codelineno-0-792" name="__codelineno-0-792"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-792" name="__codelineno-0-792"></a><span class="sd">    """</span>
 <a id="__codelineno-0-793" name="__codelineno-0-793"></a>    <span class="c1"># Allow explicit override</span>
-<a id="__codelineno-0-794" name="__codelineno-0-794"></a>    <span class="k">if</span> <span class="s2">&quot;aerodynamic_configuration&quot;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-<a id="__codelineno-0-795" name="__codelineno-0-795"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Using explicit aerodynamic_configuration from data&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-796" name="__codelineno-0-796"></a>        <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;aerodynamic_configuration&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-794" name="__codelineno-0-794"></a>    <span class="k">if</span> <span class="s2">"aerodynamic_configuration"</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+<a id="__codelineno-0-795" name="__codelineno-0-795"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Using explicit aerodynamic_configuration from data"</span><span class="p">)</span>
+<a id="__codelineno-0-796" name="__codelineno-0-796"></a>        <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="s2">"aerodynamic_configuration"</span><span class="p">]</span>
 <a id="__codelineno-0-797" name="__codelineno-0-797"></a>
 <a id="__codelineno-0-798" name="__codelineno-0-798"></a>    <span class="c1"># Use common thresholds (Section 5.6 altitude, Section 5.7 c_vmin)</span>
 <a id="__codelineno-0-799" name="__codelineno-0-799"></a>    <span class="n">thresholds</span> <span class="o">=</span> <span class="n">AERO_CONFIG_THRESHOLDS</span>
 <a id="__codelineno-0-800" name="__codelineno-0-800"></a>
 <a id="__codelineno-0-801" name="__codelineno-0-801"></a>    <span class="c1"># Extract inputs (all required when not overridden)</span>
-<a id="__codelineno-0-802" name="__codelineno-0-802"></a>    <span class="n">altitude</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;altitude&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-802" name="__codelineno-0-802"></a>    <span class="n">altitude</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"altitude"</span><span class="p">]</span>
 <a id="__codelineno-0-803" name="__codelineno-0-803"></a>    <span class="n">h_ft</span> <span class="o">=</span> <span class="n">altitude</span> <span class="o">/</span> <span class="n">FT</span>
-<a id="__codelineno-0-804" name="__codelineno-0-804"></a>    <span class="n">flight_phase</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;flight_phase&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-804" name="__codelineno-0-804"></a>    <span class="n">flight_phase</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"flight_phase"</span><span class="p">]</span>
 <a id="__codelineno-0-805" name="__codelineno-0-805"></a>    <span class="c1"># The Vmin thresholds below derive from OPF stall speeds, which are</span>
 <a id="__codelineno-0-806" name="__codelineno-0-806"></a>    <span class="c1"># CAS quantities — compare against CAS, not TAS (BADA4 does the same).</span>
-<a id="__codelineno-0-807" name="__codelineno-0-807"></a>    <span class="n">v_cas</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;calibrated_airspeed&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-807" name="__codelineno-0-807"></a>    <span class="n">v_cas</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"calibrated_airspeed"</span><span class="p">]</span>
 <a id="__codelineno-0-808" name="__codelineno-0-808"></a>    <span class="n">v_kt</span> <span class="o">=</span> <span class="n">v_cas</span> <span class="o">/</span> <span class="n">KT</span>
-<a id="__codelineno-0-809" name="__codelineno-0-809"></a>    <span class="n">mass</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">&quot;aircraft_mass&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-809" name="__codelineno-0-809"></a>    <span class="n">mass</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"aircraft_mass"</span><span class="p">]</span>
 <a id="__codelineno-0-810" name="__codelineno-0-810"></a>
 <a id="__codelineno-0-811" name="__codelineno-0-811"></a>    <span class="c1"># Get reference stall speeds (in knots CAS)</span>
 <a id="__codelineno-0-812" name="__codelineno-0-812"></a>    <span class="n">vstall_cr_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">limits</span><span class="o">.</span><span class="n">stall_speed</span><span class="p">(</span><span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">CR</span><span class="p">)</span>
@@ -4745,14 +4745,14 @@ Fully vectorized using np.where for array inputs.</p>
 <span class="normal"><a href="#__codelineno-0-754">754</a></span>
 <span class="normal"><a href="#__codelineno-0-755">755</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-744" name="__codelineno-0-744"></a><span class="nd">@classmethod</span>
 <a id="__codelineno-0-745" name="__codelineno-0-745"></a><span class="k">def</span><span class="w"> </span><span class="nf">available_aircraft</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<a id="__codelineno-0-746" name="__codelineno-0-746"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;List available BADA3 aircraft types.</span>
+<a id="__codelineno-0-746" name="__codelineno-0-746"></a><span class="w">    </span><span class="sd">"""List available BADA3 aircraft types.</span>
 <a id="__codelineno-0-747" name="__codelineno-0-747"></a>
 <a id="__codelineno-0-748" name="__codelineno-0-748"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-749" name="__codelineno-0-749"></a><span class="sd">        Sorted list of ICAO codes for available aircraft.</span>
 <a id="__codelineno-0-750" name="__codelineno-0-750"></a>
 <a id="__codelineno-0-751" name="__codelineno-0-751"></a><span class="sd">    Raises:</span>
 <a id="__codelineno-0-752" name="__codelineno-0-752"></a><span class="sd">        ConfigurationError: If BADA3 data path is not configured.</span>
-<a id="__codelineno-0-753" name="__codelineno-0-753"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-753" name="__codelineno-0-753"></a><span class="sd">    """</span>
 <a id="__codelineno-0-754" name="__codelineno-0-754"></a>    <span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_path</span> <span class="o">=</span> <span class="n">_get_paths</span><span class="p">()</span>
 <a id="__codelineno-0-755" name="__codelineno-0-755"></a>    <span class="k">return</span> <span class="n">available_bada3_aircraft</span><span class="p">(</span><span class="n">data_path</span><span class="p">,</span> <span class="n">synonym_path</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -4799,14 +4799,14 @@ Fully vectorized using np.where for array inputs.</p>
 <span class="normal"><a href="#__codelineno-0-723">723</a></span>
 <span class="normal"><a href="#__codelineno-0-724">724</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-712" name="__codelineno-0-712"></a><span class="nd">@classmethod</span>
 <a id="__codelineno-0-713" name="__codelineno-0-713"></a><span class="k">def</span><span class="w"> </span><span class="nf">from_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">BADA3Data</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BADA3Model</span><span class="p">:</span>
-<a id="__codelineno-0-714" name="__codelineno-0-714"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Create BADA3 model from pre-loaded data.</span>
+<a id="__codelineno-0-714" name="__codelineno-0-714"></a><span class="w">    </span><span class="sd">"""Create BADA3 model from pre-loaded data.</span>
 <a id="__codelineno-0-715" name="__codelineno-0-715"></a>
 <a id="__codelineno-0-716" name="__codelineno-0-716"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-717" name="__codelineno-0-717"></a><span class="sd">        data: Parsed BADA3 data object.</span>
 <a id="__codelineno-0-718" name="__codelineno-0-718"></a>
 <a id="__codelineno-0-719" name="__codelineno-0-719"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-720" name="__codelineno-0-720"></a><span class="sd">        Initialized BADA3 aircraft model.</span>
-<a id="__codelineno-0-721" name="__codelineno-0-721"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-721" name="__codelineno-0-721"></a><span class="sd">    """</span>
 <a id="__codelineno-0-722" name="__codelineno-0-722"></a>    <span class="n">instance</span> <span class="o">=</span> <span class="nb">object</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
 <a id="__codelineno-0-723" name="__codelineno-0-723"></a>    <span class="n">instance</span><span class="o">.</span><span class="n">_init_from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-724" name="__codelineno-0-724"></a>    <span class="k">return</span> <span class="n">instance</span>
@@ -4863,7 +4863,7 @@ Fully vectorized using np.where for array inputs.</p>
 <a id="__codelineno-0-729" name="__codelineno-0-729"></a>    <span class="n">file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
 <a id="__codelineno-0-730" name="__codelineno-0-730"></a>    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <a id="__codelineno-0-731" name="__codelineno-0-731"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BADA3Model</span><span class="p">:</span>
-<a id="__codelineno-0-732" name="__codelineno-0-732"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load BADA3 model from OPF file.</span>
+<a id="__codelineno-0-732" name="__codelineno-0-732"></a><span class="w">    </span><span class="sd">"""Load BADA3 model from OPF file.</span>
 <a id="__codelineno-0-733" name="__codelineno-0-733"></a>
 <a id="__codelineno-0-734" name="__codelineno-0-734"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-735" name="__codelineno-0-735"></a><span class="sd">        file: Path to BADA3 OPF file.</span>
@@ -4871,7 +4871,7 @@ Fully vectorized using np.where for array inputs.</p>
 <a id="__codelineno-0-737" name="__codelineno-0-737"></a>
 <a id="__codelineno-0-738" name="__codelineno-0-738"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-739" name="__codelineno-0-739"></a><span class="sd">        Initialized BADA3 aircraft model.</span>
-<a id="__codelineno-0-740" name="__codelineno-0-740"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-740" name="__codelineno-0-740"></a><span class="sd">    """</span>
 <a id="__codelineno-0-741" name="__codelineno-0-741"></a>    <span class="n">data</span> <span class="o">=</span> <span class="n">parse_bada3_file</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
 <a id="__codelineno-0-742" name="__codelineno-0-742"></a>    <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -4920,7 +4920,7 @@ extended in the LD (landing) configuration and retracted otherwise.</p>
 <span class="normal"><a href="#__codelineno-0-891">891</a></span>
 <span class="normal"><a href="#__codelineno-0-892">892</a></span>
 <span class="normal"><a href="#__codelineno-0-893">893</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-878" name="__codelineno-0-878"></a><span class="k">def</span><span class="w"> </span><span class="nf">landing_gear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-879" name="__codelineno-0-879"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine landing gear state from flight state.</span>
+<a id="__codelineno-0-879" name="__codelineno-0-879"></a><span class="w">    </span><span class="sd">"""Determine landing gear state from flight state.</span>
 <a id="__codelineno-0-880" name="__codelineno-0-880"></a>
 <a id="__codelineno-0-881" name="__codelineno-0-881"></a><span class="sd">    BADA3 OPF files do not explicitly define landing gear position per</span>
 <a id="__codelineno-0-882" name="__codelineno-0-882"></a><span class="sd">    configuration. By BADA3 convention (Section 3.5), landing gear is</span>
@@ -4932,7 +4932,7 @@ extended in the LD (landing) configuration and retracted otherwise.</p>
 <a id="__codelineno-0-888" name="__codelineno-0-888"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-889" name="__codelineno-0-889"></a><span class="sd">        Boolean indicating gear extended (True = LD config) or</span>
 <a id="__codelineno-0-890" name="__codelineno-0-890"></a><span class="sd">        retracted (False = other configs).</span>
-<a id="__codelineno-0-891" name="__codelineno-0-891"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-891" name="__codelineno-0-891"></a><span class="sd">    """</span>
 <a id="__codelineno-0-892" name="__codelineno-0-892"></a>    <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aerodynamic_configuration</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 <a id="__codelineno-0-893" name="__codelineno-0-893"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">AerodynamicConfig</span><span class="o">.</span><span class="n">LD</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -5012,11 +5012,11 @@ BADA3 piston engine coefficients.</p>
 <span class="normal"><a href="#__codelineno-0-523">523</a></span>
 <span class="normal"><a href="#__codelineno-0-524">524</a></span>
 <span class="normal"><a href="#__codelineno-0-525">525</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-493" name="__codelineno-0-493"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA3PistonEngineModel</span><span class="p">(</span><span class="n">BADA3PropellerModel</span><span class="p">):</span>
-<a id="__codelineno-0-494" name="__codelineno-0-494"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA3 piston engine model.</span>
+<a id="__codelineno-0-494" name="__codelineno-0-494"></a><span class="w">    </span><span class="sd">"""BADA3 piston engine model.</span>
 <a id="__codelineno-0-495" name="__codelineno-0-495"></a>
 <a id="__codelineno-0-496" name="__codelineno-0-496"></a><span class="sd">    Implements thrust and fuel flow calculations for piston engines using</span>
 <a id="__codelineno-0-497" name="__codelineno-0-497"></a><span class="sd">    BADA3 piston engine coefficients.</span>
-<a id="__codelineno-0-498" name="__codelineno-0-498"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-498" name="__codelineno-0-498"></a><span class="sd">    """</span>
 <a id="__codelineno-0-499" name="__codelineno-0-499"></a>
 <a id="__codelineno-0-500" name="__codelineno-0-500"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_thrust_max_isa</span><span class="p">(</span>
 <a id="__codelineno-0-501" name="__codelineno-0-501"></a>        <span class="bp">self</span><span class="p">,</span>
@@ -5102,10 +5102,10 @@ BADA3 piston engine coefficients.</p>
 <span class="normal"><a href="#__codelineno-0-433">433</a></span>
 <span class="normal"><a href="#__codelineno-0-434">434</a></span>
 <span class="normal"><a href="#__codelineno-0-435">435</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-431" name="__codelineno-0-431"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA3PropellerModel</span><span class="p">(</span><span class="n">BADA3EngineModel</span><span class="p">):</span>
-<a id="__codelineno-0-432" name="__codelineno-0-432"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for BADA3 propeller engine models.</span>
+<a id="__codelineno-0-432" name="__codelineno-0-432"></a><span class="w">    </span><span class="sd">"""Base class for BADA3 propeller engine models.</span>
 <a id="__codelineno-0-433" name="__codelineno-0-433"></a>
 <a id="__codelineno-0-434" name="__codelineno-0-434"></a><span class="sd">    Base implementation for turboprop and piston engine models that use propellers.</span>
-<a id="__codelineno-0-435" name="__codelineno-0-435"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-435" name="__codelineno-0-435"></a><span class="sd">    """</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -5207,11 +5207,11 @@ engine efficiency and nominal fuel flow calculations.</p>
 <span class="normal"><a href="#__codelineno-0-426">426</a></span>
 <span class="normal"><a href="#__codelineno-0-427">427</a></span>
 <span class="normal"><a href="#__codelineno-0-428">428</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-382" name="__codelineno-0-382"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA3TurbineModel</span><span class="p">(</span><span class="n">BADA3EngineModel</span><span class="p">):</span>
-<a id="__codelineno-0-383" name="__codelineno-0-383"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for BADA3 turbine engine models.</span>
+<a id="__codelineno-0-383" name="__codelineno-0-383"></a><span class="w">    </span><span class="sd">"""Base class for BADA3 turbine engine models.</span>
 <a id="__codelineno-0-384" name="__codelineno-0-384"></a>
 <a id="__codelineno-0-385" name="__codelineno-0-385"></a><span class="sd">    Provides common implementations for jet and turboprop engines based on</span>
 <a id="__codelineno-0-386" name="__codelineno-0-386"></a><span class="sd">    engine efficiency and nominal fuel flow calculations.</span>
-<a id="__codelineno-0-387" name="__codelineno-0-387"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-387" name="__codelineno-0-387"></a><span class="sd">    """</span>
 <a id="__codelineno-0-388" name="__codelineno-0-388"></a>
 <a id="__codelineno-0-389" name="__codelineno-0-389"></a>    <span class="nd">@abstractmethod</span>
 <a id="__codelineno-0-390" name="__codelineno-0-390"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_engine_efficiency</span><span class="p">(</span>
@@ -5219,14 +5219,14 @@ engine efficiency and nominal fuel flow calculations.</p>
 <a id="__codelineno-0-392" name="__codelineno-0-392"></a>        <span class="o">*</span><span class="p">,</span>
 <a id="__codelineno-0-393" name="__codelineno-0-393"></a>        <span class="n">v</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-394" name="__codelineno-0-394"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate engine efficiency (abstract method).</span>
+<a id="__codelineno-0-395" name="__codelineno-0-395"></a><span class="w">        </span><span class="sd">"""Calculate engine efficiency (abstract method).</span>
 <a id="__codelineno-0-396" name="__codelineno-0-396"></a>
 <a id="__codelineno-0-397" name="__codelineno-0-397"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-398" name="__codelineno-0-398"></a><span class="sd">            v: True airspeed in m/s.</span>
 <a id="__codelineno-0-399" name="__codelineno-0-399"></a>
 <a id="__codelineno-0-400" name="__codelineno-0-400"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-401" name="__codelineno-0-401"></a><span class="sd">            Engine efficiency value.</span>
-<a id="__codelineno-0-402" name="__codelineno-0-402"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-402" name="__codelineno-0-402"></a><span class="sd">        """</span>
 <a id="__codelineno-0-403" name="__codelineno-0-403"></a>
 <a id="__codelineno-0-404" name="__codelineno-0-404"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_fuel_flow_nom</span><span class="p">(</span>
 <a id="__codelineno-0-405" name="__codelineno-0-405"></a>        <span class="bp">self</span><span class="p">,</span>
@@ -5234,7 +5234,7 @@ engine efficiency and nominal fuel flow calculations.</p>
 <a id="__codelineno-0-407" name="__codelineno-0-407"></a>        <span class="n">v</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-408" name="__codelineno-0-408"></a>        <span class="n">thrust</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-409" name="__codelineno-0-409"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-410" name="__codelineno-0-410"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate nominal fuel flow based on engine efficiency.</span>
+<a id="__codelineno-0-410" name="__codelineno-0-410"></a><span class="w">        </span><span class="sd">"""Calculate nominal fuel flow based on engine efficiency.</span>
 <a id="__codelineno-0-411" name="__codelineno-0-411"></a>
 <a id="__codelineno-0-412" name="__codelineno-0-412"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-413" name="__codelineno-0-413"></a><span class="sd">            v: True airspeed in m/s.</span>
@@ -5242,7 +5242,7 @@ engine efficiency and nominal fuel flow calculations.</p>
 <a id="__codelineno-0-415" name="__codelineno-0-415"></a>
 <a id="__codelineno-0-416" name="__codelineno-0-416"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-417" name="__codelineno-0-417"></a><span class="sd">            Nominal fuel flow rate in kg/s.</span>
-<a id="__codelineno-0-418" name="__codelineno-0-418"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-418" name="__codelineno-0-418"></a><span class="sd">        """</span>
 <a id="__codelineno-0-419" name="__codelineno-0-419"></a>        <span class="n">eta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engine_efficiency</span><span class="p">(</span><span class="n">v</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
 <a id="__codelineno-0-420" name="__codelineno-0-420"></a>        <span class="k">return</span> <span class="n">eta</span> <span class="o">*</span> <span class="n">thrust</span>
 <a id="__codelineno-0-421" name="__codelineno-0-421"></a>
@@ -5333,11 +5333,11 @@ BADA3 turbine and propeller engine coefficients.</p>
 <span class="normal"><a href="#__codelineno-0-488">488</a></span>
 <span class="normal"><a href="#__codelineno-0-489">489</a></span>
 <span class="normal"><a href="#__codelineno-0-490">490</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-465" name="__codelineno-0-465"></a><span class="k">class</span><span class="w"> </span><span class="nc">BADA3TurbopropEngineModel</span><span class="p">(</span><span class="n">BADA3TurbineModel</span><span class="p">,</span> <span class="n">BADA3PropellerModel</span><span class="p">):</span>
-<a id="__codelineno-0-466" name="__codelineno-0-466"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;BADA3 turboprop engine model.</span>
+<a id="__codelineno-0-466" name="__codelineno-0-466"></a><span class="w">    </span><span class="sd">"""BADA3 turboprop engine model.</span>
 <a id="__codelineno-0-467" name="__codelineno-0-467"></a>
 <a id="__codelineno-0-468" name="__codelineno-0-468"></a><span class="sd">    Implements thrust and fuel flow calculations for turboprop engines using</span>
 <a id="__codelineno-0-469" name="__codelineno-0-469"></a><span class="sd">    BADA3 turbine and propeller engine coefficients.</span>
-<a id="__codelineno-0-470" name="__codelineno-0-470"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-470" name="__codelineno-0-470"></a><span class="sd">    """</span>
 <a id="__codelineno-0-471" name="__codelineno-0-471"></a>
 <a id="__codelineno-0-472" name="__codelineno-0-472"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_thrust_max_isa</span><span class="p">(</span>
 <a id="__codelineno-0-473" name="__codelineno-0-473"></a>        <span class="bp">self</span><span class="p">,</span>

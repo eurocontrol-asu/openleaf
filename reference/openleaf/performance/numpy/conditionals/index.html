@@ -1359,13 +1359,13 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-149" name="__codelineno-0-149"></a>    <span class="n">x1</span><span class="p">,</span>
 <a id="__codelineno-0-150" name="__codelineno-0-150"></a>    <span class="n">x2</span><span class="p">,</span>
 <a id="__codelineno-0-151" name="__codelineno-0-151"></a><span class="p">):</span>
-<a id="__codelineno-0-152" name="__codelineno-0-152"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-152" name="__codelineno-0-152"></a><span class="w">    </span><span class="sd">"""</span>
 <a id="__codelineno-0-153" name="__codelineno-0-153"></a><span class="sd">    Element-wise maximum of two arrays.</span>
 <a id="__codelineno-0-154" name="__codelineno-0-154"></a>
 <a id="__codelineno-0-155" name="__codelineno-0-155"></a><span class="sd">    Note: not differentiable at the crossover point, will cause issues if you try to optimize across a crossover.</span>
 <a id="__codelineno-0-156" name="__codelineno-0-156"></a>
 <a id="__codelineno-0-157" name="__codelineno-0-157"></a><span class="sd">    See syntax here: https://numpy.org/doc/stable/reference/generated/numpy.maximum.html</span>
-<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="sd">    """</span>
 <a id="__codelineno-0-159" name="__codelineno-0-159"></a>    <span class="k">if</span> <span class="n">is_casadi_type</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a>        <span class="k">return</span> <span class="n">where</span><span class="p">(</span><span class="n">x1</span> <span class="o">&gt;=</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a>
@@ -1422,13 +1422,13 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="n">x1</span><span class="p">,</span>
 <a id="__codelineno-0-172" name="__codelineno-0-172"></a>    <span class="n">x2</span><span class="p">,</span>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="p">):</span>
-<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="w">    </span><span class="sd">"""</span>
 <a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">    Element-wise minimum of two arrays.</span>
 <a id="__codelineno-0-176" name="__codelineno-0-176"></a>
 <a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">    Note: not differentiable at the crossover point, will cause issues if you try to optimize across a crossover.</span>
 <a id="__codelineno-0-178" name="__codelineno-0-178"></a>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a><span class="sd">    See syntax here: https://numpy.org/doc/stable/reference/generated/numpy.minimum.html</span>
-<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    """</span>
 <a id="__codelineno-0-181" name="__codelineno-0-181"></a>    <span class="k">if</span> <span class="n">is_casadi_type</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <a id="__codelineno-0-182" name="__codelineno-0-182"></a>        <span class="k">return</span> <span class="n">where</span><span class="p">(</span><span class="n">x1</span> <span class="o">&lt;=</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
 <a id="__codelineno-0-183" name="__codelineno-0-183"></a>
@@ -1487,11 +1487,11 @@ with NumPy arrays, CasADi symbolic types, and PyTorch tensors.</p>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>    <span class="n">value_if_true</span><span class="p">,</span>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a>    <span class="n">value_if_false</span><span class="p">,</span>
 <a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="p">):</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="w">    </span><span class="sd">"""</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a><span class="sd">    Return elements chosen from x or y depending on condition.</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a><span class="sd">    See syntax here: https://numpy.org/doc/stable/reference/generated/numpy.where.html</span>
-<a id="__codelineno-0-133" name="__codelineno-0-133"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-133" name="__codelineno-0-133"></a><span class="sd">    """</span>
 <a id="__codelineno-0-134" name="__codelineno-0-134"></a>    <span class="k">if</span> <span class="n">is_casadi_type</span><span class="p">([</span><span class="n">condition</span><span class="p">,</span> <span class="n">value_if_true</span><span class="p">,</span> <span class="n">value_if_false</span><span class="p">],</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <a id="__codelineno-0-135" name="__codelineno-0-135"></a>        <span class="n">ca</span> <span class="o">=</span> <span class="n">_get_casadi</span><span class="p">()</span>
 <a id="__codelineno-0-136" name="__codelineno-0-136"></a>        <span class="k">return</span> <span class="n">ca</span><span class="o">.</span><span class="n">if_else</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="n">value_if_true</span><span class="p">,</span> <span class="n">value_if_false</span><span class="p">)</span>

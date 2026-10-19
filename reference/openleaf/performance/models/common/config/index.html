@@ -1510,33 +1510,33 @@ Used by both BADA3 and BADA4 models with identical default values.</p>
 <span class="normal"><a href="#__codelineno-0-64">64</a></span>
 <span class="normal"><a href="#__codelineno-0-65">65</a></span>
 <span class="normal"><a href="#__codelineno-0-66">66</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="k">class</span><span class="w"> </span><span class="nc">AeroConfigThresholds</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Altitude thresholds for aerodynamic configuration selection.</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="w">    </span><span class="sd">"""Altitude thresholds for aerodynamic configuration selection.</span>
 <a id="__codelineno-0-41" name="__codelineno-0-41"></a>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a><span class="sd">    These thresholds define altitude bands (in feet AGL) for each configuration.</span>
 <a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="sd">    Used by both BADA3 and BADA4 models with identical default values.</span>
 <a id="__codelineno-0-44" name="__codelineno-0-44"></a>
 <a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="sd">    Reference: BADA3 Section 5.6, BADA4 Appendix B / ARPM Table 2</span>
-<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-46" name="__codelineno-0-46"></a><span class="sd">    """</span>
 <a id="__codelineno-0-47" name="__codelineno-0-47"></a>
 <a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <a id="__codelineno-0-49" name="__codelineno-0-49"></a>
 <a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="n">h_max_to</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">400.0</span>
-<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Maximum altitude for take-off configuration [ft].&quot;&quot;&quot;</span>
+<a id="__codelineno-0-51" name="__codelineno-0-51"></a><span class="w">    </span><span class="sd">"""Maximum altitude for take-off configuration [ft]."""</span>
 <a id="__codelineno-0-52" name="__codelineno-0-52"></a>
 <a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="n">h_max_ic</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2000.0</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Maximum altitude for initial climb configuration [ft].&quot;&quot;&quot;</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a><span class="w">    </span><span class="sd">"""Maximum altitude for initial climb configuration [ft]."""</span>
 <a id="__codelineno-0-55" name="__codelineno-0-55"></a>
 <a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="n">h_max_ap</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">8000.0</span>
-<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Maximum altitude for approach configuration [ft].&quot;&quot;&quot;</span>
+<a id="__codelineno-0-57" name="__codelineno-0-57"></a><span class="w">    </span><span class="sd">"""Maximum altitude for approach configuration [ft]."""</span>
 <a id="__codelineno-0-58" name="__codelineno-0-58"></a>
 <a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="n">h_max_ld</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">3000.0</span>
-<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Maximum altitude for landing configuration [ft].&quot;&quot;&quot;</span>
+<a id="__codelineno-0-60" name="__codelineno-0-60"></a><span class="w">    </span><span class="sd">"""Maximum altitude for landing configuration [ft]."""</span>
 <a id="__codelineno-0-61" name="__codelineno-0-61"></a>
 <a id="__codelineno-0-62" name="__codelineno-0-62"></a>    <span class="n">speed_margin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Speed margin above Vmin for configuration transitions [kt].&quot;&quot;&quot;</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="w">    </span><span class="sd">"""Speed margin above Vmin for configuration transitions [kt]."""</span>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a>    <span class="n">c_vmin</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.3</span>
-<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Minimum speed coefficient: Vmin = c_vmin * Vstall (Section 5.7).&quot;&quot;&quot;</span>
+<a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="w">    </span><span class="sd">"""Minimum speed coefficient: Vmin = c_vmin * Vstall (Section 5.7)."""</span>
 </code></pre></div></td></tr></table></div>
               </details>
 
@@ -1770,44 +1770,44 @@ follow this interface. The implementation details vary by model
 <span class="normal"><a href="#__codelineno-0-199">199</a></span>
 <span class="normal"><a href="#__codelineno-0-200">200</a></span>
 <span class="normal"><a href="#__codelineno-0-201">201</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-162" name="__codelineno-0-162"></a><span class="k">class</span><span class="w"> </span><span class="nc">ConfigurationSelector</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
-<a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Protocol for configuration selection from flight state.</span>
+<a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="w">    </span><span class="sd">"""Protocol for configuration selection from flight state.</span>
 <a id="__codelineno-0-164" name="__codelineno-0-164"></a>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a><span class="sd">    All models that implement aerodynamic configuration selection should</span>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">    follow this interface. The implementation details vary by model</span>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    (BADA3 uses altitude thresholds, BADA4 uses ARPM tables, etc.).</span>
-<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    """</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a>
 <a id="__codelineno-0-170" name="__codelineno-0-170"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">aerodynamic_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine aerodynamic configuration from flight state.</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="w">        </span><span class="sd">"""Determine aerodynamic configuration from flight state.</span>
 <a id="__codelineno-0-172" name="__codelineno-0-172"></a>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">            data: Flight state dictionary with model-specific keys.</span>
 <a id="__codelineno-0-175" name="__codelineno-0-175"></a>
 <a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">            AerodynamicConfig enum value (can be vectorized).</span>
-<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">        """</span>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a>        <span class="o">...</span>
 <a id="__codelineno-0-180" name="__codelineno-0-180"></a>
 <a id="__codelineno-0-181" name="__codelineno-0-181"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">high_lift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get high-lift device state from flight state.</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="w">        </span><span class="sd">"""Get high-lift device state from flight state.</span>
 <a id="__codelineno-0-183" name="__codelineno-0-183"></a>
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a><span class="sd">            data: Flight state dictionary.</span>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a>
 <a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="sd">            High-lift indicator (model-specific type) or None if not applicable.</span>
-<a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="sd">        """</span>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a>        <span class="o">...</span>
 <a id="__codelineno-0-191" name="__codelineno-0-191"></a>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">landing_gear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Determine landing gear state from flight state.</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="w">        </span><span class="sd">"""Determine landing gear state from flight state.</span>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">            data: Flight state dictionary.</span>
 <a id="__codelineno-0-197" name="__codelineno-0-197"></a>
 <a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">            Boolean indicating gear extended (True) or retracted (False).</span>
-<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">        """</span>
 <a id="__codelineno-0-201" name="__codelineno-0-201"></a>        <span class="o">...</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -1855,14 +1855,14 @@ follow this interface. The implementation details vary by model
 <span class="normal"><a href="#__codelineno-0-177">177</a></span>
 <span class="normal"><a href="#__codelineno-0-178">178</a></span>
 <span class="normal"><a href="#__codelineno-0-179">179</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="k">def</span><span class="w"> </span><span class="nf">aerodynamic_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine aerodynamic configuration from flight state.</span>
+<a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="w">    </span><span class="sd">"""Determine aerodynamic configuration from flight state.</span>
 <a id="__codelineno-0-172" name="__codelineno-0-172"></a>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">        data: Flight state dictionary with model-specific keys.</span>
 <a id="__codelineno-0-175" name="__codelineno-0-175"></a>
 <a id="__codelineno-0-176" name="__codelineno-0-176"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-177" name="__codelineno-0-177"></a><span class="sd">        AerodynamicConfig enum value (can be vectorized).</span>
-<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">    """</span>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a>    <span class="o">...</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1900,14 +1900,14 @@ follow this interface. The implementation details vary by model
 <span class="normal"><a href="#__codelineno-0-188">188</a></span>
 <span class="normal"><a href="#__codelineno-0-189">189</a></span>
 <span class="normal"><a href="#__codelineno-0-190">190</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="k">def</span><span class="w"> </span><span class="nf">high_lift</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Get high-lift device state from flight state.</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="w">    </span><span class="sd">"""Get high-lift device state from flight state.</span>
 <a id="__codelineno-0-183" name="__codelineno-0-183"></a>
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a><span class="sd">        data: Flight state dictionary.</span>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a>
 <a id="__codelineno-0-187" name="__codelineno-0-187"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-188" name="__codelineno-0-188"></a><span class="sd">        High-lift indicator (model-specific type) or None if not applicable.</span>
-<a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-189" name="__codelineno-0-189"></a><span class="sd">    """</span>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a>    <span class="o">...</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -1945,14 +1945,14 @@ follow this interface. The implementation details vary by model
 <span class="normal"><a href="#__codelineno-0-199">199</a></span>
 <span class="normal"><a href="#__codelineno-0-200">200</a></span>
 <span class="normal"><a href="#__codelineno-0-201">201</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="k">def</span><span class="w"> </span><span class="nf">landing_gear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">KeyedData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine landing gear state from flight state.</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="w">    </span><span class="sd">"""Determine landing gear state from flight state.</span>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-196" name="__codelineno-0-196"></a><span class="sd">        data: Flight state dictionary.</span>
 <a id="__codelineno-0-197" name="__codelineno-0-197"></a>
 <a id="__codelineno-0-198" name="__codelineno-0-198"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-199" name="__codelineno-0-199"></a><span class="sd">        Boolean indicating gear extended (True) or retracted (False).</span>
-<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-200" name="__codelineno-0-200"></a><span class="sd">    """</span>
 <a id="__codelineno-0-201" name="__codelineno-0-201"></a>    <span class="o">...</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2035,7 +2035,7 @@ to avoid oscillation near level flight.</p>
 <a id="__codelineno-0-205" name="__codelineno-0-205"></a>    <span class="n">vertical_speed</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-206" name="__codelineno-0-206"></a>    <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
 <a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Determine flight phase from vertical speed.</span>
+<a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="w">    </span><span class="sd">"""Determine flight phase from vertical speed.</span>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">    This is a common helper used when flight_phase is not explicitly provided.</span>
 <a id="__codelineno-0-211" name="__codelineno-0-211"></a><span class="sd">    The determination is based on rate of climb/descent with a small threshold</span>
@@ -2054,7 +2054,7 @@ to avoid oscillation near level flight.</p>
 <a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="sd">        &gt;&gt;&gt; phase = determine_flight_phase(5.0)  # 5 m/s climb</span>
 <a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="sd">        &gt;&gt;&gt; phase == FlightPhase.CLIMB</span>
 <a id="__codelineno-0-226" name="__codelineno-0-226"></a><span class="sd">        True</span>
-<a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-227" name="__codelineno-0-227"></a><span class="sd">    """</span>
 <a id="__codelineno-0-228" name="__codelineno-0-228"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
 <a id="__codelineno-0-229" name="__codelineno-0-229"></a>        <span class="n">np</span><span class="o">.</span><span class="n">greater</span><span class="p">(</span><span class="n">vertical_speed</span><span class="p">,</span> <span class="n">threshold</span><span class="p">),</span>
 <a id="__codelineno-0-230" name="__codelineno-0-230"></a>        <span class="n">FlightPhase</span><span class="o">.</span><span class="n">CLIMB</span><span class="p">,</span>
@@ -2204,7 +2204,7 @@ minimum speeds.</p>
 <a id="__codelineno-0-79" name="__codelineno-0-79"></a>    <span class="n">vmin_ap_kt</span><span class="p">:</span> <span class="n">ArrayScalarLike</span><span class="p">,</span>
 <a id="__codelineno-0-80" name="__codelineno-0-80"></a>    <span class="n">thresholds</span><span class="p">:</span> <span class="n">AeroConfigThresholds</span> <span class="o">=</span> <span class="n">AERO_CONFIG_THRESHOLDS</span><span class="p">,</span>
 <a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Select aerodynamic configuration from flight state.</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="w">    </span><span class="sd">"""Select aerodynamic configuration from flight state.</span>
 <a id="__codelineno-0-83" name="__codelineno-0-83"></a>
 <a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">    This is the shared configuration selection logic used by BADA3 and BADA4.</span>
 <a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">    The selection is based on flight phase, altitude, and speed relative to</span>
@@ -2233,7 +2233,7 @@ minimum speeds.</p>
 <a id="__codelineno-0-108" name="__codelineno-0-108"></a><span class="sd">        The caller is responsible for computing vmin_cr and vmin_ap from</span>
 <a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="sd">        model-specific stall speed formulas. BADA3 uses sqrt(m/mref) scaling,</span>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="sd">        BADA4 uses CL_max buffet model.</span>
-<a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-111" name="__codelineno-0-111"></a><span class="sd">    """</span>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a>    <span class="c1"># Speed margins</span>
 <a id="__codelineno-0-113" name="__codelineno-0-113"></a>    <span class="n">v_cr_margin</span> <span class="o">=</span> <span class="n">vmin_cr_kt</span> <span class="o">+</span> <span class="n">thresholds</span><span class="o">.</span><span class="n">speed_margin</span>
 <a id="__codelineno-0-114" name="__codelineno-0-114"></a>    <span class="n">v_ap_margin</span> <span class="o">=</span> <span class="n">vmin_ap_kt</span> <span class="o">+</span> <span class="n">thresholds</span><span class="o">.</span><span class="n">speed_margin</span>
@@ -2363,7 +2363,7 @@ values for CasADi compatibility.</p>
 <a id="__codelineno-0-241" name="__codelineno-0-241"></a>    <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
 <a id="__codelineno-0-242" name="__codelineno-0-242"></a>    <span class="n">default</span><span class="p">:</span> <span class="n">ArrayScalarLike</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-243" name="__codelineno-0-243"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Select values based on aerodynamic configuration using vectorized np.where.</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="w">    </span><span class="sd">"""Select values based on aerodynamic configuration using vectorized np.where.</span>
 <a id="__codelineno-0-245" name="__codelineno-0-245"></a>
 <a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">    This is a utility function to reduce code duplication when selecting</span>
 <a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">    values based on AerodynamicConfig enum. It handles vectorized config</span>
@@ -2381,14 +2381,14 @@ values for CasADi compatibility.</p>
 <a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">        &gt;&gt;&gt; hlid = select_by_config(</span>
 <a id="__codelineno-0-260" name="__codelineno-0-260"></a><span class="sd">        ...     config,</span>
 <a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">        ...     {</span>
-<a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="sd">        ...         AerodynamicConfig.CR: &quot;0&quot;,</span>
-<a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="sd">        ...         AerodynamicConfig.IC: &quot;1&quot;,</span>
-<a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="sd">        ...         AerodynamicConfig.TO: &quot;2&quot;,</span>
-<a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="sd">        ...         AerodynamicConfig.AP: &quot;1&quot;,</span>
-<a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">        ...         AerodynamicConfig.LD: &quot;3&quot;,</span>
+<a id="__codelineno-0-262" name="__codelineno-0-262"></a><span class="sd">        ...         AerodynamicConfig.CR: "0",</span>
+<a id="__codelineno-0-263" name="__codelineno-0-263"></a><span class="sd">        ...         AerodynamicConfig.IC: "1",</span>
+<a id="__codelineno-0-264" name="__codelineno-0-264"></a><span class="sd">        ...         AerodynamicConfig.TO: "2",</span>
+<a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="sd">        ...         AerodynamicConfig.AP: "1",</span>
+<a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">        ...         AerodynamicConfig.LD: "3",</span>
 <a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">        ...     },</span>
 <a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">        ... )</span>
-<a id="__codelineno-0-269" name="__codelineno-0-269"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-269" name="__codelineno-0-269"></a><span class="sd">    """</span>
 <a id="__codelineno-0-270" name="__codelineno-0-270"></a>    <span class="n">result</span> <span class="o">=</span> <span class="n">default</span>
 <a id="__codelineno-0-271" name="__codelineno-0-271"></a>    <span class="k">for</span> <span class="n">config_key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 <a id="__codelineno-0-272" name="__codelineno-0-272"></a>        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">config_key</span><span class="p">),</span> <span class="n">value</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>

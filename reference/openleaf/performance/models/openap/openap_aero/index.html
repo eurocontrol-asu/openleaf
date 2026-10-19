@@ -1459,7 +1459,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-231">231</a></span>
 <span class="normal"><a href="#__codelineno-0-232">232</a></span>
 <span class="normal"><a href="#__codelineno-0-233">233</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="k">def</span><span class="w"> </span><span class="nf">cas2mach</span><span class="p">(</span><span class="n">v_cas</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert calibrated airspeed to Mach number.</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="w">    </span><span class="sd">"""Convert calibrated airspeed to Mach number.</span>
 <a id="__codelineno-0-223" name="__codelineno-0-223"></a>
 <a id="__codelineno-0-224" name="__codelineno-0-224"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-225" name="__codelineno-0-225"></a><span class="sd">        v_cas: Calibrated airspeed in m/s.</span>
@@ -1468,7 +1468,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-228" name="__codelineno-0-228"></a>
 <a id="__codelineno-0-229" name="__codelineno-0-229"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-230" name="__codelineno-0-230"></a><span class="sd">        Mach number.</span>
-<a id="__codelineno-0-231" name="__codelineno-0-231"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-231" name="__codelineno-0-231"></a><span class="sd">    """</span>
 <a id="__codelineno-0-232" name="__codelineno-0-232"></a>    <span class="n">v_tas</span> <span class="o">=</span> <span class="n">cas2tas</span><span class="p">(</span><span class="n">v_cas</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-233" name="__codelineno-0-233"></a>    <span class="k">return</span> <span class="n">tas2mach</span><span class="p">(</span><span class="n">v_tas</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1522,7 +1522,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-201">201</a></span>
 <span class="normal"><a href="#__codelineno-0-202">202</a></span>
 <span class="normal"><a href="#__codelineno-0-203">203</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="k">def</span><span class="w"> </span><span class="nf">cas2tas</span><span class="p">(</span><span class="n">v_cas</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert calibrated airspeed to true airspeed.</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="w">    </span><span class="sd">"""Convert calibrated airspeed to true airspeed.</span>
 <a id="__codelineno-0-184" name="__codelineno-0-184"></a>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a><span class="sd">    Uses the compressible flow equations for airspeed conversion.</span>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a>
@@ -1533,7 +1533,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-191" name="__codelineno-0-191"></a>
 <a id="__codelineno-0-192" name="__codelineno-0-192"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-193" name="__codelineno-0-193"></a><span class="sd">        True airspeed in m/s.</span>
-<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-194" name="__codelineno-0-194"></a><span class="sd">    """</span>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a>    <span class="n">p</span> <span class="o">=</span> <span class="n">pressure</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-196" name="__codelineno-0-196"></a>    <span class="n">rho</span> <span class="o">=</span> <span class="n">density</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-197" name="__codelineno-0-197"></a>
@@ -1583,7 +1583,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-91">91</a></span>
 <span class="normal"><a href="#__codelineno-0-92">92</a></span>
 <span class="normal"><a href="#__codelineno-0-93">93</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-81" name="__codelineno-0-81"></a><span class="k">def</span><span class="w"> </span><span class="nf">density</span><span class="p">(</span><span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute air density at a given altitude.</span>
+<a id="__codelineno-0-82" name="__codelineno-0-82"></a><span class="w">    </span><span class="sd">"""Compute air density at a given altitude.</span>
 <a id="__codelineno-0-83" name="__codelineno-0-83"></a>
 <a id="__codelineno-0-84" name="__codelineno-0-84"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-85" name="__codelineno-0-85"></a><span class="sd">        h: Altitude in meters.</span>
@@ -1591,7 +1591,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-87" name="__codelineno-0-87"></a>
 <a id="__codelineno-0-88" name="__codelineno-0-88"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-89" name="__codelineno-0-89"></a><span class="sd">        Air density in kg/m³.</span>
-<a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-90" name="__codelineno-0-90"></a><span class="sd">    """</span>
 <a id="__codelineno-0-91" name="__codelineno-0-91"></a>    <span class="n">p</span> <span class="o">=</span> <span class="n">pressure</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-92" name="__codelineno-0-92"></a>    <span class="n">T</span> <span class="o">=</span> <span class="n">temperature</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-93" name="__codelineno-0-93"></a>    <span class="k">return</span> <span class="n">p</span> <span class="o">/</span> <span class="p">(</span><span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
@@ -1636,7 +1636,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-246">246</a></span>
 <span class="normal"><a href="#__codelineno-0-247">247</a></span>
 <span class="normal"><a href="#__codelineno-0-248">248</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-236" name="__codelineno-0-236"></a><span class="k">def</span><span class="w"> </span><span class="nf">eas2tas</span><span class="p">(</span><span class="n">v_eas</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert equivalent airspeed to true airspeed.</span>
+<a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="w">    </span><span class="sd">"""Convert equivalent airspeed to true airspeed.</span>
 <a id="__codelineno-0-238" name="__codelineno-0-238"></a>
 <a id="__codelineno-0-239" name="__codelineno-0-239"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-240" name="__codelineno-0-240"></a><span class="sd">        v_eas: Equivalent airspeed in m/s.</span>
@@ -1645,7 +1645,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-243" name="__codelineno-0-243"></a>
 <a id="__codelineno-0-244" name="__codelineno-0-244"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-245" name="__codelineno-0-245"></a><span class="sd">        True airspeed in m/s.</span>
-<a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">    """</span>
 <a id="__codelineno-0-247" name="__codelineno-0-247"></a>    <span class="n">rho</span> <span class="o">=</span> <span class="n">density</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-248" name="__codelineno-0-248"></a>    <span class="k">return</span> <span class="n">v_eas</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho0</span> <span class="o">/</span> <span class="n">rho</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1689,7 +1689,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-216">216</a></span>
 <span class="normal"><a href="#__codelineno-0-217">217</a></span>
 <span class="normal"><a href="#__codelineno-0-218">218</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-206" name="__codelineno-0-206"></a><span class="k">def</span><span class="w"> </span><span class="nf">mach2cas</span><span class="p">(</span><span class="n">mach</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert Mach number to calibrated airspeed.</span>
+<a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="w">    </span><span class="sd">"""Convert Mach number to calibrated airspeed.</span>
 <a id="__codelineno-0-208" name="__codelineno-0-208"></a>
 <a id="__codelineno-0-209" name="__codelineno-0-209"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-210" name="__codelineno-0-210"></a><span class="sd">        mach: Mach number.</span>
@@ -1698,7 +1698,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-213" name="__codelineno-0-213"></a>
 <a id="__codelineno-0-214" name="__codelineno-0-214"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-215" name="__codelineno-0-215"></a><span class="sd">        Calibrated airspeed in m/s.</span>
-<a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-216" name="__codelineno-0-216"></a><span class="sd">    """</span>
 <a id="__codelineno-0-217" name="__codelineno-0-217"></a>    <span class="n">v_tas</span> <span class="o">=</span> <span class="n">mach2tas</span><span class="p">(</span><span class="n">mach</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-218" name="__codelineno-0-218"></a>    <span class="k">return</span> <span class="n">tas2cas</span><span class="p">(</span><span class="n">v_tas</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1742,7 +1742,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-153">153</a></span>
 <span class="normal"><a href="#__codelineno-0-154">154</a></span>
 <span class="normal"><a href="#__codelineno-0-155">155</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-143" name="__codelineno-0-143"></a><span class="k">def</span><span class="w"> </span><span class="nf">mach2tas</span><span class="p">(</span><span class="n">mach</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-144" name="__codelineno-0-144"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert Mach number to true airspeed.</span>
+<a id="__codelineno-0-144" name="__codelineno-0-144"></a><span class="w">    </span><span class="sd">"""Convert Mach number to true airspeed.</span>
 <a id="__codelineno-0-145" name="__codelineno-0-145"></a>
 <a id="__codelineno-0-146" name="__codelineno-0-146"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-147" name="__codelineno-0-147"></a><span class="sd">        mach: Mach number.</span>
@@ -1751,7 +1751,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-150" name="__codelineno-0-150"></a>
 <a id="__codelineno-0-151" name="__codelineno-0-151"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-152" name="__codelineno-0-152"></a><span class="sd">        True airspeed in m/s.</span>
-<a id="__codelineno-0-153" name="__codelineno-0-153"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-153" name="__codelineno-0-153"></a><span class="sd">    """</span>
 <a id="__codelineno-0-154" name="__codelineno-0-154"></a>    <span class="n">a</span> <span class="o">=</span> <span class="n">vsound</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-155" name="__codelineno-0-155"></a>    <span class="k">return</span> <span class="n">mach</span> <span class="o">*</span> <span class="n">a</span>
 </code></pre></div></td></tr></table></div>
@@ -1802,7 +1802,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-76">76</a></span>
 <span class="normal"><a href="#__codelineno-0-77">77</a></span>
 <span class="normal"><a href="#__codelineno-0-78">78</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="k">def</span><span class="w"> </span><span class="nf">pressure</span><span class="p">(</span><span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute air pressure at a given altitude.</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="w">    </span><span class="sd">"""Compute air pressure at a given altitude.</span>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">        h: Altitude in meters.</span>
@@ -1812,10 +1812,10 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">        Air pressure in Pa.</span>
 <a id="__codelineno-0-71" name="__codelineno-0-71"></a>
 <a id="__codelineno-0-72" name="__codelineno-0-72"></a><span class="sd">    Note:</span>
-<a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">        OpenAP&#39;s original implementation uses a smoothed tropopause</span>
+<a id="__codelineno-0-73" name="__codelineno-0-73"></a><span class="sd">        OpenAP's original implementation uses a smoothed tropopause</span>
 <a id="__codelineno-0-74" name="__codelineno-0-74"></a><span class="sd">        transition. We use the standard ISA model from</span>
 <a id="__codelineno-0-75" name="__codelineno-0-75"></a><span class="sd">        openleaf.performance.physics.isa.</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="sd">    """</span>
 <a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="c1"># Use OpenLeaf ISA which supports CasADi</span>
 <a id="__codelineno-0-78" name="__codelineno-0-78"></a>    <span class="k">return</span> <span class="n">isa</span><span class="o">.</span><span class="n">air_pressure</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1869,7 +1869,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-177">177</a></span>
 <span class="normal"><a href="#__codelineno-0-178">178</a></span>
 <span class="normal"><a href="#__codelineno-0-179">179</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-158" name="__codelineno-0-158"></a><span class="k">def</span><span class="w"> </span><span class="nf">tas2cas</span><span class="p">(</span><span class="n">v_tas</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-159" name="__codelineno-0-159"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert true airspeed to calibrated airspeed.</span>
+<a id="__codelineno-0-159" name="__codelineno-0-159"></a><span class="w">    </span><span class="sd">"""Convert true airspeed to calibrated airspeed.</span>
 <a id="__codelineno-0-160" name="__codelineno-0-160"></a>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a><span class="sd">    Uses the compressible flow equations for airspeed conversion.</span>
 <a id="__codelineno-0-162" name="__codelineno-0-162"></a>
@@ -1880,7 +1880,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">        Calibrated airspeed in m/s.</span>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">    """</span>
 <a id="__codelineno-0-171" name="__codelineno-0-171"></a>    <span class="n">p</span> <span class="o">=</span> <span class="n">pressure</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-172" name="__codelineno-0-172"></a>    <span class="n">rho</span> <span class="o">=</span> <span class="n">density</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a>
@@ -1931,7 +1931,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-261">261</a></span>
 <span class="normal"><a href="#__codelineno-0-262">262</a></span>
 <span class="normal"><a href="#__codelineno-0-263">263</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-251" name="__codelineno-0-251"></a><span class="k">def</span><span class="w"> </span><span class="nf">tas2eas</span><span class="p">(</span><span class="n">v_tas</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert true airspeed to equivalent airspeed.</span>
+<a id="__codelineno-0-252" name="__codelineno-0-252"></a><span class="w">    </span><span class="sd">"""Convert true airspeed to equivalent airspeed.</span>
 <a id="__codelineno-0-253" name="__codelineno-0-253"></a>
 <a id="__codelineno-0-254" name="__codelineno-0-254"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="sd">        v_tas: True airspeed in m/s.</span>
@@ -1940,7 +1940,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-258" name="__codelineno-0-258"></a>
 <a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-260" name="__codelineno-0-260"></a><span class="sd">        Equivalent airspeed in m/s.</span>
-<a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-261" name="__codelineno-0-261"></a><span class="sd">    """</span>
 <a id="__codelineno-0-262" name="__codelineno-0-262"></a>    <span class="n">rho</span> <span class="o">=</span> <span class="n">density</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-263" name="__codelineno-0-263"></a>    <span class="k">return</span> <span class="n">v_tas</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">rho</span> <span class="o">/</span> <span class="n">rho0</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1984,7 +1984,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-138">138</a></span>
 <span class="normal"><a href="#__codelineno-0-139">139</a></span>
 <span class="normal"><a href="#__codelineno-0-140">140</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-128" name="__codelineno-0-128"></a><span class="k">def</span><span class="w"> </span><span class="nf">tas2mach</span><span class="p">(</span><span class="n">v_tas</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert true airspeed to Mach number.</span>
+<a id="__codelineno-0-129" name="__codelineno-0-129"></a><span class="w">    </span><span class="sd">"""Convert true airspeed to Mach number.</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-132" name="__codelineno-0-132"></a><span class="sd">        v_tas: True airspeed in m/s.</span>
@@ -1993,7 +1993,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-135" name="__codelineno-0-135"></a>
 <a id="__codelineno-0-136" name="__codelineno-0-136"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-137" name="__codelineno-0-137"></a><span class="sd">        Mach number.</span>
-<a id="__codelineno-0-138" name="__codelineno-0-138"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-138" name="__codelineno-0-138"></a><span class="sd">    """</span>
 <a id="__codelineno-0-139" name="__codelineno-0-139"></a>    <span class="n">a</span> <span class="o">=</span> <span class="n">vsound</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="k">return</span> <span class="n">v_tas</span> <span class="o">/</span> <span class="n">a</span>
 </code></pre></div></td></tr></table></div>
@@ -2034,7 +2034,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-104">104</a></span>
 <span class="normal"><a href="#__codelineno-0-105">105</a></span>
 <span class="normal"><a href="#__codelineno-0-106">106</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-96" name="__codelineno-0-96"></a><span class="k">def</span><span class="w"> </span><span class="nf">temperature</span><span class="p">(</span><span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute air temperature at a given altitude.</span>
+<a id="__codelineno-0-97" name="__codelineno-0-97"></a><span class="w">    </span><span class="sd">"""Compute air temperature at a given altitude.</span>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>
 <a id="__codelineno-0-99" name="__codelineno-0-99"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-100" name="__codelineno-0-100"></a><span class="sd">        h: Altitude in meters.</span>
@@ -2042,7 +2042,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a>
 <a id="__codelineno-0-103" name="__codelineno-0-103"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-104" name="__codelineno-0-104"></a><span class="sd">        Air temperature in K.</span>
-<a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-105" name="__codelineno-0-105"></a><span class="sd">    """</span>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a>    <span class="k">return</span> <span class="n">isa</span><span class="o">.</span><span class="n">air_temperature</span><span class="p">(</span><span class="n">h</span><span class="p">)</span> <span class="o">+</span> <span class="n">dT</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2083,7 +2083,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <span class="normal"><a href="#__codelineno-0-118">118</a></span>
 <span class="normal"><a href="#__codelineno-0-119">119</a></span>
 <span class="normal"><a href="#__codelineno-0-120">120</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-109" name="__codelineno-0-109"></a><span class="k">def</span><span class="w"> </span><span class="nf">vsound</span><span class="p">(</span><span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dT</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArrayScalarLike</span><span class="p">:</span>
-<a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute speed of sound at a given altitude.</span>
+<a id="__codelineno-0-110" name="__codelineno-0-110"></a><span class="w">    </span><span class="sd">"""Compute speed of sound at a given altitude.</span>
 <a id="__codelineno-0-111" name="__codelineno-0-111"></a>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-113" name="__codelineno-0-113"></a><span class="sd">        h: Altitude in meters.</span>
@@ -2091,7 +2091,7 @@ compatibility while returning numpy arrays for numerical inputs.</p>
 <a id="__codelineno-0-115" name="__codelineno-0-115"></a>
 <a id="__codelineno-0-116" name="__codelineno-0-116"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-117" name="__codelineno-0-117"></a><span class="sd">        Speed of sound in m/s.</span>
-<a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-118" name="__codelineno-0-118"></a><span class="sd">    """</span>
 <a id="__codelineno-0-119" name="__codelineno-0-119"></a>    <span class="n">T</span> <span class="o">=</span> <span class="n">temperature</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">dT</span><span class="p">)</span>
 <a id="__codelineno-0-120" name="__codelineno-0-120"></a>    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">R</span> <span class="o">*</span> <span class="n">T</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>

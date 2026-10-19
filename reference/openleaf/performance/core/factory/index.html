@@ -1341,13 +1341,13 @@ interface.</p>
     # Load by ICAO code (auto-detects best available model)
     model = ModelFactory.load("A320")</p>
 <div class="highlight"><span class="filename">Text Only</span><pre><span></span><code># Load specific model type
-model = ModelFactory.load(&quot;A320&quot;, model_type=&quot;bada4&quot;)
+model = ModelFactory.load("A320", model_type="bada4")
 
 # Load from file
-model = ModelFactory.load_from_file(&quot;/path/to/A320.xml&quot;, model_type=&quot;bada4&quot;)
+model = ModelFactory.load_from_file("/path/to/A320.xml", model_type="bada4")
 
 # List available aircraft by model type
-aircraft = ModelFactory.available_aircraft(&quot;bada4&quot;)
+aircraft = ModelFactory.available_aircraft("bada4")
 </code></pre></div>
 
 
@@ -1667,27 +1667,27 @@ sources without requiring knowledge of the specific model classes.</p>
 <span class="normal"><a href="#__codelineno-0-327">327</a></span>
 <span class="normal"><a href="#__codelineno-0-328">328</a></span>
 <span class="normal"><a href="#__codelineno-0-329">329</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-62" name="__codelineno-0-62"></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelFactory</span><span class="p">:</span>
-<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Unified factory for loading aircraft performance models.</span>
+<a id="__codelineno-0-63" name="__codelineno-0-63"></a><span class="w">    </span><span class="sd">"""Unified factory for loading aircraft performance models.</span>
 <a id="__codelineno-0-64" name="__codelineno-0-64"></a>
 <a id="__codelineno-0-65" name="__codelineno-0-65"></a><span class="sd">    Provides a consistent interface for loading models from different</span>
 <a id="__codelineno-0-66" name="__codelineno-0-66"></a><span class="sd">    sources without requiring knowledge of the specific model classes.</span>
 <a id="__codelineno-0-67" name="__codelineno-0-67"></a>
 <a id="__codelineno-0-68" name="__codelineno-0-68"></a><span class="sd">    Attributes:</span>
 <a id="__codelineno-0-69" name="__codelineno-0-69"></a><span class="sd">        _model_classes: Mapping from ModelType to model class (lazy-loaded).</span>
-<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-70" name="__codelineno-0-70"></a><span class="sd">    """</span>
 <a id="__codelineno-0-71" name="__codelineno-0-71"></a>
 <a id="__codelineno-0-72" name="__codelineno-0-72"></a>    <span class="n">_model_classes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">ModelType</span><span class="p">,</span> <span class="n">ModelConstructor</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-73" name="__codelineno-0-73"></a>
 <a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="nd">@classmethod</span>
 <a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_get_model_classes</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">ModelType</span><span class="p">,</span> <span class="n">ModelConstructor</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
-<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Lazy-load model classes to avoid circular imports.</span>
+<a id="__codelineno-0-76" name="__codelineno-0-76"></a><span class="w">        </span><span class="sd">"""Lazy-load model classes to avoid circular imports.</span>
 <a id="__codelineno-0-77" name="__codelineno-0-77"></a>
 <a id="__codelineno-0-78" name="__codelineno-0-78"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-79" name="__codelineno-0-79"></a><span class="sd">            Dictionary mapping ModelType to model class (or None if unavailable).</span>
-<a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-80" name="__codelineno-0-80"></a><span class="sd">        """</span>
 <a id="__codelineno-0-81" name="__codelineno-0-81"></a>        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-82" name="__codelineno-0-82"></a>            <span class="c1"># Import here to avoid circular imports</span>
-<a id="__codelineno-0-83" name="__codelineno-0-83"></a>            <span class="c1"># Models may fail to import if their data paths aren&#39;t configured</span>
+<a id="__codelineno-0-83" name="__codelineno-0-83"></a>            <span class="c1"># Models may fail to import if their data paths aren't configured</span>
 <a id="__codelineno-0-84" name="__codelineno-0-84"></a>            <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span> <span class="o">=</span> <span class="p">{}</span>
 <a id="__codelineno-0-85" name="__codelineno-0-85"></a>
 <a id="__codelineno-0-86" name="__codelineno-0-86"></a>            <span class="k">try</span><span class="p">:</span>
@@ -1695,7 +1695,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-88" name="__codelineno-0-88"></a>
 <a id="__codelineno-0-89" name="__codelineno-0-89"></a>                <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span><span class="p">[</span><span class="n">ModelType</span><span class="o">.</span><span class="n">BADA3</span><span class="p">]</span> <span class="o">=</span> <span class="n">BADA3Model</span>
 <a id="__codelineno-0-90" name="__codelineno-0-90"></a>            <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="n">OpenLeafError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-0-91" name="__codelineno-0-91"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;BADA3 model not available: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<a id="__codelineno-0-91" name="__codelineno-0-91"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"BADA3 model not available: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 <a id="__codelineno-0-92" name="__codelineno-0-92"></a>                <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span><span class="p">[</span><span class="n">ModelType</span><span class="o">.</span><span class="n">BADA3</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-93" name="__codelineno-0-93"></a>
 <a id="__codelineno-0-94" name="__codelineno-0-94"></a>            <span class="k">try</span><span class="p">:</span>
@@ -1703,7 +1703,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-96" name="__codelineno-0-96"></a>
 <a id="__codelineno-0-97" name="__codelineno-0-97"></a>                <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span><span class="p">[</span><span class="n">ModelType</span><span class="o">.</span><span class="n">BADA4</span><span class="p">]</span> <span class="o">=</span> <span class="n">BADA4Model</span>
 <a id="__codelineno-0-98" name="__codelineno-0-98"></a>            <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="n">OpenLeafError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-0-99" name="__codelineno-0-99"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;BADA4 model not available: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<a id="__codelineno-0-99" name="__codelineno-0-99"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"BADA4 model not available: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 <a id="__codelineno-0-100" name="__codelineno-0-100"></a>                <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span><span class="p">[</span><span class="n">ModelType</span><span class="o">.</span><span class="n">BADA4</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-101" name="__codelineno-0-101"></a>
 <a id="__codelineno-0-102" name="__codelineno-0-102"></a>            <span class="k">try</span><span class="p">:</span>
@@ -1711,7 +1711,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-104" name="__codelineno-0-104"></a>
 <a id="__codelineno-0-105" name="__codelineno-0-105"></a>                <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span><span class="p">[</span><span class="n">ModelType</span><span class="o">.</span><span class="n">OPENAP</span><span class="p">]</span> <span class="o">=</span> <span class="n">OpenAPModel</span>
 <a id="__codelineno-0-106" name="__codelineno-0-106"></a>            <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="n">OpenLeafError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-0-107" name="__codelineno-0-107"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;OpenAP model not available: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<a id="__codelineno-0-107" name="__codelineno-0-107"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"OpenAP model not available: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 <a id="__codelineno-0-108" name="__codelineno-0-108"></a>                <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span><span class="p">[</span><span class="n">ModelType</span><span class="o">.</span><span class="n">OPENAP</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-109" name="__codelineno-0-109"></a>
 <a id="__codelineno-0-110" name="__codelineno-0-110"></a>            <span class="k">try</span><span class="p">:</span>
@@ -1719,7 +1719,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-112" name="__codelineno-0-112"></a>
 <a id="__codelineno-0-113" name="__codelineno-0-113"></a>                <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span><span class="p">[</span><span class="n">ModelType</span><span class="o">.</span><span class="n">PS</span><span class="p">]</span> <span class="o">=</span> <span class="n">PSModel</span>
 <a id="__codelineno-0-114" name="__codelineno-0-114"></a>            <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="n">OpenLeafError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-0-115" name="__codelineno-0-115"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;PS model not available: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<a id="__codelineno-0-115" name="__codelineno-0-115"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"PS model not available: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 <a id="__codelineno-0-116" name="__codelineno-0-116"></a>                <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span><span class="p">[</span><span class="n">ModelType</span><span class="o">.</span><span class="n">PS</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 <a id="__codelineno-0-117" name="__codelineno-0-117"></a>
 <a id="__codelineno-0-118" name="__codelineno-0-118"></a>        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_model_classes</span>
@@ -1728,7 +1728,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-121" name="__codelineno-0-121"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_model_type</span><span class="p">(</span>
 <a id="__codelineno-0-122" name="__codelineno-0-122"></a>        <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ModelType</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-123" name="__codelineno-0-123"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ModelType</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert a string model type to ModelType enum with validation.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-124" name="__codelineno-0-124"></a><span class="w">        </span><span class="sd">"""Convert a string model type to ModelType enum with validation."""</span>
 <a id="__codelineno-0-125" name="__codelineno-0-125"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
 <a id="__codelineno-0-126" name="__codelineno-0-126"></a>            <span class="k">return</span> <span class="n">model_type</span>
 <a id="__codelineno-0-127" name="__codelineno-0-127"></a>        <span class="k">try</span><span class="p">:</span>
@@ -1736,7 +1736,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-129" name="__codelineno-0-129"></a>        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-0-130" name="__codelineno-0-130"></a>            <span class="n">valid_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ModelType</span><span class="p">]</span>
 <a id="__codelineno-0-131" name="__codelineno-0-131"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-132" name="__codelineno-0-132"></a>                <span class="sa">f</span><span class="s2">&quot;Invalid model_type &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&#39;. Valid types are: </span><span class="si">{</span><span class="n">valid_types</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-132" name="__codelineno-0-132"></a>                <span class="sa">f</span><span class="s2">"Invalid model_type '</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">'. Valid types are: </span><span class="si">{</span><span class="n">valid_types</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-133" name="__codelineno-0-133"></a>            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 <a id="__codelineno-0-134" name="__codelineno-0-134"></a>
 <a id="__codelineno-0-135" name="__codelineno-0-135"></a>    <span class="nd">@classmethod</span>
@@ -1745,21 +1745,21 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-138" name="__codelineno-0-138"></a>        <span class="n">icao</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-139" name="__codelineno-0-139"></a>        <span class="n">model_classes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">ModelType</span><span class="p">,</span> <span class="n">ModelConstructor</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
 <a id="__codelineno-0-140" name="__codelineno-0-140"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AircraftModel</span><span class="p">:</span>
-<a id="__codelineno-0-141" name="__codelineno-0-141"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Try each model type in priority order, return first success.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-141" name="__codelineno-0-141"></a><span class="w">        </span><span class="sd">"""Try each model type in priority order, return first success."""</span>
 <a id="__codelineno-0-142" name="__codelineno-0-142"></a>        <span class="n">errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 <a id="__codelineno-0-143" name="__codelineno-0-143"></a>        <span class="k">for</span> <span class="n">mtype</span> <span class="ow">in</span> <span class="n">_MODEL_PRIORITY</span><span class="p">:</span>
 <a id="__codelineno-0-144" name="__codelineno-0-144"></a>            <span class="n">model_class</span> <span class="o">=</span> <span class="n">model_classes</span><span class="p">[</span><span class="n">mtype</span><span class="p">]</span>
 <a id="__codelineno-0-145" name="__codelineno-0-145"></a>            <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<a id="__codelineno-0-146" name="__codelineno-0-146"></a>                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mtype</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: Model not available (not configured)&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-146" name="__codelineno-0-146"></a>                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mtype</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: Model not available (not configured)"</span><span class="p">)</span>
 <a id="__codelineno-0-147" name="__codelineno-0-147"></a>                <span class="k">continue</span>
 <a id="__codelineno-0-148" name="__codelineno-0-148"></a>            <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-149" name="__codelineno-0-149"></a>                <span class="k">return</span> <span class="n">model_class</span><span class="p">(</span><span class="n">icao</span><span class="p">)</span>
 <a id="__codelineno-0-150" name="__codelineno-0-150"></a>            <span class="k">except</span> <span class="p">(</span><span class="ne">KeyError</span><span class="p">,</span> <span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">,</span> <span class="n">OpenLeafError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-<a id="__codelineno-0-151" name="__codelineno-0-151"></a>                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mtype</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-151" name="__codelineno-0-151"></a>                <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mtype</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 <a id="__codelineno-0-152" name="__codelineno-0-152"></a>
 <a id="__codelineno-0-153" name="__codelineno-0-153"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-154" name="__codelineno-0-154"></a>            <span class="sa">f</span><span class="s2">&quot;Aircraft &#39;</span><span class="si">{</span><span class="n">icao</span><span class="si">}</span><span class="s2">&#39; not found in any model. Tried:</span><span class="se">\n</span><span class="s2">&quot;</span>
-<a id="__codelineno-0-155" name="__codelineno-0-155"></a>            <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">)</span>
+<a id="__codelineno-0-154" name="__codelineno-0-154"></a>            <span class="sa">f</span><span class="s2">"Aircraft '</span><span class="si">{</span><span class="n">icao</span><span class="si">}</span><span class="s2">' not found in any model. Tried:</span><span class="se">\n</span><span class="s2">"</span>
+<a id="__codelineno-0-155" name="__codelineno-0-155"></a>            <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  - </span><span class="si">{</span><span class="n">err</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">errors</span><span class="p">)</span>
 <a id="__codelineno-0-156" name="__codelineno-0-156"></a>        <span class="p">)</span>
 <a id="__codelineno-0-157" name="__codelineno-0-157"></a>
 <a id="__codelineno-0-158" name="__codelineno-0-158"></a>    <span class="nd">@classmethod</span>
@@ -1768,15 +1768,15 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a>        <span class="n">icao</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-162" name="__codelineno-0-162"></a>        <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ModelType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-163" name="__codelineno-0-163"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AircraftModel</span><span class="p">:</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Load an aircraft model by ICAO code.</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">        </span><span class="sd">"""Load an aircraft model by ICAO code.</span>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">        If model_type is not specified, tries to load models in priority order</span>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">        (BADA4 &gt; BADA3 &gt; OpenAP &gt; PS) and returns the first successful load.</span>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">        Args:</span>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">            icao: ICAO aircraft type code (e.g., &quot;A320&quot;, &quot;B738&quot;).</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">            icao: ICAO aircraft type code (e.g., "A320", "B738").</span>
 <a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">            model_type: Specific model type to load, or None for auto-detect.</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">                Can be a string (&quot;bada3&quot;, &quot;bada4&quot;, &quot;openap&quot;, &quot;ps&quot;) or ModelType enum.</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">                Can be a string ("bada3", "bada4", "openap", "ps") or ModelType enum.</span>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a>
 <a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">        Returns:</span>
 <a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">            Loaded aircraft model implementing AircraftModel interface.</span>
@@ -1785,10 +1785,10 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">            ValueError: If model_type is invalid or aircraft not found in any model.</span>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a>
 <a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">        Example:</span>
-<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">            &gt;&gt;&gt; model = ModelFactory.load(&quot;A320&quot;)</span>
-<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">            &gt;&gt;&gt; model = ModelFactory.load(&quot;A320&quot;, model_type=&quot;bada4&quot;)</span>
-<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">            &gt;&gt;&gt; model = ModelFactory.load(&quot;A320&quot;, model_type=ModelType.BADA4)</span>
-<a id="__codelineno-0-184" name="__codelineno-0-184"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">            &gt;&gt;&gt; model = ModelFactory.load("A320")</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">            &gt;&gt;&gt; model = ModelFactory.load("A320", model_type="bada4")</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">            &gt;&gt;&gt; model = ModelFactory.load("A320", model_type=ModelType.BADA4)</span>
+<a id="__codelineno-0-184" name="__codelineno-0-184"></a><span class="sd">        """</span>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a>        <span class="n">model_classes</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_model_classes</span><span class="p">()</span>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a>        <span class="n">resolved</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_resolve_model_type</span><span class="p">(</span><span class="n">model_type</span><span class="p">)</span>
 <a id="__codelineno-0-187" name="__codelineno-0-187"></a>
@@ -1796,8 +1796,8 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-189" name="__codelineno-0-189"></a>            <span class="n">model_class</span> <span class="o">=</span> <span class="n">model_classes</span><span class="p">[</span><span class="n">resolved</span><span class="p">]</span>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a>            <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-191" name="__codelineno-0-191"></a>                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-192" name="__codelineno-0-192"></a>                    <span class="sa">f</span><span class="s2">&quot;Model type &#39;</span><span class="si">{</span><span class="n">resolved</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; is not available. &quot;</span>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a>                    <span class="sa">f</span><span class="s2">&quot;Check that the required data path is configured.&quot;</span>
+<a id="__codelineno-0-192" name="__codelineno-0-192"></a>                    <span class="sa">f</span><span class="s2">"Model type '</span><span class="si">{</span><span class="n">resolved</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">' is not available. "</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a>                    <span class="sa">f</span><span class="s2">"Check that the required data path is configured."</span>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a>                <span class="p">)</span>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a>            <span class="k">return</span> <span class="n">model_class</span><span class="p">(</span><span class="n">icao</span><span class="p">)</span>
 <a id="__codelineno-0-196" name="__codelineno-0-196"></a>
@@ -1809,7 +1809,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-202" name="__codelineno-0-202"></a>        <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a>        <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ModelType</span><span class="p">,</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AircraftModel</span><span class="p">:</span>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Load an aircraft model from a specific data file.</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="w">        </span><span class="sd">"""Load an aircraft model from a specific data file.</span>
 <a id="__codelineno-0-206" name="__codelineno-0-206"></a>
 <a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">            file_path: Path to the model data file.</span>
@@ -1824,9 +1824,9 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">            FileNotFoundError: If file does not exist.</span>
 <a id="__codelineno-0-218" name="__codelineno-0-218"></a>
 <a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">        Example:</span>
-<a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">            &gt;&gt;&gt; model = ModelFactory.load_from_file(&quot;/path/to/A320.xml&quot;, &quot;bada4&quot;)</span>
-<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">            &gt;&gt;&gt; model = ModelFactory.load_from_file(&quot;/path/to/A320.opf&quot;, &quot;bada3&quot;)</span>
-<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">            &gt;&gt;&gt; model = ModelFactory.load_from_file("/path/to/A320.xml", "bada4")</span>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">            &gt;&gt;&gt; model = ModelFactory.load_from_file("/path/to/A320.opf", "bada3")</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">        """</span>
 <a id="__codelineno-0-223" name="__codelineno-0-223"></a>        <span class="n">model_classes</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_model_classes</span><span class="p">()</span>
 <a id="__codelineno-0-224" name="__codelineno-0-224"></a>
 <a id="__codelineno-0-225" name="__codelineno-0-225"></a>        <span class="c1"># Convert string to ModelType if needed</span>
@@ -1836,23 +1836,23 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-229" name="__codelineno-0-229"></a>            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-0-230" name="__codelineno-0-230"></a>                <span class="n">valid_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ModelType</span><span class="p">]</span>
 <a id="__codelineno-0-231" name="__codelineno-0-231"></a>                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-232" name="__codelineno-0-232"></a>                    <span class="sa">f</span><span class="s2">&quot;Invalid model_type &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&#39;. Valid types are: </span><span class="si">{</span><span class="n">valid_types</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a>                    <span class="sa">f</span><span class="s2">"Invalid model_type '</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">'. Valid types are: </span><span class="si">{</span><span class="n">valid_types</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-233" name="__codelineno-0-233"></a>                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 <a id="__codelineno-0-234" name="__codelineno-0-234"></a>
 <a id="__codelineno-0-235" name="__codelineno-0-235"></a>        <span class="n">model_class</span> <span class="o">=</span> <span class="n">model_classes</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span>
 <a id="__codelineno-0-236" name="__codelineno-0-236"></a>
 <a id="__codelineno-0-237" name="__codelineno-0-237"></a>        <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-238" name="__codelineno-0-238"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-239" name="__codelineno-0-239"></a>                <span class="sa">f</span><span class="s2">&quot;Model type &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; is not available. &quot;</span>
-<a id="__codelineno-0-240" name="__codelineno-0-240"></a>                <span class="sa">f</span><span class="s2">&quot;Check that the required data path is configured.&quot;</span>
+<a id="__codelineno-0-239" name="__codelineno-0-239"></a>                <span class="sa">f</span><span class="s2">"Model type '</span><span class="si">{</span><span class="n">model_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">' is not available. "</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a>                <span class="sa">f</span><span class="s2">"Check that the required data path is configured."</span>
 <a id="__codelineno-0-241" name="__codelineno-0-241"></a>            <span class="p">)</span>
 <a id="__codelineno-0-242" name="__codelineno-0-242"></a>
 <a id="__codelineno-0-243" name="__codelineno-0-243"></a>        <span class="c1"># Use from_file class method if available</span>
-<a id="__codelineno-0-244" name="__codelineno-0-244"></a>        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model_class</span><span class="p">,</span> <span class="s2">&quot;from_file&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a>        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model_class</span><span class="p">,</span> <span class="s2">"from_file"</span><span class="p">):</span>
 <a id="__codelineno-0-245" name="__codelineno-0-245"></a>            <span class="k">return</span> <span class="n">model_class</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 <a id="__codelineno-0-246" name="__codelineno-0-246"></a>        <span class="k">else</span><span class="p">:</span>
 <a id="__codelineno-0-247" name="__codelineno-0-247"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-248" name="__codelineno-0-248"></a>                <span class="sa">f</span><span class="s2">&quot;Model type &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; does not support loading from file.&quot;</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a>                <span class="sa">f</span><span class="s2">"Model type '</span><span class="si">{</span><span class="n">model_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">' does not support loading from file."</span>
 <a id="__codelineno-0-249" name="__codelineno-0-249"></a>            <span class="p">)</span>
 <a id="__codelineno-0-250" name="__codelineno-0-250"></a>
 <a id="__codelineno-0-251" name="__codelineno-0-251"></a>    <span class="nd">@classmethod</span>
@@ -1860,7 +1860,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-253" name="__codelineno-0-253"></a>        <span class="bp">cls</span><span class="p">,</span>
 <a id="__codelineno-0-254" name="__codelineno-0-254"></a>        <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ModelType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">ModelType</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;List available aircraft for one or all model types.</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="w">        </span><span class="sd">"""List available aircraft for one or all model types.</span>
 <a id="__codelineno-0-257" name="__codelineno-0-257"></a>
 <a id="__codelineno-0-258" name="__codelineno-0-258"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">            model_type: Specific model type, or None for all types.</span>
@@ -1871,8 +1871,8 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-264" name="__codelineno-0-264"></a>
 <a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="sd">        Example:</span>
 <a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">            &gt;&gt;&gt; all_aircraft = ModelFactory.available_aircraft()</span>
-<a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">            &gt;&gt;&gt; bada4_aircraft = ModelFactory.available_aircraft(&quot;bada4&quot;)</span>
-<a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">            &gt;&gt;&gt; bada4_aircraft = ModelFactory.available_aircraft("bada4")</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">        """</span>
 <a id="__codelineno-0-269" name="__codelineno-0-269"></a>        <span class="n">model_classes</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_model_classes</span><span class="p">()</span>
 <a id="__codelineno-0-270" name="__codelineno-0-270"></a>
 <a id="__codelineno-0-271" name="__codelineno-0-271"></a>        <span class="c1"># Convert string to ModelType if needed</span>
@@ -1882,21 +1882,21 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-275" name="__codelineno-0-275"></a>            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-0-276" name="__codelineno-0-276"></a>                <span class="n">valid_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ModelType</span><span class="p">]</span>
 <a id="__codelineno-0-277" name="__codelineno-0-277"></a>                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-278" name="__codelineno-0-278"></a>                    <span class="sa">f</span><span class="s2">&quot;Invalid model_type &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&#39;. Valid types are: </span><span class="si">{</span><span class="n">valid_types</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-278" name="__codelineno-0-278"></a>                    <span class="sa">f</span><span class="s2">"Invalid model_type '</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">'. Valid types are: </span><span class="si">{</span><span class="n">valid_types</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-279" name="__codelineno-0-279"></a>                <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 <a id="__codelineno-0-280" name="__codelineno-0-280"></a>
 <a id="__codelineno-0-281" name="__codelineno-0-281"></a>        <span class="k">def</span><span class="w"> </span><span class="nf">_get_aircraft_list</span><span class="p">(</span><span class="n">mtype</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="w">            </span><span class="sd">&quot;&quot;&quot;Get aircraft list for a model type, handling errors.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="w">            </span><span class="sd">"""Get aircraft list for a model type, handling errors."""</span>
 <a id="__codelineno-0-283" name="__codelineno-0-283"></a>            <span class="n">model_class</span> <span class="o">=</span> <span class="n">model_classes</span><span class="p">[</span><span class="n">mtype</span><span class="p">]</span>
 <a id="__codelineno-0-284" name="__codelineno-0-284"></a>            <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-285" name="__codelineno-0-285"></a>                <span class="k">return</span> <span class="p">[]</span>
-<a id="__codelineno-0-286" name="__codelineno-0-286"></a>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model_class</span><span class="p">,</span> <span class="s2">&quot;available_aircraft&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a>            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model_class</span><span class="p">,</span> <span class="s2">"available_aircraft"</span><span class="p">):</span>
 <a id="__codelineno-0-287" name="__codelineno-0-287"></a>                <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-288" name="__codelineno-0-288"></a>                    <span class="k">return</span> <span class="n">model_class</span><span class="o">.</span><span class="n">available_aircraft</span><span class="p">()</span>
 <a id="__codelineno-0-289" name="__codelineno-0-289"></a>                <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">,</span> <span class="n">OpenLeafError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-0-290" name="__codelineno-0-290"></a>                    <span class="c1"># ImportError: optional backend library (openap/pycontrails)</span>
 <a id="__codelineno-0-291" name="__codelineno-0-291"></a>                    <span class="c1"># not installed — same contract as unconfigured BADA paths.</span>
-<a id="__codelineno-0-292" name="__codelineno-0-292"></a>                    <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Failed to get aircraft list for </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<a id="__codelineno-0-292" name="__codelineno-0-292"></a>                    <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Failed to get aircraft list for </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 <a id="__codelineno-0-293" name="__codelineno-0-293"></a>                    <span class="k">return</span> <span class="p">[]</span>
 <a id="__codelineno-0-294" name="__codelineno-0-294"></a>            <span class="k">return</span> <span class="p">[]</span>
 <a id="__codelineno-0-295" name="__codelineno-0-295"></a>
@@ -1912,7 +1912,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-305" name="__codelineno-0-305"></a>        <span class="n">icao</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-306" name="__codelineno-0-306"></a>        <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ModelType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-307" name="__codelineno-0-307"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="n">ModelType</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-<a id="__codelineno-0-308" name="__codelineno-0-308"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Check if an aircraft is available in one or all model types.</span>
+<a id="__codelineno-0-308" name="__codelineno-0-308"></a><span class="w">        </span><span class="sd">"""Check if an aircraft is available in one or all model types.</span>
 <a id="__codelineno-0-309" name="__codelineno-0-309"></a>
 <a id="__codelineno-0-310" name="__codelineno-0-310"></a><span class="sd">        Args:</span>
 <a id="__codelineno-0-311" name="__codelineno-0-311"></a><span class="sd">            icao: ICAO aircraft type code.</span>
@@ -1923,11 +1923,11 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-316" name="__codelineno-0-316"></a><span class="sd">            If model_type is None: Dictionary mapping ModelType to availability.</span>
 <a id="__codelineno-0-317" name="__codelineno-0-317"></a>
 <a id="__codelineno-0-318" name="__codelineno-0-318"></a><span class="sd">        Example:</span>
-<a id="__codelineno-0-319" name="__codelineno-0-319"></a><span class="sd">            &gt;&gt;&gt; ModelFactory.is_available(&quot;A320&quot;)</span>
+<a id="__codelineno-0-319" name="__codelineno-0-319"></a><span class="sd">            &gt;&gt;&gt; ModelFactory.is_available("A320")</span>
 <a id="__codelineno-0-320" name="__codelineno-0-320"></a><span class="sd">            {ModelType.BADA3: True, ModelType.BADA4: True, ...}</span>
-<a id="__codelineno-0-321" name="__codelineno-0-321"></a><span class="sd">            &gt;&gt;&gt; ModelFactory.is_available(&quot;A320&quot;, &quot;bada4&quot;)</span>
+<a id="__codelineno-0-321" name="__codelineno-0-321"></a><span class="sd">            &gt;&gt;&gt; ModelFactory.is_available("A320", "bada4")</span>
 <a id="__codelineno-0-322" name="__codelineno-0-322"></a><span class="sd">            True</span>
-<a id="__codelineno-0-323" name="__codelineno-0-323"></a><span class="sd">        &quot;&quot;&quot;</span>
+<a id="__codelineno-0-323" name="__codelineno-0-323"></a><span class="sd">        """</span>
 <a id="__codelineno-0-324" name="__codelineno-0-324"></a>        <span class="n">all_aircraft</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">available_aircraft</span><span class="p">(</span><span class="n">model_type</span><span class="p">)</span>
 <a id="__codelineno-0-325" name="__codelineno-0-325"></a>
 <a id="__codelineno-0-326" name="__codelineno-0-326"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">all_aircraft</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -2032,7 +2032,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-253" name="__codelineno-0-253"></a>    <span class="bp">cls</span><span class="p">,</span>
 <a id="__codelineno-0-254" name="__codelineno-0-254"></a>    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ModelType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-255" name="__codelineno-0-255"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="n">ModelType</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;List available aircraft for one or all model types.</span>
+<a id="__codelineno-0-256" name="__codelineno-0-256"></a><span class="w">    </span><span class="sd">"""List available aircraft for one or all model types.</span>
 <a id="__codelineno-0-257" name="__codelineno-0-257"></a>
 <a id="__codelineno-0-258" name="__codelineno-0-258"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-259" name="__codelineno-0-259"></a><span class="sd">        model_type: Specific model type, or None for all types.</span>
@@ -2043,8 +2043,8 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-264" name="__codelineno-0-264"></a>
 <a id="__codelineno-0-265" name="__codelineno-0-265"></a><span class="sd">    Example:</span>
 <a id="__codelineno-0-266" name="__codelineno-0-266"></a><span class="sd">        &gt;&gt;&gt; all_aircraft = ModelFactory.available_aircraft()</span>
-<a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">        &gt;&gt;&gt; bada4_aircraft = ModelFactory.available_aircraft(&quot;bada4&quot;)</span>
-<a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-267" name="__codelineno-0-267"></a><span class="sd">        &gt;&gt;&gt; bada4_aircraft = ModelFactory.available_aircraft("bada4")</span>
+<a id="__codelineno-0-268" name="__codelineno-0-268"></a><span class="sd">    """</span>
 <a id="__codelineno-0-269" name="__codelineno-0-269"></a>    <span class="n">model_classes</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_model_classes</span><span class="p">()</span>
 <a id="__codelineno-0-270" name="__codelineno-0-270"></a>
 <a id="__codelineno-0-271" name="__codelineno-0-271"></a>    <span class="c1"># Convert string to ModelType if needed</span>
@@ -2054,21 +2054,21 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-275" name="__codelineno-0-275"></a>        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-0-276" name="__codelineno-0-276"></a>            <span class="n">valid_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ModelType</span><span class="p">]</span>
 <a id="__codelineno-0-277" name="__codelineno-0-277"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-278" name="__codelineno-0-278"></a>                <span class="sa">f</span><span class="s2">&quot;Invalid model_type &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&#39;. Valid types are: </span><span class="si">{</span><span class="n">valid_types</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-278" name="__codelineno-0-278"></a>                <span class="sa">f</span><span class="s2">"Invalid model_type '</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">'. Valid types are: </span><span class="si">{</span><span class="n">valid_types</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-279" name="__codelineno-0-279"></a>            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 <a id="__codelineno-0-280" name="__codelineno-0-280"></a>
 <a id="__codelineno-0-281" name="__codelineno-0-281"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_get_aircraft_list</span><span class="p">(</span><span class="n">mtype</span><span class="p">:</span> <span class="n">ModelType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-<a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Get aircraft list for a model type, handling errors.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-282" name="__codelineno-0-282"></a><span class="w">        </span><span class="sd">"""Get aircraft list for a model type, handling errors."""</span>
 <a id="__codelineno-0-283" name="__codelineno-0-283"></a>        <span class="n">model_class</span> <span class="o">=</span> <span class="n">model_classes</span><span class="p">[</span><span class="n">mtype</span><span class="p">]</span>
 <a id="__codelineno-0-284" name="__codelineno-0-284"></a>        <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-285" name="__codelineno-0-285"></a>            <span class="k">return</span> <span class="p">[]</span>
-<a id="__codelineno-0-286" name="__codelineno-0-286"></a>        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model_class</span><span class="p">,</span> <span class="s2">&quot;available_aircraft&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-286" name="__codelineno-0-286"></a>        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model_class</span><span class="p">,</span> <span class="s2">"available_aircraft"</span><span class="p">):</span>
 <a id="__codelineno-0-287" name="__codelineno-0-287"></a>            <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-288" name="__codelineno-0-288"></a>                <span class="k">return</span> <span class="n">model_class</span><span class="o">.</span><span class="n">available_aircraft</span><span class="p">()</span>
 <a id="__codelineno-0-289" name="__codelineno-0-289"></a>            <span class="k">except</span> <span class="p">(</span><span class="ne">ImportError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">,</span> <span class="n">OpenLeafError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-0-290" name="__codelineno-0-290"></a>                <span class="c1"># ImportError: optional backend library (openap/pycontrails)</span>
 <a id="__codelineno-0-291" name="__codelineno-0-291"></a>                <span class="c1"># not installed — same contract as unconfigured BADA paths.</span>
-<a id="__codelineno-0-292" name="__codelineno-0-292"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Failed to get aircraft list for </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<a id="__codelineno-0-292" name="__codelineno-0-292"></a>                <span class="n">_logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Failed to get aircraft list for </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">"</span><span class="p">,</span> <span class="n">mtype</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
 <a id="__codelineno-0-293" name="__codelineno-0-293"></a>                <span class="k">return</span> <span class="p">[]</span>
 <a id="__codelineno-0-294" name="__codelineno-0-294"></a>        <span class="k">return</span> <span class="p">[]</span>
 <a id="__codelineno-0-295" name="__codelineno-0-295"></a>
@@ -2147,7 +2147,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-305" name="__codelineno-0-305"></a>    <span class="n">icao</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-306" name="__codelineno-0-306"></a>    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ModelType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-307" name="__codelineno-0-307"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="n">ModelType</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
-<a id="__codelineno-0-308" name="__codelineno-0-308"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an aircraft is available in one or all model types.</span>
+<a id="__codelineno-0-308" name="__codelineno-0-308"></a><span class="w">    </span><span class="sd">"""Check if an aircraft is available in one or all model types.</span>
 <a id="__codelineno-0-309" name="__codelineno-0-309"></a>
 <a id="__codelineno-0-310" name="__codelineno-0-310"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-311" name="__codelineno-0-311"></a><span class="sd">        icao: ICAO aircraft type code.</span>
@@ -2158,11 +2158,11 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-316" name="__codelineno-0-316"></a><span class="sd">        If model_type is None: Dictionary mapping ModelType to availability.</span>
 <a id="__codelineno-0-317" name="__codelineno-0-317"></a>
 <a id="__codelineno-0-318" name="__codelineno-0-318"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-319" name="__codelineno-0-319"></a><span class="sd">        &gt;&gt;&gt; ModelFactory.is_available(&quot;A320&quot;)</span>
+<a id="__codelineno-0-319" name="__codelineno-0-319"></a><span class="sd">        &gt;&gt;&gt; ModelFactory.is_available("A320")</span>
 <a id="__codelineno-0-320" name="__codelineno-0-320"></a><span class="sd">        {ModelType.BADA3: True, ModelType.BADA4: True, ...}</span>
-<a id="__codelineno-0-321" name="__codelineno-0-321"></a><span class="sd">        &gt;&gt;&gt; ModelFactory.is_available(&quot;A320&quot;, &quot;bada4&quot;)</span>
+<a id="__codelineno-0-321" name="__codelineno-0-321"></a><span class="sd">        &gt;&gt;&gt; ModelFactory.is_available("A320", "bada4")</span>
 <a id="__codelineno-0-322" name="__codelineno-0-322"></a><span class="sd">        True</span>
-<a id="__codelineno-0-323" name="__codelineno-0-323"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-323" name="__codelineno-0-323"></a><span class="sd">    """</span>
 <a id="__codelineno-0-324" name="__codelineno-0-324"></a>    <span class="n">all_aircraft</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">available_aircraft</span><span class="p">(</span><span class="n">model_type</span><span class="p">)</span>
 <a id="__codelineno-0-325" name="__codelineno-0-325"></a>
 <a id="__codelineno-0-326" name="__codelineno-0-326"></a>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">all_aircraft</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -2254,15 +2254,15 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-161" name="__codelineno-0-161"></a>    <span class="n">icao</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <a id="__codelineno-0-162" name="__codelineno-0-162"></a>    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ModelType</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <a id="__codelineno-0-163" name="__codelineno-0-163"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AircraftModel</span><span class="p">:</span>
-<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load an aircraft model by ICAO code.</span>
+<a id="__codelineno-0-164" name="__codelineno-0-164"></a><span class="w">    </span><span class="sd">"""Load an aircraft model by ICAO code.</span>
 <a id="__codelineno-0-165" name="__codelineno-0-165"></a>
 <a id="__codelineno-0-166" name="__codelineno-0-166"></a><span class="sd">    If model_type is not specified, tries to load models in priority order</span>
 <a id="__codelineno-0-167" name="__codelineno-0-167"></a><span class="sd">    (BADA4 &gt; BADA3 &gt; OpenAP &gt; PS) and returns the first successful load.</span>
 <a id="__codelineno-0-168" name="__codelineno-0-168"></a>
 <a id="__codelineno-0-169" name="__codelineno-0-169"></a><span class="sd">    Args:</span>
-<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">        icao: ICAO aircraft type code (e.g., &quot;A320&quot;, &quot;B738&quot;).</span>
+<a id="__codelineno-0-170" name="__codelineno-0-170"></a><span class="sd">        icao: ICAO aircraft type code (e.g., "A320", "B738").</span>
 <a id="__codelineno-0-171" name="__codelineno-0-171"></a><span class="sd">        model_type: Specific model type to load, or None for auto-detect.</span>
-<a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">            Can be a string (&quot;bada3&quot;, &quot;bada4&quot;, &quot;openap&quot;, &quot;ps&quot;) or ModelType enum.</span>
+<a id="__codelineno-0-172" name="__codelineno-0-172"></a><span class="sd">            Can be a string ("bada3", "bada4", "openap", "ps") or ModelType enum.</span>
 <a id="__codelineno-0-173" name="__codelineno-0-173"></a>
 <a id="__codelineno-0-174" name="__codelineno-0-174"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-175" name="__codelineno-0-175"></a><span class="sd">        Loaded aircraft model implementing AircraftModel interface.</span>
@@ -2271,10 +2271,10 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-178" name="__codelineno-0-178"></a><span class="sd">        ValueError: If model_type is invalid or aircraft not found in any model.</span>
 <a id="__codelineno-0-179" name="__codelineno-0-179"></a>
 <a id="__codelineno-0-180" name="__codelineno-0-180"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">        &gt;&gt;&gt; model = ModelFactory.load(&quot;A320&quot;)</span>
-<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">        &gt;&gt;&gt; model = ModelFactory.load(&quot;A320&quot;, model_type=&quot;bada4&quot;)</span>
-<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">        &gt;&gt;&gt; model = ModelFactory.load(&quot;A320&quot;, model_type=ModelType.BADA4)</span>
-<a id="__codelineno-0-184" name="__codelineno-0-184"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-181" name="__codelineno-0-181"></a><span class="sd">        &gt;&gt;&gt; model = ModelFactory.load("A320")</span>
+<a id="__codelineno-0-182" name="__codelineno-0-182"></a><span class="sd">        &gt;&gt;&gt; model = ModelFactory.load("A320", model_type="bada4")</span>
+<a id="__codelineno-0-183" name="__codelineno-0-183"></a><span class="sd">        &gt;&gt;&gt; model = ModelFactory.load("A320", model_type=ModelType.BADA4)</span>
+<a id="__codelineno-0-184" name="__codelineno-0-184"></a><span class="sd">    """</span>
 <a id="__codelineno-0-185" name="__codelineno-0-185"></a>    <span class="n">model_classes</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_model_classes</span><span class="p">()</span>
 <a id="__codelineno-0-186" name="__codelineno-0-186"></a>    <span class="n">resolved</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_resolve_model_type</span><span class="p">(</span><span class="n">model_type</span><span class="p">)</span>
 <a id="__codelineno-0-187" name="__codelineno-0-187"></a>
@@ -2282,8 +2282,8 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-189" name="__codelineno-0-189"></a>        <span class="n">model_class</span> <span class="o">=</span> <span class="n">model_classes</span><span class="p">[</span><span class="n">resolved</span><span class="p">]</span>
 <a id="__codelineno-0-190" name="__codelineno-0-190"></a>        <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-191" name="__codelineno-0-191"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-192" name="__codelineno-0-192"></a>                <span class="sa">f</span><span class="s2">&quot;Model type &#39;</span><span class="si">{</span><span class="n">resolved</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; is not available. &quot;</span>
-<a id="__codelineno-0-193" name="__codelineno-0-193"></a>                <span class="sa">f</span><span class="s2">&quot;Check that the required data path is configured.&quot;</span>
+<a id="__codelineno-0-192" name="__codelineno-0-192"></a>                <span class="sa">f</span><span class="s2">"Model type '</span><span class="si">{</span><span class="n">resolved</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">' is not available. "</span>
+<a id="__codelineno-0-193" name="__codelineno-0-193"></a>                <span class="sa">f</span><span class="s2">"Check that the required data path is configured."</span>
 <a id="__codelineno-0-194" name="__codelineno-0-194"></a>            <span class="p">)</span>
 <a id="__codelineno-0-195" name="__codelineno-0-195"></a>        <span class="k">return</span> <span class="n">model_class</span><span class="p">(</span><span class="n">icao</span><span class="p">)</span>
 <a id="__codelineno-0-196" name="__codelineno-0-196"></a>
@@ -2382,7 +2382,7 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-202" name="__codelineno-0-202"></a>    <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span><span class="p">,</span>
 <a id="__codelineno-0-203" name="__codelineno-0-203"></a>    <span class="n">model_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">ModelType</span><span class="p">,</span>
 <a id="__codelineno-0-204" name="__codelineno-0-204"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AircraftModel</span><span class="p">:</span>
-<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Load an aircraft model from a specific data file.</span>
+<a id="__codelineno-0-205" name="__codelineno-0-205"></a><span class="w">    </span><span class="sd">"""Load an aircraft model from a specific data file.</span>
 <a id="__codelineno-0-206" name="__codelineno-0-206"></a>
 <a id="__codelineno-0-207" name="__codelineno-0-207"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-208" name="__codelineno-0-208"></a><span class="sd">        file_path: Path to the model data file.</span>
@@ -2397,9 +2397,9 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-217" name="__codelineno-0-217"></a><span class="sd">        FileNotFoundError: If file does not exist.</span>
 <a id="__codelineno-0-218" name="__codelineno-0-218"></a>
 <a id="__codelineno-0-219" name="__codelineno-0-219"></a><span class="sd">    Example:</span>
-<a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">        &gt;&gt;&gt; model = ModelFactory.load_from_file(&quot;/path/to/A320.xml&quot;, &quot;bada4&quot;)</span>
-<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">        &gt;&gt;&gt; model = ModelFactory.load_from_file(&quot;/path/to/A320.opf&quot;, &quot;bada3&quot;)</span>
-<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-220" name="__codelineno-0-220"></a><span class="sd">        &gt;&gt;&gt; model = ModelFactory.load_from_file("/path/to/A320.xml", "bada4")</span>
+<a id="__codelineno-0-221" name="__codelineno-0-221"></a><span class="sd">        &gt;&gt;&gt; model = ModelFactory.load_from_file("/path/to/A320.opf", "bada3")</span>
+<a id="__codelineno-0-222" name="__codelineno-0-222"></a><span class="sd">    """</span>
 <a id="__codelineno-0-223" name="__codelineno-0-223"></a>    <span class="n">model_classes</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_model_classes</span><span class="p">()</span>
 <a id="__codelineno-0-224" name="__codelineno-0-224"></a>
 <a id="__codelineno-0-225" name="__codelineno-0-225"></a>    <span class="c1"># Convert string to ModelType if needed</span>
@@ -2409,23 +2409,23 @@ sources without requiring knowledge of the specific model classes.</p>
 <a id="__codelineno-0-229" name="__codelineno-0-229"></a>        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
 <a id="__codelineno-0-230" name="__codelineno-0-230"></a>            <span class="n">valid_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">value</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ModelType</span><span class="p">]</span>
 <a id="__codelineno-0-231" name="__codelineno-0-231"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-232" name="__codelineno-0-232"></a>                <span class="sa">f</span><span class="s2">&quot;Invalid model_type &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&#39;. Valid types are: </span><span class="si">{</span><span class="n">valid_types</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-232" name="__codelineno-0-232"></a>                <span class="sa">f</span><span class="s2">"Invalid model_type '</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">'. Valid types are: </span><span class="si">{</span><span class="n">valid_types</span><span class="si">}</span><span class="s2">"</span>
 <a id="__codelineno-0-233" name="__codelineno-0-233"></a>            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">e</span>
 <a id="__codelineno-0-234" name="__codelineno-0-234"></a>
 <a id="__codelineno-0-235" name="__codelineno-0-235"></a>    <span class="n">model_class</span> <span class="o">=</span> <span class="n">model_classes</span><span class="p">[</span><span class="n">model_type</span><span class="p">]</span>
 <a id="__codelineno-0-236" name="__codelineno-0-236"></a>
 <a id="__codelineno-0-237" name="__codelineno-0-237"></a>    <span class="k">if</span> <span class="n">model_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
 <a id="__codelineno-0-238" name="__codelineno-0-238"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-239" name="__codelineno-0-239"></a>            <span class="sa">f</span><span class="s2">&quot;Model type &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; is not available. &quot;</span>
-<a id="__codelineno-0-240" name="__codelineno-0-240"></a>            <span class="sa">f</span><span class="s2">&quot;Check that the required data path is configured.&quot;</span>
+<a id="__codelineno-0-239" name="__codelineno-0-239"></a>            <span class="sa">f</span><span class="s2">"Model type '</span><span class="si">{</span><span class="n">model_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">' is not available. "</span>
+<a id="__codelineno-0-240" name="__codelineno-0-240"></a>            <span class="sa">f</span><span class="s2">"Check that the required data path is configured."</span>
 <a id="__codelineno-0-241" name="__codelineno-0-241"></a>        <span class="p">)</span>
 <a id="__codelineno-0-242" name="__codelineno-0-242"></a>
 <a id="__codelineno-0-243" name="__codelineno-0-243"></a>    <span class="c1"># Use from_file class method if available</span>
-<a id="__codelineno-0-244" name="__codelineno-0-244"></a>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model_class</span><span class="p">,</span> <span class="s2">&quot;from_file&quot;</span><span class="p">):</span>
+<a id="__codelineno-0-244" name="__codelineno-0-244"></a>    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">model_class</span><span class="p">,</span> <span class="s2">"from_file"</span><span class="p">):</span>
 <a id="__codelineno-0-245" name="__codelineno-0-245"></a>        <span class="k">return</span> <span class="n">model_class</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
 <a id="__codelineno-0-246" name="__codelineno-0-246"></a>    <span class="k">else</span><span class="p">:</span>
 <a id="__codelineno-0-247" name="__codelineno-0-247"></a>        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-<a id="__codelineno-0-248" name="__codelineno-0-248"></a>            <span class="sa">f</span><span class="s2">&quot;Model type &#39;</span><span class="si">{</span><span class="n">model_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; does not support loading from file.&quot;</span>
+<a id="__codelineno-0-248" name="__codelineno-0-248"></a>            <span class="sa">f</span><span class="s2">"Model type '</span><span class="si">{</span><span class="n">model_type</span><span class="o">.</span><span class="n">value</span><span class="si">}</span><span class="s2">' does not support loading from file."</span>
 <a id="__codelineno-0-249" name="__codelineno-0-249"></a>        <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
             </details>
@@ -2476,12 +2476,12 @@ sources without requiring knowledge of the specific model classes.</p>
 <span class="normal"><a href="#__codelineno-0-53">53</a></span>
 <span class="normal"><a href="#__codelineno-0-54">54</a></span>
 <span class="normal"><a href="#__codelineno-0-55">55</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-49" name="__codelineno-0-49"></a><span class="k">class</span><span class="w"> </span><span class="nc">ModelType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
-<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Supported aircraft performance model types.&quot;&quot;&quot;</span>
+<a id="__codelineno-0-50" name="__codelineno-0-50"></a><span class="w">    </span><span class="sd">"""Supported aircraft performance model types."""</span>
 <a id="__codelineno-0-51" name="__codelineno-0-51"></a>
-<a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="n">BADA3</span> <span class="o">=</span> <span class="s2">&quot;bada3&quot;</span>
-<a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="n">BADA4</span> <span class="o">=</span> <span class="s2">&quot;bada4&quot;</span>
-<a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="n">OPENAP</span> <span class="o">=</span> <span class="s2">&quot;openap&quot;</span>
-<a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">PS</span> <span class="o">=</span> <span class="s2">&quot;ps&quot;</span>
+<a id="__codelineno-0-52" name="__codelineno-0-52"></a>    <span class="n">BADA3</span> <span class="o">=</span> <span class="s2">"bada3"</span>
+<a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="n">BADA4</span> <span class="o">=</span> <span class="s2">"bada4"</span>
+<a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="n">OPENAP</span> <span class="o">=</span> <span class="s2">"openap"</span>
+<a id="__codelineno-0-55" name="__codelineno-0-55"></a>    <span class="n">PS</span> <span class="o">=</span> <span class="s2">"ps"</span>
 </code></pre></div></td></tr></table></div>
               </details>
 

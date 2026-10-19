@@ -1387,7 +1387,7 @@ CasADi type.</p>
 <span class="normal"><a href="#__codelineno-0-271">271</a></span>
 <span class="normal"><a href="#__codelineno-0-272">272</a></span>
 <span class="normal"><a href="#__codelineno-0-273">273</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-234" name="__codelineno-0-234"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_casadi_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is or contains a CasADi data type.</span>
+<a id="__codelineno-0-235" name="__codelineno-0-235"></a><span class="w">    </span><span class="sd">"""Check if an object is or contains a CasADi data type.</span>
 <a id="__codelineno-0-236" name="__codelineno-0-236"></a>
 <a id="__codelineno-0-237" name="__codelineno-0-237"></a><span class="sd">    This is the main dispatch check - returns True if the object is a CasADi</span>
 <a id="__codelineno-0-238" name="__codelineno-0-238"></a><span class="sd">    type (MX, DM, SX) or, if recursive=True, if any nested element is a</span>
@@ -1401,7 +1401,7 @@ CasADi type.</p>
 <a id="__codelineno-0-246" name="__codelineno-0-246"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-247" name="__codelineno-0-247"></a><span class="sd">        True if the object is (or contains) a CasADi type, False otherwise.</span>
 <a id="__codelineno-0-248" name="__codelineno-0-248"></a><span class="sd">        Always returns False if CasADi is not installed.</span>
-<a id="__codelineno-0-249" name="__codelineno-0-249"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-249" name="__codelineno-0-249"></a><span class="sd">    """</span>
 <a id="__codelineno-0-250" name="__codelineno-0-250"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">Backend</span><span class="o">.</span><span class="n">CASADI</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
 <a id="__codelineno-0-251" name="__codelineno-0-251"></a>        <span class="k">return</span> <span class="kc">False</span>
 <a id="__codelineno-0-252" name="__codelineno-0-252"></a>
@@ -1410,7 +1410,7 @@ CasADi type.</p>
 <a id="__codelineno-0-255" name="__codelineno-0-255"></a>    <span class="n">t</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
 <a id="__codelineno-0-256" name="__codelineno-0-256"></a>
 <a id="__codelineno-0-257" name="__codelineno-0-257"></a>    <span class="c1"># NumPy arrays cannot contain CasADi types (unless object dtype)</span>
-<a id="__codelineno-0-258" name="__codelineno-0-258"></a>    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s2">&quot;O&quot;</span><span class="p">:</span>
+<a id="__codelineno-0-258" name="__codelineno-0-258"></a>    <span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">dtype</span> <span class="o">!=</span> <span class="s2">"O"</span><span class="p">:</span>
 <a id="__codelineno-0-259" name="__codelineno-0-259"></a>        <span class="k">return</span> <span class="kc">False</span>
 <a id="__codelineno-0-260" name="__codelineno-0-260"></a>
 <a id="__codelineno-0-261" name="__codelineno-0-261"></a>    <span class="c1"># Skip Python scalar types</span>
@@ -1466,14 +1466,14 @@ CasADi type.</p>
 <span class="normal"><a href="#__codelineno-0-43">43</a></span>
 <span class="normal"><a href="#__codelineno-0-44">44</a></span>
 <span class="normal"><a href="#__codelineno-0-45">45</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-32" name="__codelineno-0-32"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_iterable</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is iterable.</span>
+<a id="__codelineno-0-33" name="__codelineno-0-33"></a><span class="w">    </span><span class="sd">"""Check if an object is iterable.</span>
 <a id="__codelineno-0-34" name="__codelineno-0-34"></a>
 <a id="__codelineno-0-35" name="__codelineno-0-35"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-36" name="__codelineno-0-36"></a><span class="sd">        x: Object to test for iterability.</span>
 <a id="__codelineno-0-37" name="__codelineno-0-37"></a>
 <a id="__codelineno-0-38" name="__codelineno-0-38"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-39" name="__codelineno-0-39"></a><span class="sd">        Boolean indicating whether the object is iterable.</span>
-<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-40" name="__codelineno-0-40"></a><span class="sd">    """</span>
 <a id="__codelineno-0-41" name="__codelineno-0-41"></a>    <span class="k">try</span><span class="p">:</span>
 <a id="__codelineno-0-42" name="__codelineno-0-42"></a>        <span class="nb">iter</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <a id="__codelineno-0-43" name="__codelineno-0-43"></a>        <span class="k">return</span> <span class="kc">True</span>
@@ -1544,7 +1544,7 @@ CasADi type.</p>
 <span class="normal"><a href="#__codelineno-0-309">309</a></span>
 <span class="normal"><a href="#__codelineno-0-310">310</a></span>
 <span class="normal"><a href="#__codelineno-0-311">311</a></span></pre></div></td><td class="code"><div><pre><span></span><code><a id="__codelineno-0-276" name="__codelineno-0-276"></a><span class="k">def</span><span class="w"> </span><span class="nf">is_torch_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">recursive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is or contains a PyTorch tensor.</span>
+<a id="__codelineno-0-277" name="__codelineno-0-277"></a><span class="w">    </span><span class="sd">"""Check if an object is or contains a PyTorch tensor.</span>
 <a id="__codelineno-0-278" name="__codelineno-0-278"></a>
 <a id="__codelineno-0-279" name="__codelineno-0-279"></a><span class="sd">    Args:</span>
 <a id="__codelineno-0-280" name="__codelineno-0-280"></a><span class="sd">        obj: The object to evaluate.</span>
@@ -1554,7 +1554,7 @@ CasADi type.</p>
 <a id="__codelineno-0-284" name="__codelineno-0-284"></a><span class="sd">    Returns:</span>
 <a id="__codelineno-0-285" name="__codelineno-0-285"></a><span class="sd">        True if the object is (or contains) a PyTorch tensor, False otherwise.</span>
 <a id="__codelineno-0-286" name="__codelineno-0-286"></a><span class="sd">        Always returns False if PyTorch is not installed.</span>
-<a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="sd">    &quot;&quot;&quot;</span>
+<a id="__codelineno-0-287" name="__codelineno-0-287"></a><span class="sd">    """</span>
 <a id="__codelineno-0-288" name="__codelineno-0-288"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">Backend</span><span class="o">.</span><span class="n">TORCH</span><span class="o">.</span><span class="n">available</span><span class="p">:</span>
 <a id="__codelineno-0-289" name="__codelineno-0-289"></a>        <span class="k">return</span> <span class="kc">False</span>
 <a id="__codelineno-0-290" name="__codelineno-0-290"></a>
