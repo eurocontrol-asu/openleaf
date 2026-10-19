@@ -141,7 +141,9 @@ class EnvelopeChecker:
             return
 
         active_violations = {
-            name: int(np.sum(mask)) for name, mask in violations.items() if np.any(mask)
+            name: int(np.asarray(np.sum(mask)).item())
+            for name, mask in violations.items()
+            if np.any(mask)
         }
 
         if not active_violations:
