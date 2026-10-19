@@ -67,7 +67,7 @@ optimization = ["openleaf-performance[casadi]"]  # Trajectory optimization requi
 gpu = ["openleaf-performance[torch]"]            # GPU acceleration via PyTorch
 # Optional aircraft performance data sources
 openap = [
-    "openap>=2.4,<2.5",
+    "openap>=2.4,<2.7",
 ]
 ps = [
     "pycontrails>=0.60.2,<0.60.5",
@@ -100,7 +100,7 @@ dev = [
     "casadi>=3.6.0",
     "torch>=2.0.0",
     "jax>=0.9.1",
-    "openap>=2.4,<2.5",
+    "openap>=2.4,<2.7",
     "pycontrails>=0.60.2,<0.60.5",
     "xarray>=2023.0.0",
     "cyclopts>=3.0.0",
