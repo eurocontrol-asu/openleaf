@@ -640,3 +640,30 @@ class TestTotalEnergyModel:
 
         # Thrust should be different due to different f
         assert not np.allclose(model_mach.thrust, model_default.thrust)
+
+    @pytest.mark.parametrize(
+        "inputs",
+        [
+            {},
+            {"vertical_speed": np.array([10.0])},
+            {"thrust": np.array([50000.0])},
+            {"thrust": np.array([50000.0]), "vertical_speed": np.array([10.0])},
+        ],
+        ids=["defaults", "vertical_speed", "thrust", "thrust+vertical_speed"],
+    )
+    def test_symbolic_drag_matches_numeric(self, base_state, inputs):
+        """A CasADi drag resolves to the same state as the numeric drag."""
+        ca = pytest.importorskip("casadi")
+        drag = ca.MX.sym("drag")
+        symbolic = tem.TotalEnergyModel(**{**base_state, "drag": drag}, **inputs)
+        numeric = tem.TotalEnergyModel(**base_state, **inputs)
+
+        evaluate = ca.Function(
+            "tem", [drag], [symbolic.thrust, symbolic.vertical_speed, symbolic.f]
+        )
+        for result, expected in zip(
+            evaluate(base_state["drag"]),
+            (numeric.thrust, numeric.vertical_speed, numeric.f),
+            strict=True,
+        ):
+            np.testing.assert_allclose(np.asarray(result).ravel(), expected)

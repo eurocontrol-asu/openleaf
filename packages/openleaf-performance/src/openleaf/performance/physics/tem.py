@@ -438,7 +438,7 @@ class TotalEnergyModel:
             return self._thrust_computed
 
         # Start with default: T = D
-        result = np.asarray(self._drag)
+        result = np.array(self._drag)
 
         # Where vertical_speed is provided, compute thrust
         if self._vertical_speed_input is not None:
@@ -565,7 +565,7 @@ class TotalEnergyModel:
         if np.isscalar(f_default):
             result = np.full_like(self._altitude, f_default)
         else:
-            result = np.asarray(f_default)
+            result = np.array(f_default)
 
         # Where both thrust and vertical_speed are provided, compute f from TEM
         if self._thrust_input is not None and self._vertical_speed_input is not None:
