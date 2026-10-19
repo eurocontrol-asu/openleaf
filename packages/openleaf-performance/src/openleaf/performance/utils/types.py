@@ -12,35 +12,51 @@ from __future__ import annotations
 
 
 __all__ = [
+    "ArrayExpression",
     "ArrayScalarLike",
     "KeyedData",
     "is_keyed_data",
 ]
 
-from typing import TYPE_CHECKING
 from typing import Any
 from typing import Protocol
+from typing import Self
 
 import numpy.typing as npt
 import pandas as pd
 
 
-if TYPE_CHECKING:
-    import casadi as ca
-else:
-    try:
-        import casadi as ca
-    except ImportError:  # casadi is an optional backend: openleaf-performance[casadi]
-        ca = None
+class ArrayExpression(Protocol):
+    """Array value from a backend other than NumPy, used through its operators.
+
+    Covers CasADi ``MX``/``SX``/``DM``, PyTorch tensors and JAX arrays. The
+    dispatch layer in :mod:`openleaf.performance.numpy` picks the implementation
+    from the runtime type, so the model code only needs the elementwise
+    operators. Operands from different families (say, ``MX`` and ``SX``) do not
+    combine at runtime; that is a property of the caller's inputs, which a
+    single static type cannot express.
+    """
+
+    def __add__(self, other: Any, /) -> Self: ...
+    def __radd__(self, other: Any, /) -> Self: ...
+    def __sub__(self, other: Any, /) -> Self: ...
+    def __rsub__(self, other: Any, /) -> Self: ...
+    def __mul__(self, other: Any, /) -> Self: ...
+    def __rmul__(self, other: Any, /) -> Self: ...
+    def __truediv__(self, other: Any, /) -> Self: ...
+    def __rtruediv__(self, other: Any, /) -> Self: ...
+    def __pow__(self, other: Any, /) -> Self: ...
+    def __rpow__(self, other: Any, /) -> Self: ...
+    def __neg__(self) -> Self: ...
+    def __abs__(self) -> Self: ...
+    def __lt__(self, other: Any, /) -> Self: ...
+    def __le__(self, other: Any, /) -> Self: ...
+    def __gt__(self, other: Any, /) -> Self: ...
+    def __ge__(self, other: Any, /) -> Self: ...
 
 
-if TYPE_CHECKING or ca is not None:
-    # Extended ArrayScalarLike to include object arrays (like string arrays)
-    type ArrayScalarLike = float | int | npt.NDArray | pd.Series | ca.MX | ca.SX | ca.DM
-    """Type alias for array or scalar-like objects supporting NumPy/CasADi operations."""
-else:
-    type ArrayScalarLike = float | int | npt.NDArray | pd.Series
-    """Type alias for array or scalar-like objects (CasADi backend not installed)."""
+type ArrayScalarLike = float | int | npt.NDArray | pd.Series | ArrayExpression
+"""Type alias for the scalar and array values accepted and returned by models."""
 
 
 class KeyedData(Protocol):
@@ -64,7 +80,7 @@ class KeyedData(Protocol):
         """
         ...
 
-    def get(self, key: str, default: ArrayScalarLike = None) -> ArrayScalarLike:
+    def get[T](self, key: str, default: T = None) -> ArrayScalarLike | T:
         """Get value by key with optional default.
 
         Args:
