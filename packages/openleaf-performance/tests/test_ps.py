@@ -926,22 +926,9 @@ class TestPSLimitsScalar:
             "ATM limit should reduce or maintain max Mach"
         )
 
-    def test_max_altitude_returns_hmo(self, ps_model: PSModel):
-        """Test max_altitude returns HMO."""
-        max_alt = ps_model.limits.max_altitude({})
-
-        # HMO typically FL350-FL450 for jets
-        assert max_alt > 30000, f"max_altitude too low: {max_alt} ft"
-        assert max_alt < 50000, f"max_altitude too high: {max_alt} ft"
-
-    def test_max_altitude_exact(self, ps_model: PSModel):
-        """Verify PS max_altitude returns HMO in feet (A320: 41000 ft).
-
-        PS stores HMO from pycontrails aircraft database.
-        A320: ceiling = 41000 ft.
-        """
-        max_alt = ps_model.limits.max_altitude({})
-        assert max_alt == pytest.approx(41000.0), f"PS A320 HMO should be 41000 ft, got {max_alt}"
+    def test_hmo_exact(self, ps_model: PSModel):
+        """Verify PS HMO in feet (A320: FL410 in the pycontrails database)."""
+        assert ps_model.limits.hmo == pytest.approx(41000.0)
 
     def test_max_mach_exact(self, ps_model: PSModel):
         """Verify PS max_mach at high altitude returns MMO (A320: 0.82).
@@ -1051,16 +1038,24 @@ class TestPSLimitsSymbolic:
         # Gradient should be finite (relationship may vary with altitude)
         assert np.isfinite(grad_val), "Gradient should be finite"
 
-    def test_max_altitude_symbolic(self, ps_model: PSModel):
-        """Test max_altitude returns constant (HMO) for symbolic input."""
-        # PS max_altitude just returns HMO regardless of input
-        max_alt = ps_model.limits.max_altitude({})
-
-        # Should be a numeric constant
-        assert isinstance(max_alt, (int, float, np.floating)), (
-            "PS max_altitude should return numeric HMO"
+    def test_max_altitude_symbolic_gradient(self, ps_model: PSModel):
+        """max_altitude is a CasADi expression in mass and delta_isa."""
+        m_sym = ca.MX.sym("m")
+        disa_sym = ca.MX.sym("disa")
+        max_alt = ps_model.limits.max_altitude(
+            {"aircraft_mass": m_sym, "delta_isa": disa_sym, "mach_number": 0.78}
         )
-        assert max_alt > 30000, "HMO should be > FL300"
+        assert isinstance(max_alt, ca.MX)
+
+        f = ca.Function("f", [m_sym, disa_sym], [max_alt, ca.gradient(max_alt, m_sym)])
+        h, dh_dm = (float(v) for v in f(73500.0, 15.0))
+        h_ref = float(
+            ps_model.limits.max_altitude(
+                {"aircraft_mass": 73500.0, "delta_isa": 15.0, "mach_number": 0.78}
+            )
+        )
+        assert h == pytest.approx(h_ref, rel=1e-12)
+        assert dh_dm < 0.0
 
 
 class TestPSMaxMachAltitudeUnits:
@@ -1098,3 +1093,235 @@ class TestPSMaxMachAltitudeUnits:
         low = float(lim.max_mach({"altitude": 2500.0}))
         high = float(lim.max_mach({"altitude": 3500.0}))
         assert high > low
+
+
+class TestPSMaxAltitude:
+    """PS max_altitude: min(hmo, thrust-limited ceiling, lift-limited ceiling).
+
+    The thrust-limited ceiling is checked against the residual climb rate
+    computed independently from PSModel.thrust_max and drag, as in issue #44.
+    """
+
+    MACH = 0.78
+
+    @staticmethod
+    def _residual_climb_fpm(model, mass, delta_isa, mach, altitude_ft):
+        """Residual climb rate at maximum thrust, (T_max - D) V / (m g) [ft/min]."""
+        altitude_m = altitude_ft * units.FT
+        p = isa.air_pressure(altitude_m)
+        t = isa.air_temperature(altitude_m) + delta_isa
+        cl = model.lift_coefficient(mass, p, mach)
+        cd = model.aerodynamics.drag_coef_with_state(
+            cl=cl, mach=mach, air_temperature=t, air_pressure=p
+        )
+        drag = model.compute_thrust_required(mass, cl, cd)
+        thrust_max = model.thrust_max(
+            {"mach_number": mach, "air_temperature": t, "air_pressure": p}
+        )
+        tas = mach * np.sqrt(units.GAMMA * units.R_AIR * t)
+        return (thrust_max - drag) * tas / (mass * units.G) * units.MS_TO_FPM
+
+    def _max_altitude(self, model, mass, delta_isa, mach=MACH):
+        return model.max_altitude(
+            {"aircraft_mass": mass, "delta_isa": delta_isa, "mach_number": mach}
+        )
+
+    @pytest.mark.parametrize(
+        "mass,delta_isa",
+        [
+            (55000.0, 0.0),
+            (65000.0, 0.0),
+            (65000.0, 15.0),
+            (73500.0, 0.0),
+            (73500.0, 15.0),
+        ],
+    )
+    def test_matches_residual_climb_criterion(self, ps_model: PSModel, mass, delta_isa):
+        """Below hmo the result is where the residual climb is 300 ft/min."""
+        grid_ft = np.arange(30000.0, 45000.0 + 1.0, 10.0)
+        roc = self._residual_climb_fpm(ps_model, mass, delta_isa, self.MACH, grid_ft)
+        grid_ceiling = grid_ft[roc >= 300.0].max()
+
+        h_max = float(self._max_altitude(ps_model, mass, delta_isa))
+
+        if grid_ceiling >= ps_model.hmo:
+            assert h_max == ps_model.hmo
+        else:
+            assert grid_ceiling <= h_max < grid_ceiling + 10.0
+            roc_at_ceiling = self._residual_climb_fpm(ps_model, mass, delta_isa, self.MACH, h_max)
+            assert roc_at_ceiling == pytest.approx(300.0, abs=1e-3)
+
+    def test_issue_44_figures(self, ps_model: PSModel):
+        """73.5 t at ISA+15 is thrust-limited near 33,110 ft; 55 t at ISA is hmo."""
+        assert float(self._max_altitude(ps_model, 73500.0, 15.0)) == pytest.approx(
+            33110.0, abs=10.0
+        )
+        assert float(self._max_altitude(ps_model, 55000.0, 0.0)) == 41000.0
+
+    def test_decreases_with_mass(self, ps_model: PSModel):
+        masses = np.linspace(55000.0, 73500.0, 12)
+        h_max = self._max_altitude(ps_model, masses, 0.0)
+        assert h_max.shape == masses.shape
+        assert np.all(np.diff(h_max) <= 0.0)
+        below = h_max < ps_model.hmo
+        assert below.sum() >= 2
+        assert np.all(np.diff(h_max[below]) < 0.0)
+
+    def test_decreases_with_delta_isa(self, ps_model: PSModel):
+        delta_isa = np.linspace(0.0, 25.0, 6)
+        h_max = self._max_altitude(ps_model, 70000.0, delta_isa)
+        assert h_max.shape == delta_isa.shape
+        assert np.all(np.diff(h_max) <= 0.0)
+        below = h_max < ps_model.hmo
+        assert below.sum() >= 2
+        assert np.all(np.diff(h_max[below]) < 0.0)
+
+    def test_clamped_at_hmo(self, ps_model: PSModel):
+        """A light, cold aircraft is limited by hmo, never above it."""
+        h_max = self._max_altitude(ps_model, np.array([45000.0, 50000.0]), -10.0)
+        np.testing.assert_array_equal(h_max, ps_model.hmo)
+
+    def test_defaults_to_design_mach(self, ps_model: PSModel):
+        m_des = ps_model.engine.data.m_des
+        without_mach = ps_model.max_altitude({"aircraft_mass": 70000.0, "delta_isa": 10.0})
+        with_mach = self._max_altitude(ps_model, 70000.0, 10.0, mach=m_des)
+        assert float(without_mach) == float(with_mach)
+
+    @pytest.mark.parametrize("missing", ["aircraft_mass", "delta_isa"])
+    def test_requires_mass_and_delta_isa(self, ps_model: PSModel, missing):
+        from openleaf.performance.exceptions import MissingFieldError
+
+        state = {"aircraft_mass": 65000.0, "delta_isa": 0.0}
+        del state[missing]
+        with pytest.raises(MissingFieldError, match=missing):
+            ps_model.max_altitude(state)
+
+    def test_lift_limited_at_low_mach(self, ps_model: PSModel):
+        """At M0.6 the lift limit binds: lift reaches the maximum usable lift."""
+        from openleaf.performance.models.ps.ps_physics import max_usable_lift_coefficient
+
+        mach, mass = 0.6, 65000.0
+        h_max = float(self._max_altitude(ps_model, mass, 0.0, mach=mach))
+        assert h_max < ps_model.hmo
+        assert self._residual_climb_fpm(ps_model, mass, 0.0, mach, h_max) > 300.0
+
+        c_lift = ps_model.lift_coefficient(mass, isa.air_pressure(h_max * units.FT), mach)
+        c_l_maxu = max_usable_lift_coefficient(
+            mach, ps_model.engine.data.m_des, ps_model.aerodynamics.data.c_l_do
+        )
+        assert c_lift == pytest.approx(c_l_maxu, rel=1e-9)
+
+    def test_search_floor_when_margin_never_met(self, ps_model: PSModel):
+        """Hot, heavy and fast: no 300 ft/min margin above FL200."""
+        from openleaf.performance.models.ps.limits import CEILING_FLOOR_FT
+
+        h_max = float(self._max_altitude(ps_model, 73500.0, 35.0, mach=0.82))
+        assert h_max == CEILING_FLOOR_FT
+        roc_at_floor = self._residual_climb_fpm(ps_model, 73500.0, 35.0, 0.82, CEILING_FLOOR_FT)
+        assert roc_at_floor < 300.0
+
+    def test_low_mach_states_report_floor_not_violation(self, ps_model: PSModel):
+        """Climb and ground points: the lift limit never drops below FL200.
+
+        At M0.25 the clean-wing lift limit alone lies below sea level, and at
+        Mach 0 it is -inf; neither may flag a ceiling violation.
+        """
+        import warnings
+
+        from openleaf.performance.core import TrajectoryData
+        from openleaf.performance.models.ps.limits import CEILING_FLOOR_FT
+
+        altitude = np.array([0.0, 1500.0, 5000.0]) * units.FT
+        mach = np.array([0.0, 0.25, 0.35])
+        temperature = isa.air_temperature(altitude)
+        with warnings.catch_warnings():
+            # Mach 0 divides by zero in the PS lift coefficient, as for drag.
+            warnings.simplefilter("ignore", RuntimeWarning)
+            perf = TrajectoryData(
+                {
+                    "altitude": altitude,
+                    "air_temperature": temperature,
+                    "true_airspeed": mach * np.sqrt(units.GAMMA * units.R_AIR * temperature),
+                    "vertical_speed": np.full(3, 10.0),
+                    "acceleration": np.zeros(3),
+                    "aircraft_mass": np.full(3, 70000.0),
+                }
+            ).with_aircraft(ps_model)
+            max_altitude = np.asarray(perf.max_altitude)
+            ceiling = perf.envelope_violations["ceiling"]
+
+        np.testing.assert_array_equal(max_altitude, CEILING_FLOOR_FT)
+        np.testing.assert_array_equal(ceiling, [False, False, False])
+
+    def test_thrust_ceiling_zeroes_pycontrails_excess_thrust(self, pycontrails_params):
+        """At the thrust-limited ceiling, pycontrails' excess thrust is zero.
+
+        pycontrails' get_excess_thrust_available uses a 0.2 thrust buffer and
+        the 300 ft/min climb rate, so compare with thrust_buffer=0.2.
+        """
+        from pycontrails.models.ps_model.ps_operational_limits import get_excess_thrust_available
+
+        model = PSModel("A320", thrust_buffer=0.2)
+        mass, delta_isa, mach = 73500.0, 25.0, 0.80
+        h_thrust = float(model.limits._thrust_limited_ceiling(mass, delta_isa, mach))
+        assert h_thrust < model.hmo
+
+        altitude_m = h_thrust * units.FT
+        excess = get_excess_thrust_available(
+            mach_number=mach,
+            air_temperature=isa.air_temperature(altitude_m) + delta_isa,
+            air_pressure=isa.air_pressure(altitude_m),
+            aircraft_mass=mass,
+            theta=0.0,
+            atyp_param=pycontrails_params,
+        )
+        # The excess thrust coefficient falls by about 2e-6 per foot here; the
+        # tolerance allows for constants that differ from pycontrails.
+        assert excess == pytest.approx(0.0, abs=1e-7)
+
+    @pytest.mark.parametrize("mach", [0.45, 0.6, 0.7, 0.78, 0.82])
+    def test_max_usable_lift_coefficient_matches_pycontrails(self, pycontrails_params, mach):
+        from pycontrails.models.ps_model import ps_operational_limits as pc_limits
+
+        from openleaf.performance.models.ps.ps_physics import max_usable_lift_coefficient
+
+        params = pycontrails_params
+        expected = pc_limits.max_usable_lift_coefficient(mach, params.m_des, params.c_l_do)
+        result = max_usable_lift_coefficient(mach, params.m_des, params.c_l_do)
+        assert result == pytest.approx(expected, rel=1e-12)
+
+    @pytest.mark.parametrize("rocd", [0.0, 300.0, 1500.0])
+    def test_required_thrust_coefficient_matches_pycontrails(self, rocd):
+        pytest.importorskip("pycontrails")
+        from pycontrails.models.ps_model import ps_operational_limits as pc_limits
+
+        from openleaf.performance.models.ps.ps_physics import required_thrust_coefficient
+
+        expected = pc_limits.required_thrust_coefficient(0.5, 0.03, 230.0, rocd=rocd)
+        result = required_thrust_coefficient(0.5, 0.03, 230.0, rocd=rocd)
+        assert result == pytest.approx(expected, rel=1e-12)
+
+    def test_envelope_ceiling_flag(self, ps_model: PSModel):
+        """Issue #44: at FL400, M0.78, 73.5 t at ISA+15 violates the ceiling."""
+        from openleaf.performance.core import TrajectoryData
+
+        altitude = np.array([40000.0, 40000.0]) * units.FT
+        delta_isa = np.array([0.0, 15.0])
+        mass = np.array([55000.0, 73500.0])
+        temperature = isa.air_temperature(altitude) + delta_isa
+        perf = TrajectoryData(
+            {
+                "altitude": altitude,
+                "air_temperature": temperature,
+                "true_airspeed": self.MACH * np.sqrt(units.GAMMA * units.R_AIR * temperature),
+                "vertical_speed": np.zeros(2),
+                "acceleration": np.zeros(2),
+                "aircraft_mass": mass,
+            }
+        ).with_aircraft(ps_model)
+
+        max_altitude = np.asarray(perf.max_altitude)
+        assert max_altitude.shape == (2,)
+        assert max_altitude[0] == ps_model.hmo
+        assert max_altitude[1] == pytest.approx(33110.0, abs=10.0)
+        np.testing.assert_array_equal(perf.envelope_violations["ceiling"], [False, True])

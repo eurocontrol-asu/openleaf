@@ -45,6 +45,10 @@ ATM_SPEED_LIMIT_ALTITUDE_FT = 10000.0
 ATM_SPEED_LIMIT_IMPACT_PRESSURE_PA = 10510.0
 """Impact pressure corresponding to 250kt at sea level [Pa]."""
 
+# Thrust-limited ceiling criterion (pycontrails required_thrust_coefficient)
+CEILING_CLIMB_RATE_FPM = 300.0
+"""Residual climb rate at maximum thrust that defines the ceiling [ft/min]."""
+
 # Non-vortex lift-dependent drag factor coefficients (Eq. 7)
 K1_BASE_COEFF = 0.8
 """Base coefficient for non-vortex lift-dependent drag factor."""
@@ -71,11 +75,13 @@ __all__ = [
     "max_available_thrust_coefficient",
     "max_mach_number_by_altitude",
     "max_overall_propulsion_efficiency",
+    "max_usable_lift_coefficient",
     "non_vortex_lift_dependent_drag_factor",
     "normalised_max_throttle_parameter",
     "oswald_efficiency_factor",
     "overall_propulsion_efficiency",
     "propulsion_efficiency_over_max",
+    "required_thrust_coefficient",
     "reynolds_number",
     "skin_friction_coefficient",
     "thrust_coefficient_at_max_efficiency",
@@ -142,6 +148,62 @@ def max_mach_number_by_altitude(
         )
         + buffer
     )
+
+
+def max_usable_lift_coefficient(
+    mach_num: ArrayScalarLike,
+    m_des: float,
+    c_l_do: float,
+) -> ArrayScalarLike:
+    """Calculate maximum usable lift coefficient.
+
+    Args:
+        mach_num: Mach number.
+        m_des: Design Mach number.
+        c_l_do: Design optimum lift coefficient.
+
+    Returns:
+        Maximum usable lift coefficient.
+
+    References:
+        pycontrails ps_operational_limits.max_usable_lift_coefficient
+    """
+    m_over_m_des = mach_num / m_des
+    c_l_maxu_over_c_l_do = np.where(
+        m_over_m_des < 0.70,
+        1.8 + 0.160 * m_over_m_des - 1.085 * m_over_m_des**2,
+        13.272 - 42.262 * m_over_m_des + 49.883 * m_over_m_des**2 - 19.683 * m_over_m_des**3,
+    )
+    return c_l_maxu_over_c_l_do * c_l_do
+
+
+def required_thrust_coefficient(
+    c_lift: ArrayScalarLike,
+    c_drag: ArrayScalarLike,
+    true_airspeed: ArrayScalarLike,
+    *,
+    rocd: ArrayScalarLike = CEILING_CLIMB_RATE_FPM,
+) -> ArrayScalarLike:
+    """Calculate thrust coefficient required to fly at a given climb rate.
+
+    The thrust balance at constant true airspeed, ``T = D + m g dh/dt / V``,
+    divided by the dynamic pressure times the wing area (with ``L = m g``).
+    The default climb rate is the 300 ft/min residual climb at which the
+    maximum useful operating altitude is deemed reached.
+
+    Args:
+        c_lift: Lift coefficient.
+        c_drag: Airframe drag coefficient.
+        true_airspeed: True airspeed [m/s].
+        rocd: Rate of climb or descent [ft/min].
+
+    Returns:
+        Required thrust coefficient.
+
+    References:
+        pycontrails ps_operational_limits.required_thrust_coefficient
+    """
+    return c_drag + c_lift * (rocd * units.FPM) / true_airspeed
 
 
 # --- Skin Friction and Viscosity ---

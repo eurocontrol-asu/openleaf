@@ -73,7 +73,10 @@ A cruise-focused model designed for contrail and climate impact research.
   Wing aspect ratio is computed from span and area.
 - **Envelope**: Altitude-dependent Mach limits derived from impact pressure
   constraints (p_i_max). VMO is effectively infinite (Mach limits dominate at
-  cruise altitudes).
+  cruise altitudes). The maximum altitude depends on mass, temperature
+  deviation and Mach number: it is the lowest of hmo, the thrust-limited
+  ceiling (300 ft/min residual climb at maximum thrust) and the lift-limited
+  ceiling (maximum usable lift coefficient), and never below FL200.
 - **Limitations**: Clean configuration only; not suitable for climb/descent
   with deployed high-lift devices.
 

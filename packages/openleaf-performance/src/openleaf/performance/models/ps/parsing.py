@@ -98,6 +98,7 @@ def load_from_pycontrails(aircraft_type: str) -> PSData:
         j_2=params.j_2,
         j_3=params.j_3,
         x_ref=params.x_ref,
+        c_l_do=params.c_l_do,
     )
 
     engine = PSEngineData(
