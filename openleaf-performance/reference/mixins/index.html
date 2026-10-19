@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../../../assets/logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -31,7 +31,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -2074,8 +2074,10 @@ May return None for models that don't track gear state.</p>
 <p>Expects the container class to provide:
     - <code>_model</code>: an <code>AircraftModel</code> instance
     - <code>_traj</code>: a dict-like trajectory data store
+    - <code>data</code>: the input columns only, without derived quantities
     - <code>drag</code>, <code>aircraft_mass</code>, <code>f</code>, <code>air_temperature</code>
-      (for the TEM thrust calculation)</p>
+      (for the TEM thrust calculation; an input <code>acceleration</code> column
+      is used in preference to <code>f</code>)</p>
 
 
 
@@ -2230,14 +2232,14 @@ PS model uses cruise-only clean configuration.</p>
     <div class="doc doc-contents ">
 
         <p>Required thrust [N] from Total Energy Model.</p>
-<p>Uses the TEM equation to compute thrust given:
-- drag (from aerodynamic model)
-- vertical_speed (pressure altitude rate)
-- energy share factor f</p>
-<p>Formula (BADA Manual 3.1-4):
+<p>When the trajectory provides an acceleration, thrust comes from the
+fundamental TEM equation (BADA Manual 3.1-1):
+    T = D + m · g · (dh_geo/dt) / V + m · (dV/dt)</p>
+<p>Otherwise it comes from the energy share factor f (BADA Manual 3.1-4):
     T = D + (m · g · dh_geo/dt) / (V · f)</p>
-<p>where dh_geo/dt is derived from pressure altitude rate using
-temperature correction.</p>
+<p>The first form is preferred because it never divides by f, which is
+0 in level acceleration. In both, dh_geo/dt is derived from the
+pressure altitude rate using temperature correction.</p>
 
     </div>
 
@@ -2363,7 +2365,7 @@ temperature correction.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.indexes", "navigation.top", "navigation.path", "search.suggest", "search.highlight", "content.code.copy", "content.tabs.link"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
