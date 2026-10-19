@@ -452,6 +452,7 @@ class PSEngineModel(EngineModel[PSEngineData]):
             self.data.m_des,
             self.data.eta_1,
             self.data.eta_2,
+            engine_deterioration_factor=self.data.engine_deterioration_factor,
         )
 
         # Avoid division by zero
@@ -617,7 +618,13 @@ class PSModel(AircraftModel):
     engine: PSEngineModel
     data: PSAircraftData
 
-    def __init__(self, icao: str, *, thrust_buffer: float = 0.0):
+    def __init__(
+        self,
+        icao: str,
+        *,
+        thrust_buffer: float = 0.0,
+        engine_deterioration_factor: float = 0.025,
+    ):
         """Initialize PS model from ICAO aircraft type code.
 
         Requires pycontrails to be installed for aircraft parameters.
@@ -627,6 +634,8 @@ class PSModel(AircraftModel):
             thrust_buffer: Safety buffer for max thrust coefficient (default 0.0).
                 Use 0.0 for thrust consistent with BADA MCC rating.
                 Use 0.20 for pycontrails' conservative upper bound.
+            engine_deterioration_factor: In-service engine deterioration, as a
+                fractional increase in fuel flow (default 0.025, as in pycontrails).
 
         Raises:
             ImportError: If pycontrails is not installed.
@@ -634,40 +643,42 @@ class PSModel(AircraftModel):
 
         Example:
             >>> model = PSModel("A320")
-            >>> model.mtom  # [kg], from the pycontrails 0.60.4 database
+            >>> model.mtom  # [kg], from the pycontrails 0.64 database
             73500.0
             >>> model_conservative = PSModel("A320", thrust_buffer=0.20)
         """
         logger.info("Loading PS model for %s", icao)
         # Use load_from_pycontrails to get PS data, then initialize
         ps_data = load_from_pycontrails(icao)
-        self._init_from_data(ps_data, thrust_buffer=thrust_buffer)
+        self._init_from_data(
+            ps_data,
+            thrust_buffer=thrust_buffer,
+            engine_deterioration_factor=engine_deterioration_factor,
+        )
 
-    def _init_from_data(self, ps_data: PSData, *, thrust_buffer: float = 0.0) -> None:
+    def _init_from_data(
+        self,
+        ps_data: PSData,
+        *,
+        thrust_buffer: float = 0.0,
+        engine_deterioration_factor: float = 0.025,
+    ) -> None:
         """Initialize model from PS data object.
 
         Args:
             ps_data: Complete PS model data.
             thrust_buffer: Safety buffer for max thrust coefficient.
+            engine_deterioration_factor: In-service engine deterioration, as a
+                fractional increase in fuel flow (default 0.025, as in pycontrails).
         """
         logger.debug("Initializing PS aero and engine models")
         aero = PSAeroModel(ps_data.aero)
 
-        # Create engine data with specified thrust_buffer
-        engine_data = PSEngineData(
-            n_engines=ps_data.engine.n_engines,
-            m_des=ps_data.engine.m_des,
-            c_t_des=ps_data.engine.c_t_des,
-            eta_1=ps_data.engine.eta_1,
-            eta_2=ps_data.engine.eta_2,
-            tet_mcc=ps_data.engine.tet_mcc,
-            tr_ec=ps_data.engine.tr_ec,
-            m_ec=ps_data.engine.m_ec,
-            ff_idle_sls=ps_data.engine.ff_idle_sls,
-            ff_max_sls=ps_data.engine.ff_max_sls,
-            p_i_max=ps_data.engine.p_i_max,
-            p_inf_co=ps_data.engine.p_inf_co,
-            thrust_buffer=thrust_buffer,
+        engine_data = ps_data.engine.model_copy(
+            update={
+                "thrust_buffer": thrust_buffer,
+                "engine_deterioration_factor": engine_deterioration_factor,
+            }
         )
         engine = PSEngineModel(engine_data, ps_data.aero)
 
@@ -695,22 +706,41 @@ class PSModel(AircraftModel):
     # limits inherited from AircraftModel base class
 
     @classmethod
-    def from_data(cls, ps_data: PSData, *, thrust_buffer: float = 0.0) -> PSModel:
+    def from_data(
+        cls,
+        ps_data: PSData,
+        *,
+        thrust_buffer: float = 0.0,
+        engine_deterioration_factor: float = 0.025,
+    ) -> PSModel:
         """Create PS model from pre-loaded data.
 
         Args:
             ps_data: Complete PS model data object.
             thrust_buffer: Safety buffer for max thrust coefficient (default 0.0).
+            engine_deterioration_factor: In-service engine deterioration, as a
+                fractional increase in fuel flow (default 0.025, as in pycontrails).
 
         Returns:
             Initialized PS model.
         """
         instance = object.__new__(cls)
-        instance._init_from_data(ps_data, thrust_buffer=thrust_buffer)
+        instance._init_from_data(
+            ps_data,
+            thrust_buffer=thrust_buffer,
+            engine_deterioration_factor=engine_deterioration_factor,
+        )
         return instance
 
     @classmethod
-    def from_file(cls, file: str, *, thrust_buffer: float = 0.0, **kwargs) -> PSModel:
+    def from_file(
+        cls,
+        file: str,
+        *,
+        thrust_buffer: float = 0.0,
+        engine_deterioration_factor: float = 0.025,
+        **kwargs,
+    ) -> PSModel:
         """Load PS model from file.
 
         For PS model, 'file' is treated as an ICAO code since PS uses
@@ -719,15 +749,27 @@ class PSModel(AircraftModel):
         Args:
             file: ICAO aircraft type code (e.g., 'A320').
             thrust_buffer: Safety buffer for max thrust coefficient (default 0.0).
+            engine_deterioration_factor: In-service engine deterioration, as a
+                fractional increase in fuel flow (default 0.025, as in pycontrails).
             **kwargs: Additional arguments (unused).
 
         Returns:
             Initialized PS model.
         """
-        return cls(file, thrust_buffer=thrust_buffer)
+        return cls(
+            file,
+            thrust_buffer=thrust_buffer,
+            engine_deterioration_factor=engine_deterioration_factor,
+        )
 
     @classmethod
-    def from_pycontrails(cls, aircraft_type: str, *, thrust_buffer: float = 0.0) -> PSModel:
+    def from_pycontrails(
+        cls,
+        aircraft_type: str,
+        *,
+        thrust_buffer: float = 0.0,
+        engine_deterioration_factor: float = 0.025,
+    ) -> PSModel:
         """Create PS model using pycontrails aircraft parameters.
 
         Requires pycontrails to be installed.
@@ -738,6 +780,8 @@ class PSModel(AircraftModel):
         Args:
             aircraft_type: ICAO aircraft type code (e.g., 'A320', 'B738').
             thrust_buffer: Safety buffer for max thrust coefficient (default 0.0).
+            engine_deterioration_factor: In-service engine deterioration, as a
+                fractional increase in fuel flow (default 0.025, as in pycontrails).
 
         Returns:
             Initialized PS model.
@@ -745,7 +789,11 @@ class PSModel(AircraftModel):
         Raises:
             ImportError: If pycontrails is not installed.
         """
-        return cls(aircraft_type, thrust_buffer=thrust_buffer)
+        return cls(
+            aircraft_type,
+            thrust_buffer=thrust_buffer,
+            engine_deterioration_factor=engine_deterioration_factor,
+        )
 
     @classmethod
     def available_aircraft(cls) -> list[str]:

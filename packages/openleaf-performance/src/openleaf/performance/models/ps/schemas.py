@@ -55,6 +55,10 @@ class PSEngineData(EngineData):
         thrust_buffer: Safety buffer for max thrust coefficient calculation.
             Default 0.0 gives thrust consistent with BADA MCC rating.
             pycontrails uses 0.20 (20% increase) as an upper safety bound.
+        engine_deterioration_factor: In-service engine deterioration between
+            maintenance cycles, as a fractional increase in fuel flow. The
+            maximum overall propulsion efficiency uses eta_1 / (1 + factor),
+            as in pycontrails' PSFlight. Default 0.025, pycontrails' default.
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -72,6 +76,7 @@ class PSEngineData(EngineData):
     p_i_max: float
     p_inf_co: float
     thrust_buffer: float = 0.0
+    engine_deterioration_factor: float = 0.025
 
 
 class PSAerodynamicsData(AerodynamicsData):

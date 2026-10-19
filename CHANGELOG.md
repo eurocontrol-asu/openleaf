@@ -20,6 +20,13 @@ and `core/vX.Y.Z` for `openleaf-core`.
 
 #### Changed
 
+- The PS extra requires `pycontrails>=0.64,<0.65` (was `>=0.60.2,<0.60.5`).
+  pycontrails 0.64 no longer folds engine deterioration into the tabulated
+  `eta_1`, so `PSModel` now applies it itself, as pycontrails' `PSFlight` does:
+  the maximum overall propulsion efficiency uses `eta_1 / (1 + f)`, with the
+  new `engine_deterioration_factor` option (default 0.025). Fuel flow is
+  exactly 2.5 % above the undeteriorated engine; PS efficiencies rise by
+  0.06 % against the old `eta_1 * (1 - 0.025)` form.
 - PS `max_altitude` now depends on the flight state, as BADA3's does: it is
   the lowest of `hmo`, the thrust-limited ceiling (300 ft/min residual climb at
   maximum thrust) and the lift-limited ceiling, at `mach_number` (design Mach

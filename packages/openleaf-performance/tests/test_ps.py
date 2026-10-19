@@ -159,15 +159,26 @@ class TestPSOverallPropulsionEfficiency:
         """Test values at cruise, above thrust_max and near zero thrust."""
         thrust_max = ps_model.engine.thrust_max(state)
         cases = [
-            (cruise_thrust, 0.30620),
-            (1.2 * thrust_max, 0.29507),
-            (2.0 * thrust_max, 0.29507),
+            (cruise_thrust, 0.30639),
+            (1.2 * thrust_max, 0.29525),
+            (2.0 * thrust_max, 0.29525),
             (50.0, 0.01),
             (0.0, 0.01),
         ]
         for thrust, expected in cases:
             eta = ps_model.engine.overall_propulsion_efficiency({**state, "thrust": thrust})
             assert eta == pytest.approx(expected, abs=5e-6), f"thrust={thrust:.0f} N"
+
+    def test_engine_deterioration_scales_fuel_flow(self, state: dict, cruise_thrust: float):
+        """Test that the deterioration factor is a fractional fuel flow increase."""
+        point = {**state, "thrust": cruise_thrust}
+        clean = PSModel("A320", engine_deterioration_factor=0.0)
+        worn = PSModel("A320", engine_deterioration_factor=0.025)
+
+        assert worn.engine.fuel_flow(point) == pytest.approx(
+            1.025 * clean.engine.fuel_flow(point), rel=1e-12
+        )
+        assert PSModel("A320").engine.data.engine_deterioration_factor == 0.025
 
     def test_equals_raw_correlation_inside_envelope(
         self, ps_model: PSModel, state: dict, cruise_thrust: float
@@ -177,7 +188,15 @@ class TestPSOverallPropulsionEfficiency:
         mach = state["mach_number"]
         c_t = ps_model.engine.thrust_coefficient(cruise_thrust, mach, state["air_pressure"])
         c_t_eta_b = ps.ps_physics.thrust_coefficient_at_max_efficiency(mach, d.m_des, d.c_t_des)
-        raw = ps.overall_propulsion_efficiency(mach, c_t, c_t_eta_b, d.m_des, d.eta_1, d.eta_2)
+        raw = ps.overall_propulsion_efficiency(
+            mach,
+            c_t,
+            c_t_eta_b,
+            d.m_des,
+            d.eta_1,
+            d.eta_2,
+            engine_deterioration_factor=d.engine_deterioration_factor,
+        )
 
         eta = ps_model.engine.overall_propulsion_efficiency({**state, "thrust": cruise_thrust})
         assert eta == pytest.approx(raw, rel=1e-12)
@@ -510,7 +529,13 @@ class TestPSModelValidation:
         c_t_eta_b = pc_ps.thrust_coefficient_at_max_efficiency(mach, params.m_des, params.c_t_des)
 
         # Overall propulsion efficiency using pycontrails
-        eta = pc_ps.overall_propulsion_efficiency(mach, c_t_pc, c_t_eta_b, params)
+        eta = pc_ps.overall_propulsion_efficiency(
+            mach,
+            c_t_pc,
+            c_t_eta_b,
+            params,
+            engine_deterioration_factor=ps_model_validation.engine.data.engine_deterioration_factor,
+        )
 
         # Fuel flow using pycontrails
         # Use same Q_FUEL as openleaf for consistency (43.13 MJ/kg)
@@ -820,9 +845,19 @@ class TestPSPhysicsExhaustive:
 
         params = pycontrails_params
 
-        # openleaf function signature: (mach, c_t, c_t_eta_b, m_des, eta_1, eta_2)
-        eta_ae = ae_eta(mach, c_t, c_t_eta_b, params.m_des, params.eta_1, params.eta_2)
-        eta_pc = pc_ps.overall_propulsion_efficiency(mach, c_t, c_t_eta_b, params)
+        factor = 0.025
+        eta_ae = ae_eta(
+            mach,
+            c_t,
+            c_t_eta_b,
+            params.m_des,
+            params.eta_1,
+            params.eta_2,
+            engine_deterioration_factor=factor,
+        )
+        eta_pc = pc_ps.overall_propulsion_efficiency(
+            mach, c_t, c_t_eta_b, params, engine_deterioration_factor=factor
+        )
 
         assert eta_ae == pytest.approx(eta_pc, rel=1e-6), (
             f"M{mach} c_t={c_t}: eta={eta_ae:.4f} != pycontrails {eta_pc:.4f}"
