@@ -70,7 +70,7 @@ openap = [
     "openap>=2.5,<2.7",
 ]
 ps = [
-    "pycontrails>=0.60.2,<0.60.5",
+    "pycontrails>=0.60.2,<0.64.1",
 ]
 # All optional runtime features (dev tooling lives in [dependency-groups])
 all = [
@@ -101,7 +101,7 @@ dev = [
     "torch>=2.0.0",
     "jax>=0.9.1",
     "openap>=2.5,<2.7",
-    "pycontrails>=0.60.2,<0.60.5",
+    "pycontrails>=0.60.2,<0.64.1",
     "xarray>=2023.0.0",
     "cyclopts>=3.0.0",
     "pre-commit>=4.0",
