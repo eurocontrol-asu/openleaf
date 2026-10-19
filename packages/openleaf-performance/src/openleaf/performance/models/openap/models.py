@@ -30,6 +30,8 @@ from openleaf.performance.core.types import EngineType
 from openleaf.performance.core.validation import requires
 from openleaf.performance.exceptions import ModelDataError
 from openleaf.performance.logging import get_logger
+from openleaf.performance.models.openap import openap_aero
+from openleaf.performance.models.openap.backend import OpenleafBackend
 from openleaf.performance.models.openap.limits import OpenAPLimits
 from openleaf.performance.models.openap.schemas import OpenAPAerodynamicsData
 from openleaf.performance.models.openap.schemas import OpenAPAircraftData
@@ -43,6 +45,10 @@ from openleaf.performance.physics import units
 logger = get_logger(__name__)
 
 if TYPE_CHECKING:
+    from openap.base import DragBase
+    from openap.base import FuelFlowBase
+    from openap.base import ThrustBase
+
     from openleaf.performance.utils.types import ArrayScalarLike
     from openleaf.performance.utils.types import KeyedData
 
@@ -70,14 +76,19 @@ _WTC_MEDIUM_THRESHOLD_KG = 7_000.0
 
 
 # ==============================================================================
-# Helper: Unwrap OpenAP decorators
+# Helper: Build OpenAP components on the openleaf backend
 # ==============================================================================
+_BACKEND = OpenleafBackend()
+"""OpenAP math backend shared by every wrapped component (it holds no state)."""
+
+
 def _unwrap_ndarrayconvert(obj: object) -> None:
     """Unwrap @ndarrayconvert decorators from an OpenAP object's methods.
 
-    OpenAP uses @ndarrayconvert decorator that converts all inputs to numpy
-    arrays. This prevents CasADi symbolic types from being used. This function
-    replaces decorated methods with their original unwrapped versions.
+    OpenAP's @ndarrayconvert decorator passes CasADi and JAX values through but
+    converts every other input, PyTorch tensors included, to a NumPy array,
+    which would detach tensors from the autograd graph. This function replaces
+    decorated methods with their original unwrapped versions.
 
     The decorator stores the original function in `.orig_func` attribute.
 
@@ -95,14 +106,29 @@ def _unwrap_ndarrayconvert(obj: object) -> None:
             setattr(obj, name, types.MethodType(orig_func, obj))
 
 
+def _adapt(obj: DragBase | ThrustBase | FuelFlowBase) -> None:
+    """Make an OpenAP component accept every openleaf backend.
+
+    Unwraps its NumPy input conversion and swaps its atmosphere for
+    :mod:`~openleaf.performance.models.openap.openap_aero`, so OpenAP uses
+    openleaf's ISA model. The math backend itself is passed to the
+    component's constructor, because OpenAP binds it at construction time.
+
+    Args:
+        obj: OpenAP object (Thrust, FuelFlow, Drag) built with ``_BACKEND``.
+    """
+    _unwrap_ndarrayconvert(obj)
+    obj.aero = openap_aero
+
+
 # ==============================================================================
 # Aerodynamic Model
 # ==============================================================================
 class OpenAPAeroModel(AerodynamicsModel[OpenAPAerodynamicsData]):
     """Aerodynamic model using OpenAP.
 
-    Wraps OpenAP's Drag class with openleaf.performance.numpy injection for
-    CasADi symbolic compatibility.
+    Wraps OpenAP's Drag class on the openleaf math backend, so it accepts
+    NumPy, CasADi, PyTorch and JAX inputs.
     """
 
     def __init__(self, model_name: str, data: OpenAPAerodynamicsData) -> None:
@@ -117,12 +143,8 @@ class OpenAPAeroModel(AerodynamicsModel[OpenAPAerodynamicsData]):
 
         from openap import Drag
 
-        from openleaf.performance.models.openap import openap_aero
-
-        self._drag = Drag(model_name)
-        _unwrap_ndarrayconvert(self._drag)
-        self._drag.sci = np
-        self._drag.aero = openap_aero
+        self._drag = Drag(model_name, backend=_BACKEND)
+        _adapt(self._drag)
 
         self._wing_span = data.wing_span
 
@@ -201,8 +223,8 @@ class OpenAPAeroModel(AerodynamicsModel[OpenAPAerodynamicsData]):
 class OpenAPEngineModel(EngineModel[OpenAPEngineData]):
     """Engine model using OpenAP.
 
-    Wraps OpenAP's Thrust and FuelFlow classes with openleaf.performance.numpy injection
-    for CasADi symbolic compatibility.
+    Wraps OpenAP's Thrust and FuelFlow classes on the openleaf math backend, so
+    they accept NumPy, CasADi, PyTorch and JAX inputs.
     """
 
     def __init__(self, model_name: str, data: OpenAPEngineData) -> None:
@@ -218,26 +240,16 @@ class OpenAPEngineModel(EngineModel[OpenAPEngineData]):
         from openap import FuelFlow
         from openap import Thrust
 
-        from openleaf.performance.models.openap import openap_aero
-
-        self._thrust = Thrust(model_name)
-        self._fuel_flow = FuelFlow(model_name)
-
-        # Unwrap decorators for CasADi compatibility
-        _unwrap_ndarrayconvert(self._thrust)
-        _unwrap_ndarrayconvert(self._fuel_flow)
-        _unwrap_ndarrayconvert(self._fuel_flow.thrust)
-        _unwrap_ndarrayconvert(self._fuel_flow.drag)
-
-        # Inject openleaf.performance.numpy and ISA
-        self._thrust.sci = np
-        self._thrust.aero = openap_aero
-        self._fuel_flow.sci = np
-        self._fuel_flow.aero = openap_aero
-        self._fuel_flow.thrust.sci = np
-        self._fuel_flow.thrust.aero = openap_aero
-        self._fuel_flow.drag.sci = np
-        self._fuel_flow.drag.aero = openap_aero
+        self._thrust = Thrust(model_name, backend=_BACKEND)
+        # FuelFlow builds its own Thrust and Drag on the same backend.
+        self._fuel_flow = FuelFlow(model_name, backend=_BACKEND)
+        for component in (
+            self._thrust,
+            self._fuel_flow,
+            self._fuel_flow.thrust,
+            self._fuel_flow.drag,
+        ):
+            _adapt(component)
 
     @property
     def n_engines(self) -> int:
