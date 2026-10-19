@@ -516,6 +516,7 @@ def overall_propulsion_efficiency(
     m_des: float,
     eta_1: float,
     eta_2: float,
+    engine_deterioration_factor: float = 0.0,
 ) -> ArrayScalarLike:
     """Calculate overall propulsion efficiency.
 
@@ -533,6 +534,10 @@ def overall_propulsion_efficiency(
         m_des: Design Mach number.
         eta_1: Propulsion efficiency coefficient 1.
         eta_2: Propulsion efficiency coefficient 2.
+        engine_deterioration_factor: In-service engine deterioration, as a
+            fractional increase in fuel flow; eta_1 is divided by
+            (1 + factor), as in pycontrails' PSFlight. Default 0.0, the
+            undeteriorated engine; PSModel uses 0.025.
 
     Returns:
         Overall propulsion efficiency.
@@ -541,7 +546,9 @@ def overall_propulsion_efficiency(
         Poll & Schumann (2021), Eq. 14-16.
     """
     eta_over_eta_b = propulsion_efficiency_over_max(mach_num, c_t, c_t_eta_b)
-    eta_b = max_overall_propulsion_efficiency(mach_num, m_des, eta_1, eta_2)
+    eta_b = max_overall_propulsion_efficiency(
+        mach_num, m_des, eta_1 / (1.0 + engine_deterioration_factor), eta_2
+    )
     return eta_over_eta_b * eta_b
 
 
