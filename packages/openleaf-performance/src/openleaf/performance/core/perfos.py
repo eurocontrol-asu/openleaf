@@ -693,7 +693,15 @@ class AircraftModel(ABC):
     def thrust_required(self, data: KeyedData) -> ArrayScalarLike:
         """Calculate required thrust for flight condition.
 
-        Uses aero.thrust_required with energy share factor formulation.
+        When ``data`` provides an acceleration, thrust comes from the TEM
+        equation solved directly (aero.thrust_required_from_acceleration):
+            T = D + m · g · (dh/dt) / V + m · (dV/dt)
+        Otherwise it comes from the energy share factor f
+        (aero.thrust_required):
+            T = D + m · g · (dh/dt) / (V · f)
+        The first form is preferred because it never divides by f, which is 0
+        in level acceleration. Both take the vertical speed as a geometric
+        altitude rate, without temperature correction.
 
         Args:
             data: Flight state dictionary with keys:
@@ -701,7 +709,8 @@ class AircraftModel(ABC):
                 - aircraft_mass: Aircraft mass [kg]
                 - true_airspeed: True airspeed [m/s]
                 - vertical_speed: Rate of climb [m/s]
-                - f: Energy share factor [-]
+                - acceleration: Longitudinal acceleration [m/s²] (optional)
+                - f: Energy share factor [-] (required without acceleration)
 
         Returns:
             Required thrust [N].
@@ -710,9 +719,11 @@ class AircraftModel(ABC):
         mass = data["aircraft_mass"]
         v = data["true_airspeed"]
         vs = data["vertical_speed"]
-        f = data["f"]
 
-        return aero.thrust_required(drag, mass, v, vs, f)
+        acceleration = data.get("acceleration")
+        if acceleration is not None:
+            return aero.thrust_required_from_acceleration(drag, mass, v, vs, acceleration)
+        return aero.thrust_required(drag, mass, v, vs, data["f"])
 
     # --- Limits Delegation Methods ---
     def min_mach(self, data: KeyedData) -> ArrayScalarLike:

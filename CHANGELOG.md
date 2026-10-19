@@ -53,6 +53,11 @@ and `core/vX.Y.Z` for `openleaf-core`.
   1 and ~1e14 with the last bits of thrust and drag (#46).
 - Trajectory `thrust` keeps the m·a term for level accelerations, where the
   energy share factor is 0 (#47).
+- `AircraftModel.thrust_required` uses `acceleration` when the state has one
+  (new `aero.thrust_required_from_acceleration`), so a level acceleration
+  keeps its m·a term instead of returning NaN or raising `ZeroDivisionError`;
+  `aero.thrust_required` drops the climb term at f = 0 rather than dividing
+  by it (#58).
 - BADA4 `max_altitude_for(hl_deployed=True)` returns MFA instead of HMO (#48).
 - Poll & Schumann (2021) citation pages (257-295, with DOI) and the
   `PSModel("A320").mtom` docstring example (#49).
