@@ -33,6 +33,7 @@ from openleaf.performance.models.ps.models import PSEngineModel
 from openleaf.performance.models.ps.models import PSModel
 from openleaf.performance.models.ps.ps_physics import max_mach_number_by_altitude
 from openleaf.performance.models.ps.ps_physics import oswald_efficiency_factor
+from openleaf.performance.models.ps.ps_physics import overall_propulsion_efficiency
 from openleaf.performance.models.ps.ps_physics import reynolds_number
 from openleaf.performance.models.ps.ps_physics import skin_friction_coefficient
 from openleaf.performance.models.ps.ps_physics import wave_drag_coefficient
@@ -56,6 +57,7 @@ __all__ = [
     # Physics functions (for advanced users)
     "max_mach_number_by_altitude",
     "oswald_efficiency_factor",
+    "overall_propulsion_efficiency",
     "reynolds_number",
     "skin_friction_coefficient",
     "wave_drag_coefficient",

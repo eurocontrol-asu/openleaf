@@ -457,6 +457,13 @@ def overall_propulsion_efficiency(
 ) -> ArrayScalarLike:
     """Calculate overall propulsion efficiency.
 
+    This is the raw Poll-Schumann correlation, meaningful for
+    0 <= c_t <= c_t,max. It applies no guards: above c_t,max it extrapolates the
+    efficiency polynomial (which turns negative at high c_t), and it returns 0
+    at zero thrust. For the value used by the fuel flow model, with c_t clipped
+    to the available range and the efficiency floored, use
+    PSEngineModel.overall_propulsion_efficiency.
+
     Args:
         mach_num: Mach number.
         c_t: Thrust coefficient.

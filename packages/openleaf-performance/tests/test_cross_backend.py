@@ -1208,6 +1208,11 @@ class TestPSCrossBackend:
         result = ps_model.engine.fuel_flow_min(state)
         assert to_float(result) > 0
 
+    def test_numpy_overall_propulsion_efficiency(self, ps_model):
+        state = _ps_engine_state_numpy()
+        result = ps_model.engine.overall_propulsion_efficiency(state)
+        assert 0 < to_float(result) < 1
+
     def test_numpy_drag_coef(self, ps_model):
         state = _ps_aero_state_numpy()
         result = ps_model.aerodynamics.drag_coef(state)
@@ -1252,6 +1257,15 @@ class TestPSCrossBackend:
         assert_close(result, ref, label="ps fuel_flow_min torch")
 
     @skip_no_torch
+    def test_torch_overall_propulsion_efficiency(self, ps_model):
+        np_state = _ps_engine_state_numpy()
+        ref = to_float(ps_model.engine.overall_propulsion_efficiency(np_state))
+        t_state = _convert_ps_state_torch(np_state)
+        result = ps_model.engine.overall_propulsion_efficiency(t_state)
+        assert isinstance(result, torch.Tensor)
+        assert_close(result, ref, label="ps overall_propulsion_efficiency torch")
+
+    @skip_no_torch
     def test_torch_drag_coef(self, ps_model):
         np_state = _ps_aero_state_numpy()
         ref = to_float(ps_model.aerodynamics.drag_coef(np_state))
@@ -1293,6 +1307,14 @@ class TestPSCrossBackend:
         j_state = _convert_ps_state_jax(np_state)
         result = ps_model.engine.fuel_flow_min(j_state)
         assert_close(result, ref, label="ps fuel_flow_min jax")
+
+    @skip_no_jax
+    def test_jax_overall_propulsion_efficiency(self, ps_model):
+        np_state = _ps_engine_state_numpy()
+        ref = to_float(ps_model.engine.overall_propulsion_efficiency(np_state))
+        j_state = _convert_ps_state_jax(np_state)
+        result = ps_model.engine.overall_propulsion_efficiency(j_state)
+        assert_close(result, ref, label="ps overall_propulsion_efficiency jax")
 
     @skip_no_jax
     def test_jax_drag_coef(self, ps_model):
@@ -1385,6 +1407,35 @@ class TestPSCrossBackend:
         assert isinstance(result, ca.MX)
         f = ca.Function("f", [alt_sym], [result])
         assert_close(f(np_state["altitude"]), ref, label="ps fuel_flow_min casadi")
+
+    @skip_no_casadi
+    def test_casadi_overall_propulsion_efficiency(self, ps_model):
+        np_state = _ps_engine_state_numpy()
+        ref = to_float(ps_model.engine.overall_propulsion_efficiency(np_state))
+
+        thrust_sym = ca.MX.sym("thrust")
+        mach_sym = ca.MX.sym("mach")
+        T_sym = ca.MX.sym("T")
+        p_sym = ca.MX.sym("p")
+        state = {
+            "thrust": thrust_sym,
+            "mach_number": mach_sym,
+            "air_temperature": T_sym,
+            "air_pressure": p_sym,
+        }
+        result = ps_model.engine.overall_propulsion_efficiency(state)
+        assert isinstance(result, ca.MX)
+        f = ca.Function("f", [thrust_sym, mach_sym, T_sym, p_sym], [result])
+        assert_close(
+            f(
+                np_state["thrust"],
+                np_state["mach_number"],
+                np_state["air_temperature"],
+                np_state["air_pressure"],
+            ),
+            ref,
+            label="ps overall_propulsion_efficiency casadi",
+        )
 
     @skip_no_casadi
     def test_casadi_drag_coef(self, ps_model):

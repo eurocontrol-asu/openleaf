@@ -370,25 +370,55 @@ class PSEngineModel(EngineModel[PSEngineData]):
             altitude=data["altitude"],
         )
 
-    def _fuel_flow_impl(
+    @requires("thrust", "mach_number", "air_temperature", "air_pressure")
+    def overall_propulsion_efficiency(self, data: KeyedData) -> ArrayScalarLike:
+        """Calculate the overall propulsion efficiency used by fuel_flow.
+
+        The thrust coefficient is clipped to [0, c_T,max] and the efficiency is
+        floored at 0.01, exactly as in fuel_flow, so the uncorrected fuel flow is
+        F V / (eta Q) with F the clipped thrust. The value is taken before the
+        idle and maximum fuel flow correction (_correct_fuel_flow_impl); where
+        that correction clips, F V / (fuel_flow Q) no longer equals eta.
+
+        Args:
+            data: Flight state containing thrust, mach_number, air_temperature,
+                and air_pressure.
+
+        Returns:
+            Overall propulsion efficiency [-].
+
+        Raises:
+            MissingFieldError: If required fields are missing.
+        """
+        _, eta = self._thrust_coefficient_and_efficiency(
+            thrust=data["thrust"],
+            mach=data["mach_number"],
+            air_temperature=data["air_temperature"],
+            air_pressure=data["air_pressure"],
+        )
+        return eta
+
+    def _thrust_coefficient_and_efficiency(
         self,
         thrust: ArrayScalarLike,
         mach: ArrayScalarLike,
         air_temperature: ArrayScalarLike,
         air_pressure: ArrayScalarLike,
-        altitude: ArrayScalarLike,
-    ) -> ArrayScalarLike:
-        """Calculate fuel flow rate (typed implementation).
+    ) -> tuple[ArrayScalarLike, ArrayScalarLike]:
+        """Calculate the clipped thrust coefficient and the efficiency at it.
+
+        Shared by fuel_flow and overall_propulsion_efficiency so the two cannot
+        diverge.
 
         Args:
             thrust: Thrust [N].
             mach: Mach number (dimensionless).
             air_temperature: Air temperature [K].
             air_pressure: Air pressure [Pa].
-            altitude: Altitude [m].
 
         Returns:
-            Fuel flow rate [kg/s].
+            Thrust coefficient clipped to [0, c_T,max] (dimensionless) and the
+            overall propulsion efficiency at it, floored at 0.01 (dimensionless).
         """
         # Thrust coefficient
         c_t = self.thrust_coefficient(thrust, mach, air_pressure)
@@ -420,6 +450,35 @@ class PSEngineModel(EngineModel[PSEngineData]):
 
         # Avoid division by zero
         eta = np.maximum(eta, 0.01)
+
+        return c_t, eta
+
+    def _fuel_flow_impl(
+        self,
+        thrust: ArrayScalarLike,
+        mach: ArrayScalarLike,
+        air_temperature: ArrayScalarLike,
+        air_pressure: ArrayScalarLike,
+        altitude: ArrayScalarLike,
+    ) -> ArrayScalarLike:
+        """Calculate fuel flow rate (typed implementation).
+
+        Args:
+            thrust: Thrust [N].
+            mach: Mach number (dimensionless).
+            air_temperature: Air temperature [K].
+            air_pressure: Air pressure [Pa].
+            altitude: Altitude [m].
+
+        Returns:
+            Fuel flow rate [kg/s].
+        """
+        c_t, eta = self._thrust_coefficient_and_efficiency(
+            thrust=thrust,
+            mach=mach,
+            air_temperature=air_temperature,
+            air_pressure=air_pressure,
+        )
 
         # Fuel flow
         fuel_flow = (

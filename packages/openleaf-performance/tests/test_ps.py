@@ -8,7 +8,9 @@ import casadi as ca
 import numpy as np
 import pytest
 
+import openleaf.performance.models.ps as ps
 from openleaf.performance.core.perfos import EngineType
+from openleaf.performance.exceptions import MissingFieldError
 from openleaf.performance.models.ps import PSModel
 from openleaf.performance.physics import isa
 from openleaf.performance.physics import units
@@ -125,6 +127,103 @@ class TestPSEngine:
             ps_model.engine.fuel_flow({**cruise_state, "thrust": t}) for t in [15000, 25000, 35000]
         ]
         assert np.all(np.diff(fuel_flows) > 0)
+
+
+class TestPSOverallPropulsionEfficiency:
+    """Tests for the overall propulsion efficiency used by fuel_flow."""
+
+    @pytest.fixture
+    def state(self) -> dict:
+        """FL350, M0.78, ISA cruise state without thrust."""
+        h = 35000.0 * units.FT
+        return {
+            "altitude": h,
+            "mach_number": 0.78,
+            "air_temperature": isa.air_temperature(h),
+            "air_pressure": isa.air_pressure(h),
+        }
+
+    @pytest.fixture
+    def cruise_thrust(self, ps_model: PSModel, state: dict) -> float:
+        """Thrust equal to drag at 65 t in the cruise state [N]."""
+        cl = ps_model.lift_coefficient(65000.0, state["air_pressure"], state["mach_number"])
+        cd = ps_model.aerodynamics.drag_coef_with_state(
+            cl=cl,
+            mach=state["mach_number"],
+            air_temperature=state["air_temperature"],
+            air_pressure=state["air_pressure"],
+        )
+        return ps_model.compute_thrust_required(65000.0, cl, cd)
+
+    def test_reference_values(self, ps_model: PSModel, state: dict, cruise_thrust: float):
+        """Test values at cruise, above thrust_max and near zero thrust."""
+        thrust_max = ps_model.engine.thrust_max(state)
+        cases = [
+            (cruise_thrust, 0.30620),
+            (1.2 * thrust_max, 0.29507),
+            (2.0 * thrust_max, 0.29507),
+            (50.0, 0.01),
+            (0.0, 0.01),
+        ]
+        for thrust, expected in cases:
+            eta = ps_model.engine.overall_propulsion_efficiency({**state, "thrust": thrust})
+            assert eta == pytest.approx(expected, abs=5e-6), f"thrust={thrust:.0f} N"
+
+    def test_equals_raw_correlation_inside_envelope(
+        self, ps_model: PSModel, state: dict, cruise_thrust: float
+    ):
+        """Test that no guard is active for an unclipped cruise point."""
+        d = ps_model.engine.data
+        mach = state["mach_number"]
+        c_t = ps_model.engine.thrust_coefficient(cruise_thrust, mach, state["air_pressure"])
+        c_t_eta_b = ps.ps_physics.thrust_coefficient_at_max_efficiency(mach, d.m_des, d.c_t_des)
+        raw = ps.overall_propulsion_efficiency(mach, c_t, c_t_eta_b, d.m_des, d.eta_1, d.eta_2)
+
+        eta = ps_model.engine.overall_propulsion_efficiency({**state, "thrust": cruise_thrust})
+        assert eta == pytest.approx(raw, rel=1e-12)
+
+    @pytest.mark.parametrize(
+        "reference,factor",
+        [("cruise", 0.5), ("cruise", 1.0), ("thrust_max", 1.2), ("thrust_max", 2.0)],
+    )
+    def test_consistent_with_fuel_flow(
+        self, ps_model: PSModel, state: dict, cruise_thrust: float, reference: str, factor: float
+    ):
+        """Test that fuel_flow equals F V / (eta Q) with F clipped to thrust_max.
+
+        None of these points is clipped by the idle or maximum fuel flow.
+        """
+        thrust_max = ps_model.engine.thrust_max(state)
+        thrust = factor * (cruise_thrust if reference == "cruise" else thrust_max)
+        flight_state = {**state, "thrust": thrust}
+
+        eta = ps_model.engine.overall_propulsion_efficiency(flight_state)
+        tas = state["mach_number"] * np.sqrt(units.GAMMA * units.R_AIR * state["air_temperature"])
+        expected = min(thrust, thrust_max) * tas / (eta * units.Q_FUEL)
+
+        assert ps_model.engine.fuel_flow(flight_state) == pytest.approx(expected, rel=1e-10)
+
+    def test_array_input(self, ps_model: PSModel, state: dict, cruise_thrust: float):
+        """Test element-wise evaluation on an array of thrusts."""
+        thrust = np.array([0.0, cruise_thrust, 3.0 * cruise_thrust])
+        eta = np.asarray(
+            ps_model.engine.overall_propulsion_efficiency({**state, "thrust": thrust})
+        )
+
+        assert eta.shape == thrust.shape
+        for i, t in enumerate(thrust):
+            scalar = ps_model.engine.overall_propulsion_efficiency({**state, "thrust": t})
+            assert eta[i] == pytest.approx(scalar, rel=1e-12)
+
+    def test_missing_field_raises(self, ps_model: PSModel, state: dict):
+        """Test that thrust is a required field."""
+        with pytest.raises(MissingFieldError):
+            ps_model.engine.overall_propulsion_efficiency(state)
+
+    def test_raw_function_reexported(self):
+        """Test that the raw correlation is re-exported from models.ps."""
+        assert ps.overall_propulsion_efficiency is ps.ps_physics.overall_propulsion_efficiency
+        assert "overall_propulsion_efficiency" in ps.__all__
 
 
 class TestPSIntegration:
