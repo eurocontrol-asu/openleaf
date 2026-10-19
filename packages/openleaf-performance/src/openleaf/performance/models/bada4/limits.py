@@ -218,7 +218,9 @@ class BADA4Limits(LimitsModel[BADA4LimitsData]):
 
         Args:
             data: Flight state dictionary with:
-                - aerodynamic_configuration: AerodynamicConfig (default: CR)
+                - aerodynamic_configuration: AerodynamicConfig (preferred)
+                - hl_deployed: bool/array - high-lift state (if no config,
+                  default: False)
 
         Returns:
             Maximum altitude in feet. Fully vectorized.
@@ -229,8 +231,7 @@ class BADA4Limits(LimitsModel[BADA4LimitsData]):
         if "aerodynamic_configuration" in data:
             hl_deployed = _has_hl_deployed(data["aerodynamic_configuration"])
         else:
-            # No config provided: assume clean (hl not deployed)
-            hl_deployed = False
+            hl_deployed = data.get("hl_deployed", False)
 
         return np.where(hl_deployed, geo.mfa, geo.hmo)
 
