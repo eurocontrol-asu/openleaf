@@ -142,6 +142,76 @@ class TestTEMFunctions:
         assert np.isclose(residual, 0.0, atol=1e-10)
 
 
+class TestFFromStateNearLevel:
+    """f_from_state near T = D, where f = dh/dt / SEP is singular (issue #46)."""
+
+    ALTITUDE = 10000.0  # m
+    MASS = 65000.0  # kg
+    TAS = 230.0  # m/s
+    DRAG = 40000.0  # N
+    ROCD = 5.0  # m/s
+
+    def _f(self, thrust, rocd=ROCD):
+        return tem.f_from_state(
+            thrust,
+            self.DRAG,
+            self.MASS,
+            self.TAS,
+            rocd,
+            isa.air_temperature(self.ALTITUDE),
+            self.ALTITUDE,
+        )
+
+    def _band_half_width(self):
+        """|T - D| [N] at which |SEP| equals LEVEL_FLIGHT_SEP_TOLERANCE."""
+        return tem.LEVEL_FLIGHT_SEP_TOLERANCE * self.MASS * isa.G / self.TAS
+
+    def test_independent_of_round_off_around_drag(self):
+        """ULP-level perturbations of T around D give the same f, not 1 vs 1e14."""
+        ulp = np.spacing(self.DRAG)
+        offsets = np.arange(-50, 51) * ulp
+        f = self._f(self.DRAG + offsets)
+        np.testing.assert_array_equal(f, tem.DEFAULT_ENERGY_SHARE_FACTOR)
+
+    def test_level_flight_inside_band_is_default(self):
+        """Level flight with T within the band of D is not reported as f = 0."""
+        thrust = self.DRAG + np.array([-0.5, 0.5]) * self._band_half_width()
+        f = self._f(thrust, rocd=0.0)
+        np.testing.assert_array_equal(f, tem.DEFAULT_ENERGY_SHARE_FACTOR)
+
+    def test_exact_ratio_outside_band(self):
+        """Outside the band f is the exact TEM ratio, with no regularisation bias."""
+        excess = np.array([-2.0, 2.0]) * self._band_half_width()
+        f = self._f(self.DRAG + excess)
+        sep = excess * self.TAS / (self.MASS * isa.G)
+        np.testing.assert_allclose(f, self.ROCD / sep, rtol=1e-12)
+
+    def test_total_energy_model_uses_same_guard(self):
+        """TotalEnergyModel.f inherits the round-off-free level-flight test."""
+        ulp = np.spacing(self.DRAG)
+        model = tem.TotalEnergyModel(
+            drag=np.full(2, self.DRAG),
+            mass=np.full(2, self.MASS),
+            true_airspeed=np.full(2, self.TAS),
+            altitude=np.full(2, self.ALTITUDE),
+            thrust=self.DRAG + np.array([13.0, 14.0]) * ulp,
+            vertical_speed=np.full(2, self.ROCD),
+        )
+        np.testing.assert_array_equal(model.f, tem.DEFAULT_ENERGY_SHARE_FACTOR)
+
+    @pytest.mark.parametrize("offset_band", [0.0, 0.5])
+    @pytest.mark.parametrize("rocd", [0.0, ROCD])
+    def test_jax_gradient_finite_at_and_near_drag(self, offset_band, rocd):
+        """Reverse-mode gradients stay finite at T = D and inside the band."""
+        jax = pytest.importorskip("jax")
+        jnp = pytest.importorskip("jax.numpy")
+
+        thrust = jnp.asarray(self.DRAG + offset_band * self._band_half_width())
+        grads = jax.grad(self._f, argnums=(0, 1))(thrust, jnp.asarray(rocd))
+        assert all(np.isfinite(float(g)) for g in grads)
+        assert all(float(g) == 0.0 for g in grads)
+
+
 class TestTemperatureCorrection:
     """Test temperature correction for non-ISA conditions."""
 

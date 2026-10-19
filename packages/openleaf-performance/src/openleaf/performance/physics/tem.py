@@ -32,6 +32,7 @@ from __future__ import annotations
 
 __all__ = [
     "DEFAULT_ENERGY_SHARE_FACTOR",
+    "LEVEL_FLIGHT_SEP_TOLERANCE",
     "TotalEnergyModel",
     "rocd_pressure",
     "thrust_from_rocd",
@@ -54,6 +55,16 @@ if TYPE_CHECKING:
 
 # Default energy share factor for level constant-speed flight
 DEFAULT_ENERGY_SHARE_FACTOR = 1.0
+
+LEVEL_FLIGHT_SEP_TOLERANCE = 1e-3
+"""Specific excess power below which f_from_state treats T = D [m/s].
+
+The specific excess power SEP = (T - D) · V / (m · g) is the climb rate the
+excess thrust would sustain with all of it going to potential energy. 1e-3 m/s
+(0.2 ft/min) is far below any measurable climb rate, yet for an airliner it
+corresponds to |T - D| of a few newtons, about eleven orders of magnitude
+above float64 resolution, so the level-flight test never depends on round-off.
+"""
 
 
 def temp_correction_factor(
@@ -176,6 +187,17 @@ def f_from_state(
     Given thrust and vertical speed, compute the implied f. Useful for
     analyzing flight data or when f is the free variable.
 
+    The TEM gives f = dh_geo/dt / SEP, with the specific excess power
+    SEP = (T - D) · V / (m · g). f is singular at T = D whenever
+    dh/dt != 0: no exact value exists there and |f| grows without bound as
+    T approaches D. Where |SEP| < LEVEL_FLIGHT_SEP_TOLERANCE the state is
+    treated as level, unaccelerated flight and DEFAULT_ENERGY_SHARE_FACTOR is
+    returned; elsewhere the exact ratio is returned. Just outside that band
+    |f| reaches about |dh/dt| / LEVEL_FLIGHT_SEP_TOLERANCE, and so does the
+    gradient scale, so do not place this function in a differentiated path
+    that can reach T = D. Optimizers should constrain the TEM with residual(),
+    which is linear in f and never divides by T - D.
+
     Args:
         thrust: Engine thrust [N].
         drag: Aerodynamic drag [N].
@@ -195,21 +217,13 @@ def f_from_state(
     correction = temp_correction_factor(air_temperature, altitude)
     rocd_geo = rocd / correction
 
-    # Solve TEM for f: f = (m · g · rocd_geo) / [(T - D) · V]
-    # When T=D (level flight), f is undefined; return default (1.0)
-    excess_thrust = thrust - drag
-    denom = excess_thrust * true_airspeed
-    # Sign via where(): np.sign(denom + EPS) flips the sign for denom in
-    # (-EPS, 0), negating the clamped denominator near level flight.
-    safe_denom = np.maximum(np.abs(denom), EPSILON_CLAMP) * np.where(denom >= 0, 1.0, -1.0)
-
-    # Compute f, but return default when excess_thrust ≈ 0
-    f_computed = (mass * isa.G * rocd_geo) / safe_denom
-    return np.where(
-        np.abs(excess_thrust) < EPSILON_CLAMP,
-        DEFAULT_ENERGY_SHARE_FACTOR,
-        f_computed,
-    )
+    # Solve TEM for f: f = rocd_geo / SEP. The tolerance is physical, not a
+    # round-off clamp, and the inner where() keeps the unselected branch from
+    # dividing by a vanishing SEP (no NaN or overflow in reverse-mode AD).
+    sep = (thrust - drag) * true_airspeed / (mass * isa.G)
+    near_level = np.abs(sep) < LEVEL_FLIGHT_SEP_TOLERANCE
+    safe_sep = np.where(near_level, 1.0, sep)
+    return np.where(near_level, DEFAULT_ENERGY_SHARE_FACTOR, rocd_geo / safe_sep)
 
 
 def residual(
