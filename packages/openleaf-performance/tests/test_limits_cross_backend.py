@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import math
 
+import numpy as np
 import pytest
 
 from openleaf.performance.core.types import AerodynamicConfig
@@ -518,6 +519,13 @@ class TestPSLimits:
     def _state(self, alt_ft=ALT_FT, air_pressure=AIR_PRESSURE):
         return {"altitude": alt_ft, "air_pressure": air_pressure}
 
+    # Heavy and warm: thrust-limited ceiling below hmo
+    CEILING_MASS_KG = 75_000.0
+    CEILING_DELTA_ISA = 15.0
+
+    def _max_alt_state(self, mass=CEILING_MASS_KG, delta_isa=CEILING_DELTA_ISA):
+        return {"aircraft_mass": mass, "delta_isa": delta_isa, "mach_number": MACH}
+
     # --- NumPy reference ---
 
     def test_numpy_max_mach_cruise(self):
@@ -533,10 +541,27 @@ class TestPSLimits:
         assert m_low < m_high
 
     def test_numpy_max_altitude(self):
-        result = to_float(self.model.limits.max_altitude({}))
+        result = to_float(self.model.limits.max_altitude(self._max_alt_state()))
+        assert 20_000.0 < result < self.model.limits.hmo
+
+    def test_numpy_max_altitude_clamped_at_hmo(self):
+        result = to_float(self.model.limits.max_altitude(self._max_alt_state(55_000.0, 0.0)))
         assert result == self.model.limits.hmo
 
     # --- Torch ---
+
+    @skip_no_torch
+    def test_torch_max_altitude_and_gradient(self):
+        ref = to_float(self.model.limits.max_altitude(self._max_alt_state()))
+        mass = torch.tensor(self.CEILING_MASS_KG, dtype=torch.float64, requires_grad=True)
+        delta_isa = torch.tensor(self.CEILING_DELTA_ISA, dtype=torch.float64, requires_grad=True)
+        result = self.model.limits.max_altitude(self._max_alt_state(mass, delta_isa))
+        assert isinstance(result, torch.Tensor)
+        assert_close(result, ref, rtol=1e-12, label="torch ps max_altitude")
+
+        result.backward()
+        assert float(mass.grad) < 0.0
+        assert float(delta_isa.grad) < 0.0
 
     @skip_no_torch
     def test_torch_max_mach(self):
@@ -564,6 +589,53 @@ class TestPSLimits:
         assert float(result[0]) < float(result[2])
 
     # --- JAX ---
+
+    @skip_no_jax
+    def test_jax_max_altitude_gradient(self):
+        """Gradient is finite and non-zero below hmo, zero where clamped at hmo."""
+        ref = to_float(self.model.limits.max_altitude(self._max_alt_state()))
+
+        def max_altitude(mass, delta_isa):
+            return self.model.limits.max_altitude(self._max_alt_state(mass, delta_isa))
+
+        result = jax.jit(max_altitude)(self.CEILING_MASS_KG, self.CEILING_DELTA_ISA)
+        assert isinstance(result, jax.Array)
+        assert_close(result, ref, rtol=1e-12, label="jax ps max_altitude")
+
+        # Central finite differences of the NumPy result, step 1 kg and 0.01 K
+        def h(mass, delta_isa):
+            return to_float(self.model.limits.max_altitude(self._max_alt_state(mass, delta_isa)))
+
+        m, t = self.CEILING_MASS_KG, self.CEILING_DELTA_ISA
+        fd_mass = (h(m + 1.0, t) - h(m - 1.0, t)) / 2.0
+        fd_delta_isa = (h(m, t + 0.01) - h(m, t - 0.01)) / 0.02
+
+        d_mass, d_delta_isa = jax.grad(max_altitude, argnums=(0, 1))(m, t)
+        assert math.isfinite(float(d_mass)) and float(d_mass) < 0.0
+        assert math.isfinite(float(d_delta_isa)) and float(d_delta_isa) < 0.0
+        assert_close(d_mass, fd_mass, rtol=1e-3, label="jax d(max_altitude)/d(mass)")
+        assert_close(
+            d_delta_isa, fd_delta_isa, rtol=1e-3, label="jax d(max_altitude)/d(delta_isa)"
+        )
+
+        d_mass_hmo, d_delta_isa_hmo = jax.grad(max_altitude, argnums=(0, 1))(55_000.0, 0.0)
+        assert float(d_mass_hmo) == 0.0
+        assert float(d_delta_isa_hmo) == 0.0
+
+    @skip_no_jax
+    def test_jax_max_altitude_vmap(self):
+        masses = jnp.array([55_000.0, 65_000.0, self.CEILING_MASS_KG])
+        result = jax.vmap(
+            lambda m: self.model.limits.max_altitude(
+                self._max_alt_state(m, self.CEILING_DELTA_ISA)
+            )
+        )(masses)
+        ref = self.model.limits.max_altitude(
+            self._max_alt_state(np.asarray(masses), self.CEILING_DELTA_ISA)
+        )
+        assert result.shape == (3,)
+        for r, e in zip(result, ref, strict=True):
+            assert_close(r, e, rtol=1e-12, label="jax vmap ps max_altitude")
 
     @skip_no_jax
     def test_jax_max_mach(self):
@@ -598,6 +670,29 @@ class TestPSLimits:
         }
         result = self.model.limits.max_mach(state)
         assert_close(result, ref, label="casadi ps max_mach")
+
+    @skip_no_casadi
+    def test_casadi_max_altitude(self):
+        ref = to_float(self.model.limits.max_altitude(self._max_alt_state()))
+        state = self._max_alt_state(ca.DM(self.CEILING_MASS_KG), ca.DM(self.CEILING_DELTA_ISA))
+        result = self.model.limits.max_altitude(state)
+        assert_close(result, ref, rtol=1e-12, label="casadi ps max_altitude")
+
+    @skip_no_casadi
+    def test_casadi_max_altitude_symbolic(self):
+        """Bisection and secant step stay symbolic, with a negative Jacobian."""
+        m_sym = ca.MX.sym("m")
+        disa_sym = ca.MX.sym("disa")
+        result = self.model.limits.max_altitude(self._max_alt_state(m_sym, disa_sym))
+        jac = ca.jacobian(result, ca.vertcat(m_sym, disa_sym))
+        F = ca.Function("F", [m_sym, disa_sym], [result, jac])
+
+        h, j = F(self.CEILING_MASS_KG, self.CEILING_DELTA_ISA)
+        ref = to_float(self.model.limits.max_altitude(self._max_alt_state()))
+        assert_close(h, ref, rtol=1e-12, label="casadi symbolic ps max_altitude")
+        d_mass, d_delta_isa = (float(v) for v in np.asarray(j).ravel())
+        assert d_mass < 0.0
+        assert d_delta_isa < 0.0
 
     @skip_no_casadi
     def test_casadi_max_mach_symbolic(self):

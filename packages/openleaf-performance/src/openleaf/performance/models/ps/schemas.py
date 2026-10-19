@@ -93,6 +93,7 @@ class PSAerodynamicsData(AerodynamicsData):
         j_2: Wave drag coefficient 2.
         j_3: Wave drag coefficient 3.
         x_ref: Reference x for wave drag.
+        c_l_do: Design optimum lift coefficient.
     """
 
     model_config = ConfigDict(frozen=True, extra="forbid")
@@ -108,6 +109,7 @@ class PSAerodynamicsData(AerodynamicsData):
     j_2: float
     j_3: float
     x_ref: float
+    c_l_do: float
 
 
 class PSAircraftData(AircraftData):

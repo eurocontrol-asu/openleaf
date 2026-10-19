@@ -172,7 +172,11 @@ class LimitsModelProtocol(Protocol):
         """Get state-dependent maximum Mach number."""
 
     def max_altitude(self, data: KeyedData) -> ArrayScalarLike:
-        """Get state-dependent maximum operating altitude [ft]."""
+        """Get state-dependent maximum operating altitude [ft].
+
+        Whether the result depends on the flight state is provider-specific;
+        see ``AircraftModel.max_altitude``.
+        """
 
 
 # Note: @runtime_checkable not supported on multi-Protocol inheritance.
@@ -758,11 +762,24 @@ class AircraftModel(ABC):
     def max_altitude(self, data: KeyedData) -> ArrayScalarLike:
         """Get maximum operating altitude.
 
+        The ``ceiling`` envelope check compares the pressure altitude with
+        this value, so its meaning depends on the provider:
+
+        - BADA3: mass- and temperature-dependent maximum altitude, capped at
+          hmo (formula 3.5-1; needs ``aircraft_mass`` and ``delta_isa``).
+        - PS: min(hmo, thrust-limited ceiling at 300 ft/min residual climb,
+          lift-limited ceiling) at the state's Mach number (needs
+          ``aircraft_mass`` and ``delta_isa``).
+        - BADA4: constant per configuration, hmo when clean and the maximum
+          altitude with high-lift devices deployed (mfa) otherwise.
+        - OpenAP: constant service ceiling.
+
         Args:
             data: Flight state data dictionary.
 
         Returns:
-            Maximum operating altitude in feet.
+            Maximum operating altitude in feet; one value per state when it
+            depends on array-valued state, a scalar otherwise.
         """
         return self.limits.max_altitude(data)
 

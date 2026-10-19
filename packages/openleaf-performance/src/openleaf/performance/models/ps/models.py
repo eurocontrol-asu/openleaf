@@ -270,6 +270,33 @@ class PSEngineModel(EngineModel[PSEngineData]):
         """
         return c_t * 0.5 * units.GAMMA * air_pressure * mach_num**2 * self.aero_data.surface_area
 
+    def max_thrust_coefficient(
+        self,
+        mach_num: ArrayScalarLike,
+        air_temperature: ArrayScalarLike,
+    ) -> ArrayScalarLike:
+        """Calculate maximum available thrust coefficient.
+
+        Args:
+            mach_num: Mach number.
+            air_temperature: Air temperature [K].
+
+        Returns:
+            Maximum available thrust coefficient (includes ``thrust_buffer``).
+        """
+        c_t_eta_b = thrust_coefficient_at_max_efficiency(
+            mach_num, self.data.m_des, self.data.c_t_des
+        )
+        return max_available_thrust_coefficient(
+            air_temperature,
+            mach_num,
+            c_t_eta_b,
+            self.data.tet_mcc,
+            self.data.tr_ec,
+            self.data.m_ec,
+            buffer=self.data.thrust_buffer,
+        )
+
     @requires("mach_number", "air_temperature", "air_pressure")
     def thrust_max(self, data: KeyedData) -> ArrayScalarLike:
         """Calculate maximum available thrust.
@@ -305,20 +332,7 @@ class PSEngineModel(EngineModel[PSEngineData]):
         Returns:
             Maximum thrust [N].
         """
-        # Thrust coefficient at max efficiency
-        c_t_eta_b = thrust_coefficient_at_max_efficiency(mach, self.data.m_des, self.data.c_t_des)
-
-        # Max available thrust coefficient
-        c_t_max = max_available_thrust_coefficient(
-            air_temperature,
-            mach,
-            c_t_eta_b,
-            self.data.tet_mcc,
-            self.data.tr_ec,
-            self.data.m_ec,
-            buffer=self.data.thrust_buffer,
-        )
-
+        c_t_max = self.max_thrust_coefficient(mach, air_temperature)
         return self.thrust_from_coefficient(c_t_max, mach, air_pressure)
 
     @requires("mach_number")
@@ -427,15 +441,7 @@ class PSEngineModel(EngineModel[PSEngineData]):
         c_t_eta_b = thrust_coefficient_at_max_efficiency(mach, self.data.m_des, self.data.c_t_des)
 
         # Clamp c_t to available range
-        c_t_max = max_available_thrust_coefficient(
-            air_temperature,
-            mach,
-            c_t_eta_b,
-            self.data.tet_mcc,
-            self.data.tr_ec,
-            self.data.m_ec,
-            buffer=self.data.thrust_buffer,
-        )
+        c_t_max = self.max_thrust_coefficient(mach, air_temperature)
         c_t = np.clip(c_t, 0.0, c_t_max)
 
         # Overall propulsion efficiency
@@ -676,7 +682,7 @@ class PSModel(AircraftModel):
             p_i_max=ps_data.engine.p_i_max,
             p_inf_co=ps_data.engine.p_inf_co,
         )
-        limits = PSLimits(limits_data)
+        limits = PSLimits(limits_data, engine=engine, aerodynamics=aero)
 
         super().__init__(ps_data.aircraft, engine, aero, limits)
         self._ps_data = ps_data
