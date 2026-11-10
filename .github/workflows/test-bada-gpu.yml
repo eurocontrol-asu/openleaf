@@ -19,7 +19,7 @@ jobs:
       selected: ${{ steps.pick.outputs.selected }}
     steps:
       - id: pick
-        uses: eurocontrol-asu/.github/actions/pick-runner@7efaef6de93771ad79568358a2cae11419c5aedf # main 2026-11-10
+        uses: eurocontrol-asu/.github/actions/pick-runner@1fa4fd991aef59d01a032bb6845d7d1691496a3f # TEMP fix branch
         with:
           label: ubbla
           client-id: ${{ vars.RUNNERS_APP_CLIENT_ID }}
