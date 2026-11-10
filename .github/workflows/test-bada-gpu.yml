@@ -19,7 +19,7 @@ jobs:
       selected: ${{ steps.pick.outputs.selected }}
     steps:
       - id: pick
-        uses: eurocontrol-asu/.github/actions/pick-runner@1fa4fd991aef59d01a032bb6845d7d1691496a3f # TEMP fix branch
+        uses: eurocontrol-asu/.github/actions/pick-runner@a6de2bbae3c361938d4cd67baf0a5d46dcd8703c # main 2026-11-10
         with:
           label: ubbla
           client-id: ${{ vars.RUNNERS_APP_CLIENT_ID }}
@@ -47,6 +47,17 @@ jobs:
 
       - run: uv python install 3.12
       - run: uv sync --all-groups --all-extras
+
+      # On the self-hosted GPU runner a CUDA failure must be red, not silently skipped
+      - name: Check CUDA is usable (self-hosted only)
+        if: needs.pick.outputs.selected == 'self-hosted'
+        run: |
+          uv run --package openleaf-performance --directory packages/openleaf-performance python -c "
+          import sys, torch
+          ok = torch.cuda.is_available()
+          print('torch', torch.__version__, '| built for CUDA', torch.version.cuda, '| cuda available:', ok)
+          sys.exit(0 if ok else 'CUDA not usable on this self-hosted runner (NVIDIA driver too old for this torch build?)')
+          "
 
       - name: Run tests
         env:
