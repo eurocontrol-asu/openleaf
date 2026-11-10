@@ -11,9 +11,24 @@ permissions:
   contents: read
 
 jobs:
+  pick:
+    name: Pick runner (ubbla, else GitHub-hosted)
+    runs-on: ubuntu-latest
+    outputs:
+      runs-on: ${{ steps.pick.outputs.runs-on }}
+      selected: ${{ steps.pick.outputs.selected }}
+    steps:
+      - id: pick
+        uses: eurocontrol-asu/.github/actions/pick-runner@a6de2bbae3c361938d4cd67baf0a5d46dcd8703c # main 2026-11-10
+        with:
+          label: ubbla
+          client-id: ${{ vars.RUNNERS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RUNNERS_APP_PRIVATE_KEY }}
+
   test-bada-gpu:
     name: Test with BADA data + GPU
-    runs-on: [self-hosted, mandrell]
+    needs: pick
+    runs-on: ${{ fromJSON(needs.pick.outputs.runs-on) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -26,8 +41,23 @@ jobs:
           token: ${{ secrets.DATA_REPO_TOKEN }}
           path: bada_data
 
+      # GitHub-hosted fallback has no uv; ubbla provides it in the runner PATH
+      - if: needs.pick.outputs.selected == 'fallback'
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+
       - run: uv python install 3.12
       - run: uv sync --all-groups --all-extras
+
+      # On the self-hosted GPU runner a CUDA failure must be red, not silently skipped
+      - name: Check CUDA is usable (self-hosted only)
+        if: needs.pick.outputs.selected == 'self-hosted'
+        run: |
+          uv run --package openleaf-performance --directory packages/openleaf-performance python -c "
+          import sys, torch
+          ok = torch.cuda.is_available()
+          print('torch', torch.__version__, '| built for CUDA', torch.version.cuda, '| cuda available:', ok)
+          sys.exit(0 if ok else 'CUDA not usable on this self-hosted runner (NVIDIA driver too old for this torch build?)')
+          "
 
       - name: Run tests
         env:
