@@ -11,9 +11,24 @@ permissions:
   contents: read
 
 jobs:
+  pick:
+    name: Pick runner (ubbla, else GitHub-hosted)
+    runs-on: ubuntu-latest
+    outputs:
+      runs-on: ${{ steps.pick.outputs.runs-on }}
+      selected: ${{ steps.pick.outputs.selected }}
+    steps:
+      - id: pick
+        uses: eurocontrol-asu/.github/actions/pick-runner@7efaef6de93771ad79568358a2cae11419c5aedf # main 2026-11-10
+        with:
+          label: ubbla
+          client-id: ${{ vars.RUNNERS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RUNNERS_APP_PRIVATE_KEY }}
+
   test-bada-gpu:
     name: Test with BADA data + GPU
-    runs-on: [self-hosted, ubbla]
+    needs: pick
+    runs-on: ${{ fromJSON(needs.pick.outputs.runs-on) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -25,6 +40,10 @@ jobs:
           repository: eurocontrol-asu/bada-data
           token: ${{ secrets.DATA_REPO_TOKEN }}
           path: bada_data
+
+      # GitHub-hosted fallback has no uv; ubbla provides it in the runner PATH
+      - if: needs.pick.outputs.selected == 'fallback'
+        uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
 
       - run: uv python install 3.12
       - run: uv sync --all-groups --all-extras
